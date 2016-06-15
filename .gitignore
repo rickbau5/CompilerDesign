@@ -1,0 +1,10 @@
+
+cmin
+
+*.c
+*.h
+
+out/
+
+.DS_STORE
+*.swp

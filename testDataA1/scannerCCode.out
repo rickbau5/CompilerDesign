@@ -1,0 +1,1295 @@
+Line 1 Token: /
+Line 1 Token: *
+Line 1 Token: ID Value: closures
+Line 1 Token: ID Value: for
+Line 1 Token: ID Value: bison
+Line 3 Token: ID Value: copyright
+Line 3 Token: (
+Line 3 Token: ID Value: c
+Line 3 Token: )
+Line 3 Token: NUMCONST Value: 1984  Input: 1984
+Line 3 Token: ,
+Line 3 Token: NUMCONST Value: 1989  Input: 1989
+Line 3 Token: ,
+Line 3 Token: NUMCONST Value: 2000  Input: 2000
+Line 3 Token: ,
+Line 3 Token: NUMCONST Value: 2001  Input: 2001
+Line 3 Token: ,
+Line 3 Token: NUMCONST Value: 2002  Input: 2002
+Line 3 Token: ,
+Line 3 Token: NUMCONST Value: 2004  Input: 2004
+Line 3 Token: ,
+Line 3 Token: NUMCONST Value: 2005  Input: 2005
+Line 3 Token: ID Value: free
+Line 4 Token: ID Value: software
+Line 4 Token: ID Value: foundation
+Line 4 Token: ,
+Line 4 Token: ID Value: inc
+ERROR(4): Invalid input character: "."
+Line 6 Token: ID Value: this
+Line 6 Token: ID Value: file
+Line 6 Token: ID Value: is
+Line 6 Token: ID Value: part
+Line 6 Token: ID Value: of
+Line 6 Token: ID Value: bison
+Line 6 Token: ,
+Line 6 Token: ID Value: the
+Line 6 Token: ID Value: gnu
+Line 6 Token: ID Value: compiler
+Line 6 Token: ID Value: compiler
+ERROR(6): Invalid input character: "."
+Line 8 Token: ID Value: you
+Line 8 Token: ID Value: should
+Line 8 Token: ID Value: have
+Line 8 Token: ID Value: received
+Line 8 Token: ID Value: a
+Line 8 Token: ID Value: copy
+Line 8 Token: ID Value: of
+Line 8 Token: ID Value: the
+Line 8 Token: ID Value: gnu
+Line 8 Token: ID Value: general
+Line 8 Token: ID Value: public
+Line 8 Token: ID Value: license
+Line 9 Token: ID Value: along
+Line 9 Token: ID Value: with
+Line 9 Token: ID Value: bison
+Line 9 Token: ;
+Line 9 Token: ID Value: see
+Line 9 Token: ID Value: the
+Line 9 Token: ID Value: file
+Line 9 Token: ID Value: copying
+ERROR(9): Invalid input character: "."
+Line 9 Token: IF
+Line 9 Token: ID Value: not
+Line 9 Token: ,
+Line 9 Token: ID Value: write
+Line 9 Token: ID Value: to
+Line 9 Token: ID Value: the
+Line 9 Token: ID Value: free
+Line 10 Token: ID Value: software
+Line 10 Token: ID Value: foundation
+Line 10 Token: ,
+Line 10 Token: ID Value: inc
+ERROR(10): Invalid input character: "."
+Line 10 Token: ,
+Line 10 Token: NUMCONST Value: 51  Input: 51
+Line 10 Token: ID Value: franklin
+Line 10 Token: ID Value: street
+Line 10 Token: ,
+Line 10 Token: ID Value: fifth
+Line 10 Token: ID Value: floor
+Line 10 Token: ,
+Line 10 Token: ID Value: boston
+Line 10 Token: ,
+Line 10 Token: ID Value: ma
+Line 11 Token: NUMCONST Value: 2110  Input: 02110
+Line 11 Token: -
+Line 11 Token: NUMCONST Value: 1301  Input: 1301
+Line 11 Token: ,
+Line 11 Token: ID Value: usa
+ERROR(11): Invalid input character: "."
+Line 11 Token: *
+Line 11 Token: /
+ERROR(13): Invalid input character: "#"
+Line 13 Token: ID Value: include
+Line 13 Token: <
+Line 13 Token: ID Value: config
+ERROR(13): Invalid input character: "."
+Line 13 Token: ID Value: h
+Line 13 Token: >
+ERROR(14): Invalid input character: "#"
+Line 14 Token: ID Value: include
+Line 14 Token: STRINGCONST Value of length 8: "system.h"  Input: "system.h"
+ERROR(16): Invalid input character: "#"
+Line 16 Token: ID Value: include
+Line 16 Token: <
+Line 16 Token: ID Value: bitset
+ERROR(16): Invalid input character: "."
+Line 16 Token: ID Value: h
+Line 16 Token: >
+ERROR(17): Invalid input character: "#"
+Line 17 Token: ID Value: include
+Line 17 Token: <
+Line 17 Token: ID Value: bitsetv
+Line 17 Token: -
+Line 17 Token: ID Value: print
+ERROR(17): Invalid input character: "."
+Line 17 Token: ID Value: h
+Line 17 Token: >
+ERROR(18): Invalid input character: "#"
+Line 18 Token: ID Value: include
+Line 18 Token: <
+Line 18 Token: ID Value: bitsetv
+ERROR(18): Invalid input character: "."
+Line 18 Token: ID Value: h
+Line 18 Token: >
+ERROR(19): Invalid input character: "#"
+Line 19 Token: ID Value: include
+Line 19 Token: <
+Line 19 Token: ID Value: quotearg
+ERROR(19): Invalid input character: "."
+Line 19 Token: ID Value: h
+Line 19 Token: >
+ERROR(21): Invalid input character: "#"
+Line 21 Token: ID Value: include
+Line 21 Token: STRINGCONST Value of length 9: "closure.h"  Input: "closure.h"
+ERROR(22): Invalid input character: "#"
+Line 22 Token: ID Value: include
+Line 22 Token: STRINGCONST Value of length 9: "derives.h"  Input: "derives.h"
+ERROR(23): Invalid input character: "#"
+Line 23 Token: ID Value: include
+Line 23 Token: STRINGCONST Value of length 9: "getargs.h"  Input: "getargs.h"
+ERROR(24): Invalid input character: "#"
+Line 24 Token: ID Value: include
+Line 24 Token: STRINGCONST Value of length 6: "gram.h"  Input: "gram.h"
+ERROR(25): Invalid input character: "#"
+Line 25 Token: ID Value: include
+Line 25 Token: STRINGCONST Value of length 8: "reader.h"  Input: "reader.h"
+ERROR(26): Invalid input character: "#"
+Line 26 Token: ID Value: include
+Line 26 Token: STRINGCONST Value of length 8: "symtab.h"  Input: "symtab.h"
+Line 28 Token: /
+Line 28 Token: *
+Line 28 Token: ID Value: nitemset
+Line 28 Token: ID Value: is
+Line 28 Token: ID Value: the
+Line 28 Token: ID Value: size
+Line 28 Token: ID Value: of
+Line 28 Token: ID Value: the
+Line 28 Token: ID Value: array
+Line 28 Token: ID Value: itemset
+ERROR(28): Invalid input character: "."
+Line 28 Token: *
+Line 28 Token: /
+Line 29 Token: ID Value: item
+ERROR(29): Invalid input character: "_"
+Line 29 Token: ID Value: number
+Line 29 Token: *
+Line 29 Token: ID Value: itemset
+Line 29 Token: ;
+Line 30 Token: ID Value: size
+ERROR(30): Invalid input character: "_"
+Line 30 Token: ID Value: t
+Line 30 Token: ID Value: nritemset
+Line 30 Token: ;
+Line 32 Token: STATIC
+Line 32 Token: ID Value: bitset
+Line 32 Token: ID Value: ruleset
+Line 32 Token: ;
+Line 34 Token: /
+Line 34 Token: *
+Line 34 Token: ID Value: internal
+Line 34 Token: ID Value: data
+ERROR(34): Invalid input character: "."
+Line 34 Token: ID Value: see
+Line 34 Token: ID Value: comments
+Line 34 Token: ID Value: before
+Line 34 Token: ID Value: set
+ERROR(34): Invalid input character: "_"
+Line 34 Token: ID Value: fderives
+Line 34 Token: ID Value: and
+Line 34 Token: ID Value: set
+ERROR(34): Invalid input character: "_"
+Line 34 Token: ID Value: firsts
+ERROR(34): Invalid input character: "."
+Line 34 Token: *
+Line 34 Token: /
+Line 35 Token: STATIC
+Line 35 Token: ID Value: bitsetv
+Line 35 Token: ID Value: fderives
+Line 35 Token: =
+Line 35 Token: ID Value: null
+Line 35 Token: ;
+Line 36 Token: STATIC
+Line 36 Token: ID Value: bitsetv
+Line 36 Token: ID Value: firsts
+Line 36 Token: =
+Line 36 Token: ID Value: null
+Line 36 Token: ;
+Line 38 Token: /
+Line 38 Token: *
+Line 38 Token: ID Value: retrieve
+Line 38 Token: ID Value: the
+Line 38 Token: ID Value: fderives
+Line 38 Token: /
+Line 38 Token: ID Value: firsts
+Line 38 Token: ID Value: sets
+Line 38 Token: ID Value: of
+Line 38 Token: ID Value: the
+Line 38 Token: ID Value: nonterminals
+Line 38 Token: ID Value: numbered
+Line 38 Token: ID Value: var
+ERROR(38): Invalid input character: "."
+Line 38 Token: *
+Line 38 Token: /
+ERROR(39): Invalid input character: "#"
+Line 39 Token: ID Value: define
+Line 39 Token: ID Value: fderives
+Line 39 Token: (
+Line 39 Token: ID Value: var
+Line 39 Token: )
+Line 39 Token: ID Value: fderives
+Line 39 Token: [
+Line 39 Token: (
+Line 39 Token: ID Value: var
+Line 39 Token: )
+Line 39 Token: -
+Line 39 Token: ID Value: ntokens
+Line 39 Token: ]
+ERROR(40): Invalid input character: "#"
+Line 40 Token: ID Value: define
+Line 40 Token: ID Value: firsts
+Line 40 Token: (
+Line 40 Token: ID Value: var
+Line 40 Token: )
+Line 40 Token: ID Value: firsts
+Line 40 Token: [
+Line 40 Token: (
+Line 40 Token: ID Value: var
+Line 40 Token: )
+Line 40 Token: -
+Line 40 Token: ID Value: ntokens
+Line 40 Token: ]
+Line 42 Token: /
+Line 42 Token: *
+Line 42 Token: DEC
+Line 42 Token: DEC
+Line 42 Token: DEC
+Line 42 Token: DEC
+Line 42 Token: DEC
+Line 42 Token: DEC
+Line 42 Token: DEC
+Line 42 Token: DEC
+Line 42 Token: -
+ERROR(42): Invalid input character: "."
+Line 43 Token: |
+Line 43 Token: ID Value: debugging
+Line 43 Token: ID Value: code
+ERROR(43): Invalid input character: "."
+Line 43 Token: |
+ERROR(44): Invalid input character: "`"
+Line 44 Token: DEC
+Line 44 Token: DEC
+Line 44 Token: DEC
+Line 44 Token: DEC
+Line 44 Token: DEC
+Line 44 Token: DEC
+Line 44 Token: DEC
+Line 44 Token: DEC
+Line 44 Token: -
+Line 44 Token: *
+Line 44 Token: /
+Line 46 Token: STATIC
+Line 46 Token: ID Value: void
+Line 47 Token: ID Value: print
+ERROR(47): Invalid input character: "_"
+Line 47 Token: ID Value: closure
+Line 47 Token: (
+Line 47 Token: CHAR
+Line 47 Token: ID Value: const
+Line 47 Token: *
+Line 47 Token: ID Value: title
+Line 47 Token: ,
+Line 47 Token: ID Value: item
+ERROR(47): Invalid input character: "_"
+Line 47 Token: ID Value: number
+Line 47 Token: *
+Line 47 Token: ID Value: array
+Line 47 Token: ,
+Line 47 Token: ID Value: size
+ERROR(47): Invalid input character: "_"
+Line 47 Token: ID Value: t
+Line 47 Token: ID Value: size
+Line 47 Token: )
+Line 48 Token: {
+Line 49 Token: ID Value: size
+ERROR(49): Invalid input character: "_"
+Line 49 Token: ID Value: t
+Line 49 Token: ID Value: i
+Line 49 Token: ;
+Line 50 Token: ID Value: fprintf
+Line 50 Token: (
+Line 50 Token: ID Value: stderr
+Line 50 Token: ,
+Line 50 Token: STRINGCONST Value of length 12: "closure: %s
+"  Input: "closure: %s\n"
+Line 50 Token: ,
+Line 50 Token: ID Value: title
+Line 50 Token: )
+Line 50 Token: ;
+Line 51 Token: ID Value: for
+Line 51 Token: (
+Line 51 Token: ID Value: i
+Line 51 Token: =
+Line 51 Token: NUMCONST Value: 0  Input: 0
+Line 51 Token: ;
+Line 51 Token: ID Value: i
+Line 51 Token: <
+Line 51 Token: ID Value: size
+Line 51 Token: ;
+Line 51 Token: INC
+Line 51 Token: ID Value: i
+Line 51 Token: )
+Line 52 Token: {
+Line 53 Token: ID Value: item
+ERROR(53): Invalid input character: "_"
+Line 53 Token: ID Value: number
+Line 53 Token: *
+Line 53 Token: ID Value: rp
+Line 53 Token: ;
+Line 54 Token: ID Value: fprintf
+Line 54 Token: (
+Line 54 Token: ID Value: stderr
+Line 54 Token: ,
+Line 54 Token: STRINGCONST Value of length 8: "  %2d: ."  Input: "  %2d: ."
+Line 54 Token: ,
+Line 54 Token: ID Value: array
+Line 54 Token: [
+Line 54 Token: ID Value: i
+Line 54 Token: ]
+Line 54 Token: )
+Line 54 Token: ;
+Line 55 Token: ID Value: for
+Line 55 Token: (
+Line 55 Token: ID Value: rp
+Line 55 Token: =
+Line 55 Token: &
+Line 55 Token: ID Value: ritem
+Line 55 Token: [
+Line 55 Token: ID Value: array
+Line 55 Token: [
+Line 55 Token: ID Value: i
+Line 55 Token: ]
+Line 55 Token: ]
+Line 55 Token: ;
+Line 55 Token: *
+Line 55 Token: ID Value: rp
+Line 55 Token: GRTEQ
+Line 55 Token: NUMCONST Value: 0  Input: 0
+Line 55 Token: ;
+Line 55 Token: INC
+Line 55 Token: ID Value: rp
+Line 55 Token: )
+Line 56 Token: ID Value: fprintf
+Line 56 Token: (
+Line 56 Token: ID Value: stderr
+Line 56 Token: ,
+Line 56 Token: STRINGCONST Value of length 3: " %s"  Input: " %s"
+Line 56 Token: ,
+Line 56 Token: ID Value: symbols
+Line 56 Token: [
+Line 56 Token: *
+Line 56 Token: ID Value: rp
+Line 56 Token: ]
+Line 56 Token: -
+Line 56 Token: >
+Line 56 Token: ID Value: tag
+Line 56 Token: )
+Line 56 Token: ;
+Line 57 Token: ID Value: fprintf
+Line 57 Token: (
+Line 57 Token: ID Value: stderr
+Line 57 Token: ,
+Line 57 Token: STRINGCONST Value of length 12: "  (rule %d)
+"  Input: "  (rule %d)\n"
+Line 57 Token: ,
+Line 57 Token: -
+Line 57 Token: *
+Line 57 Token: ID Value: rp
+Line 57 Token: -
+Line 57 Token: NUMCONST Value: 1  Input: 1
+Line 57 Token: )
+Line 57 Token: ;
+Line 58 Token: }
+Line 59 Token: ID Value: fputs
+Line 59 Token: (
+Line 59 Token: STRINGCONST Value of length 2: "
+
+"  Input: "\n\n"
+Line 59 Token: ,
+Line 59 Token: ID Value: stderr
+Line 59 Token: )
+Line 59 Token: ;
+Line 60 Token: }
+Line 63 Token: STATIC
+Line 63 Token: ID Value: void
+Line 64 Token: ID Value: print
+ERROR(64): Invalid input character: "_"
+Line 64 Token: ID Value: firsts
+Line 64 Token: (
+Line 64 Token: ID Value: void
+Line 64 Token: )
+Line 65 Token: {
+Line 66 Token: ID Value: symbol
+ERROR(66): Invalid input character: "_"
+Line 66 Token: ID Value: number
+Line 66 Token: ID Value: i
+Line 66 Token: ,
+Line 66 Token: ID Value: j
+Line 66 Token: ;
+Line 68 Token: ID Value: fprintf
+Line 68 Token: (
+Line 68 Token: ID Value: stderr
+Line 68 Token: ,
+Line 68 Token: STRINGCONST Value of length 7: "firsts
+"  Input: "firsts\n"
+Line 68 Token: )
+Line 68 Token: ;
+Line 69 Token: ID Value: for
+Line 69 Token: (
+Line 69 Token: ID Value: i
+Line 69 Token: =
+Line 69 Token: ID Value: ntokens
+Line 69 Token: ;
+Line 69 Token: ID Value: i
+Line 69 Token: <
+Line 69 Token: ID Value: nsyms
+Line 69 Token: ;
+Line 69 Token: ID Value: i
+Line 69 Token: INC
+Line 69 Token: )
+Line 70 Token: {
+Line 71 Token: ID Value: bitset
+ERROR(71): Invalid input character: "_"
+Line 71 Token: ID Value: iterator
+Line 71 Token: ID Value: iter
+Line 71 Token: ;
+Line 72 Token: ID Value: fprintf
+Line 72 Token: (
+Line 72 Token: ID Value: stderr
+Line 72 Token: ,
+Line 72 Token: STRINGCONST Value of length 11: "t%s firsts
+"  Input: "\t%s firsts\n"
+Line 72 Token: ,
+Line 72 Token: ID Value: symbols
+Line 72 Token: [
+Line 72 Token: ID Value: i
+Line 72 Token: ]
+Line 72 Token: -
+Line 72 Token: >
+Line 72 Token: ID Value: tag
+Line 72 Token: )
+Line 72 Token: ;
+Line 73 Token: ID Value: bitset
+ERROR(73): Invalid input character: "_"
+Line 73 Token: ID Value: for
+ERROR(73): Invalid input character: "_"
+Line 73 Token: ID Value: each
+Line 73 Token: (
+Line 73 Token: ID Value: iter
+Line 73 Token: ,
+Line 73 Token: ID Value: firsts
+Line 73 Token: (
+Line 73 Token: ID Value: i
+Line 73 Token: )
+Line 73 Token: ,
+Line 73 Token: ID Value: j
+Line 73 Token: ,
+Line 73 Token: NUMCONST Value: 0  Input: 0
+Line 73 Token: )
+Line 74 Token: {
+Line 75 Token: ID Value: fprintf
+Line 75 Token: (
+Line 75 Token: ID Value: stderr
+Line 75 Token: ,
+Line 75 Token: STRINGCONST Value of length 5: "tt%s
+"  Input: "\t\t%s\n"
+Line 75 Token: ,
+Line 76 Token: ID Value: symbols
+Line 76 Token: [
+Line 76 Token: ID Value: j
+Line 76 Token: +
+Line 76 Token: ID Value: ntokens
+Line 76 Token: ]
+Line 76 Token: -
+Line 76 Token: >
+Line 76 Token: ID Value: tag
+Line 76 Token: )
+Line 76 Token: ;
+Line 77 Token: }
+Line 78 Token: }
+Line 79 Token: ID Value: fprintf
+Line 79 Token: (
+Line 79 Token: ID Value: stderr
+Line 79 Token: ,
+Line 79 Token: STRINGCONST Value of length 2: "
+
+"  Input: "\n\n"
+Line 79 Token: )
+Line 79 Token: ;
+Line 80 Token: }
+Line 83 Token: STATIC
+Line 83 Token: ID Value: void
+Line 84 Token: ID Value: print
+ERROR(84): Invalid input character: "_"
+Line 84 Token: ID Value: fderives
+Line 84 Token: (
+Line 84 Token: ID Value: void
+Line 84 Token: )
+Line 85 Token: {
+Line 86 Token: INT
+Line 86 Token: ID Value: i
+Line 86 Token: ;
+Line 87 Token: ID Value: rule
+ERROR(87): Invalid input character: "_"
+Line 87 Token: ID Value: number
+Line 87 Token: ID Value: r
+Line 87 Token: ;
+Line 89 Token: ID Value: fprintf
+Line 89 Token: (
+Line 89 Token: ID Value: stderr
+Line 89 Token: ,
+Line 89 Token: STRINGCONST Value of length 9: "fderives
+"  Input: "fderives\n"
+Line 89 Token: )
+Line 89 Token: ;
+Line 90 Token: ID Value: for
+Line 90 Token: (
+Line 90 Token: ID Value: i
+Line 90 Token: =
+Line 90 Token: ID Value: ntokens
+Line 90 Token: ;
+Line 90 Token: ID Value: i
+Line 90 Token: <
+Line 90 Token: ID Value: nsyms
+Line 90 Token: ;
+Line 90 Token: ID Value: i
+Line 90 Token: INC
+Line 90 Token: )
+Line 91 Token: {
+Line 92 Token: ID Value: bitset
+ERROR(92): Invalid input character: "_"
+Line 92 Token: ID Value: iterator
+Line 92 Token: ID Value: iter
+Line 92 Token: ;
+Line 93 Token: ID Value: fprintf
+Line 93 Token: (
+Line 93 Token: ID Value: stderr
+Line 93 Token: ,
+Line 93 Token: STRINGCONST Value of length 12: "t%s derives
+"  Input: "\t%s derives\n"
+Line 93 Token: ,
+Line 93 Token: ID Value: symbols
+Line 93 Token: [
+Line 93 Token: ID Value: i
+Line 93 Token: ]
+Line 93 Token: -
+Line 93 Token: >
+Line 93 Token: ID Value: tag
+Line 93 Token: )
+Line 93 Token: ;
+Line 94 Token: ID Value: bitset
+ERROR(94): Invalid input character: "_"
+Line 94 Token: ID Value: for
+ERROR(94): Invalid input character: "_"
+Line 94 Token: ID Value: each
+Line 94 Token: (
+Line 94 Token: ID Value: iter
+Line 94 Token: ,
+Line 94 Token: ID Value: fderives
+Line 94 Token: (
+Line 94 Token: ID Value: i
+Line 94 Token: )
+Line 94 Token: ,
+Line 94 Token: ID Value: r
+Line 94 Token: ,
+Line 94 Token: NUMCONST Value: 0  Input: 0
+Line 94 Token: )
+Line 95 Token: {
+Line 96 Token: ID Value: fprintf
+Line 96 Token: (
+Line 96 Token: ID Value: stderr
+Line 96 Token: ,
+Line 96 Token: STRINGCONST Value of length 6: "tt%3d "  Input: "\t\t%3d "
+Line 96 Token: ,
+Line 96 Token: ID Value: r
+Line 96 Token: )
+Line 96 Token: ;
+Line 97 Token: ID Value: rule
+ERROR(97): Invalid input character: "_"
+Line 97 Token: ID Value: rhs
+ERROR(97): Invalid input character: "_"
+Line 97 Token: ID Value: print
+Line 97 Token: (
+Line 97 Token: &
+Line 97 Token: ID Value: rules
+Line 97 Token: [
+Line 97 Token: ID Value: r
+Line 97 Token: ]
+Line 97 Token: ,
+Line 97 Token: ID Value: stderr
+Line 97 Token: )
+Line 97 Token: ;
+Line 98 Token: }
+Line 99 Token: }
+Line 100 Token: ID Value: fprintf
+Line 100 Token: (
+Line 100 Token: ID Value: stderr
+Line 100 Token: ,
+Line 100 Token: STRINGCONST Value of length 2: "
+
+"  Input: "\n\n"
+Line 100 Token: )
+Line 100 Token: ;
+Line 101 Token: }
+Line 103 Token: /
+Line 103 Token: *
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+Line 103 Token: DEC
+ERROR(103): Invalid input character: "."
+Line 104 Token: |
+Line 104 Token: ID Value: set
+Line 104 Token: ID Value: firsts
+Line 104 Token: ID Value: to
+Line 104 Token: ID Value: be
+Line 104 Token: ID Value: an
+Line 104 Token: ID Value: nvars
+Line 104 Token: ID Value: array
+Line 104 Token: ID Value: of
+Line 104 Token: ID Value: nvars
+Line 104 Token: ID Value: bitsets
+Line 104 Token: ID Value: indicating
+Line 104 Token: ID Value: which
+Line 104 Token: |
+Line 105 Token: |
+Line 105 Token: ID Value: items
+Line 105 Token: ID Value: can
+Line 105 Token: ID Value: represent
+Line 105 Token: ID Value: the
+Line 105 Token: ID Value: beginning
+Line 105 Token: ID Value: of
+Line 105 Token: ID Value: the
+Line 105 Token: ID Value: input
+Line 105 Token: ID Value: corresponding
+Line 105 Token: ID Value: to
+Line 105 Token: |
+Line 106 Token: |
+Line 106 Token: ID Value: which
+Line 106 Token: ID Value: other
+Line 106 Token: ID Value: items
+ERROR(106): Invalid input character: "."
+Line 106 Token: |
+Line 107 Token: |
+Line 107 Token: |
+Line 108 Token: |
+Line 108 Token: ID Value: for
+Line 108 Token: ID Value: example
+Line 108 Token: ,
+Line 108 Token: IF
+Line 108 Token: ID Value: some
+Line 108 Token: ID Value: rule
+Line 108 Token: ID Value: expands
+Line 108 Token: ID Value: symbol
+Line 108 Token: NUMCONST Value: 5  Input: 5
+Line 108 Token: ID Value: into
+Line 108 Token: ID Value: the
+Line 108 Token: ID Value: sequence
+Line 108 Token: ID Value: of
+Line 108 Token: |
+Line 109 Token: |
+Line 109 Token: ID Value: symbols
+Line 109 Token: NUMCONST Value: 8  Input: 8
+Line 109 Token: NUMCONST Value: 3  Input: 3
+Line 109 Token: NUMCONST Value: 20  Input: 20
+Line 109 Token: ,
+Line 109 Token: ID Value: the
+Line 109 Token: ID Value: symbol
+Line 109 Token: NUMCONST Value: 8  Input: 8
+Line 109 Token: ID Value: can
+Line 109 Token: ID Value: be
+Line 109 Token: ID Value: the
+Line 109 Token: ID Value: beginning
+Line 109 Token: ID Value: of
+Line 109 Token: ID Value: the
+Line 109 Token: ID Value: data
+Line 109 Token: ID Value: for
+Line 109 Token: |
+Line 110 Token: |
+Line 110 Token: ID Value: symbol
+Line 110 Token: NUMCONST Value: 5  Input: 5
+Line 110 Token: ,
+Line 110 Token: ID Value: so
+Line 110 Token: ID Value: the
+Line 110 Token: ID Value: bit
+Line 110 Token: [
+Line 110 Token: NUMCONST Value: 8  Input: 8
+Line 110 Token: -
+Line 110 Token: ID Value: ntokens
+Line 110 Token: ]
+Line 110 Token: IN
+Line 110 Token: ID Value: first
+Line 110 Token: [
+Line 110 Token: NUMCONST Value: 5  Input: 5
+Line 110 Token: -
+Line 110 Token: ID Value: ntokens
+Line 110 Token: ]
+Line 110 Token: (
+Line 110 Token: =
+Line 110 Token: ID Value: first
+Line 110 Token: |
+Line 111 Token: |
+Line 111 Token: (
+Line 111 Token: NUMCONST Value: 5  Input: 5
+Line 111 Token: )
+Line 111 Token: )
+Line 111 Token: ID Value: is
+Line 111 Token: ID Value: set
+ERROR(111): Invalid input character: "."
+Line 111 Token: |
+ERROR(112): Invalid input character: "`"
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: DEC
+Line 112 Token: *
+Line 112 Token: /
+Line 114 Token: STATIC
+Line 114 Token: ID Value: void
+Line 115 Token: ID Value: set
+ERROR(115): Invalid input character: "_"
+Line 115 Token: ID Value: firsts
+Line 115 Token: (
+Line 115 Token: ID Value: void
+Line 115 Token: )
+Line 116 Token: {
+Line 117 Token: ID Value: symbol
+ERROR(117): Invalid input character: "_"
+Line 117 Token: ID Value: number
+Line 117 Token: ID Value: i
+Line 117 Token: ,
+Line 117 Token: ID Value: j
+Line 117 Token: ;
+Line 119 Token: ID Value: firsts
+Line 119 Token: =
+Line 119 Token: ID Value: bitsetv
+ERROR(119): Invalid input character: "_"
+Line 119 Token: ID Value: create
+Line 119 Token: (
+Line 119 Token: ID Value: nvars
+Line 119 Token: ,
+Line 119 Token: ID Value: nvars
+Line 119 Token: ,
+Line 119 Token: ID Value: bitset
+ERROR(119): Invalid input character: "_"
+Line 119 Token: ID Value: fixed
+Line 119 Token: )
+Line 119 Token: ;
+Line 121 Token: ID Value: for
+Line 121 Token: (
+Line 121 Token: ID Value: i
+Line 121 Token: =
+Line 121 Token: ID Value: ntokens
+Line 121 Token: ;
+Line 121 Token: ID Value: i
+Line 121 Token: <
+Line 121 Token: ID Value: nsyms
+Line 121 Token: ;
+Line 121 Token: ID Value: i
+Line 121 Token: INC
+Line 121 Token: )
+Line 122 Token: ID Value: for
+Line 122 Token: (
+Line 122 Token: ID Value: j
+Line 122 Token: =
+Line 122 Token: NUMCONST Value: 0  Input: 0
+Line 122 Token: ;
+Line 122 Token: ID Value: derives
+Line 122 Token: [
+Line 122 Token: ID Value: i
+Line 122 Token: -
+Line 122 Token: ID Value: ntokens
+Line 122 Token: ]
+Line 122 Token: [
+Line 122 Token: ID Value: j
+Line 122 Token: ]
+Line 122 Token: ;
+Line 122 Token: INC
+Line 122 Token: ID Value: j
+Line 122 Token: )
+Line 123 Token: {
+Line 124 Token: ID Value: item
+ERROR(124): Invalid input character: "_"
+Line 124 Token: ID Value: number
+Line 124 Token: ID Value: sym
+Line 124 Token: =
+Line 124 Token: ID Value: derives
+Line 124 Token: [
+Line 124 Token: ID Value: i
+Line 124 Token: -
+Line 124 Token: ID Value: ntokens
+Line 124 Token: ]
+Line 124 Token: [
+Line 124 Token: ID Value: j
+Line 124 Token: ]
+Line 124 Token: -
+Line 124 Token: >
+Line 124 Token: ID Value: rhs
+Line 124 Token: [
+Line 124 Token: NUMCONST Value: 0  Input: 0
+Line 124 Token: ]
+Line 124 Token: ;
+Line 125 Token: IF
+Line 125 Token: (
+Line 125 Token: ID Value: isvar
+Line 125 Token: (
+Line 125 Token: ID Value: sym
+Line 125 Token: )
+Line 125 Token: )
+Line 126 Token: ID Value: bitset
+ERROR(126): Invalid input character: "_"
+Line 126 Token: ID Value: set
+Line 126 Token: (
+Line 126 Token: ID Value: firsts
+Line 126 Token: (
+Line 126 Token: ID Value: i
+Line 126 Token: )
+Line 126 Token: ,
+Line 126 Token: ID Value: sym
+Line 126 Token: -
+Line 126 Token: ID Value: ntokens
+Line 126 Token: )
+Line 126 Token: ;
+Line 127 Token: }
+Line 129 Token: IF
+Line 129 Token: (
+Line 129 Token: ID Value: trace
+ERROR(129): Invalid input character: "_"
+Line 129 Token: ID Value: flag
+Line 129 Token: &
+Line 129 Token: ID Value: trace
+ERROR(129): Invalid input character: "_"
+Line 129 Token: ID Value: sets
+Line 129 Token: )
+Line 130 Token: ID Value: bitsetv
+ERROR(130): Invalid input character: "_"
+Line 130 Token: ID Value: matrix
+ERROR(130): Invalid input character: "_"
+Line 130 Token: ID Value: dump
+Line 130 Token: (
+Line 130 Token: ID Value: stderr
+Line 130 Token: ,
+Line 130 Token: STRINGCONST Value of length 17: "rtc: firsts input"  Input: "rtc: firsts input"
+Line 130 Token: ,
+Line 130 Token: ID Value: firsts
+Line 130 Token: )
+Line 130 Token: ;
+Line 131 Token: ID Value: bitsetv
+ERROR(131): Invalid input character: "_"
+Line 131 Token: ID Value: reflexive
+ERROR(131): Invalid input character: "_"
+Line 131 Token: ID Value: transitive
+ERROR(131): Invalid input character: "_"
+Line 131 Token: ID Value: closure
+Line 131 Token: (
+Line 131 Token: ID Value: firsts
+Line 131 Token: )
+Line 131 Token: ;
+Line 132 Token: IF
+Line 132 Token: (
+Line 132 Token: ID Value: trace
+ERROR(132): Invalid input character: "_"
+Line 132 Token: ID Value: flag
+Line 132 Token: &
+Line 132 Token: ID Value: trace
+ERROR(132): Invalid input character: "_"
+Line 132 Token: ID Value: sets
+Line 132 Token: )
+Line 133 Token: ID Value: bitsetv
+ERROR(133): Invalid input character: "_"
+Line 133 Token: ID Value: matrix
+ERROR(133): Invalid input character: "_"
+Line 133 Token: ID Value: dump
+Line 133 Token: (
+Line 133 Token: ID Value: stderr
+Line 133 Token: ,
+Line 133 Token: STRINGCONST Value of length 18: "rtc: firsts output"  Input: "rtc: firsts output"
+Line 133 Token: ,
+Line 133 Token: ID Value: firsts
+Line 133 Token: )
+Line 133 Token: ;
+Line 135 Token: IF
+Line 135 Token: (
+Line 135 Token: ID Value: trace
+ERROR(135): Invalid input character: "_"
+Line 135 Token: ID Value: flag
+Line 135 Token: &
+Line 135 Token: ID Value: trace
+ERROR(135): Invalid input character: "_"
+Line 135 Token: ID Value: sets
+Line 135 Token: )
+Line 136 Token: ID Value: print
+ERROR(136): Invalid input character: "_"
+Line 136 Token: ID Value: firsts
+Line 136 Token: (
+Line 136 Token: )
+Line 136 Token: ;
+Line 137 Token: }
+Line 139 Token: /
+Line 139 Token: *
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: DEC
+Line 139 Token: -
+ERROR(139): Invalid input character: "."
+Line 140 Token: |
+Line 140 Token: ID Value: set
+Line 140 Token: ID Value: fderives
+Line 140 Token: ID Value: to
+Line 140 Token: ID Value: an
+Line 140 Token: ID Value: nvars
+Line 140 Token: ID Value: by
+Line 140 Token: ID Value: nrules
+Line 140 Token: ID Value: matrix
+Line 140 Token: ID Value: of
+Line 140 Token: ID Value: bits
+Line 140 Token: ID Value: indicating
+Line 140 Token: ID Value: which
+Line 140 Token: |
+Line 141 Token: |
+Line 141 Token: ID Value: rules
+Line 141 Token: ID Value: can
+Line 141 Token: ID Value: help
+Line 141 Token: ID Value: derive
+Line 141 Token: ID Value: the
+Line 141 Token: ID Value: beginning
+Line 141 Token: ID Value: of
+Line 141 Token: ID Value: the
+Line 141 Token: ID Value: data
+Line 141 Token: ID Value: for
+Line 141 Token: ID Value: each
+Line 141 Token: |
+Line 142 Token: |
+Line 142 Token: ID Value: nonterminal
+ERROR(142): Invalid input character: "."
+Line 142 Token: |
+Line 143 Token: |
+Line 143 Token: |
+Line 144 Token: |
+Line 144 Token: ID Value: for
+Line 144 Token: ID Value: example
+Line 144 Token: ,
+Line 144 Token: IF
+Line 144 Token: ID Value: symbol
+Line 144 Token: NUMCONST Value: 5  Input: 5
+Line 144 Token: ID Value: can
+Line 144 Token: ID Value: be
+Line 144 Token: ID Value: derived
+Line 144 Token: ID Value: as
+Line 144 Token: ID Value: the
+Line 144 Token: ID Value: sequence
+Line 144 Token: ID Value: of
+Line 144 Token: ID Value: symbols
+Line 144 Token: |
+Line 145 Token: |
+Line 145 Token: NUMCONST Value: 8  Input: 8
+Line 145 Token: NUMCONST Value: 3  Input: 3
+Line 145 Token: NUMCONST Value: 20  Input: 20
+Line 145 Token: ,
+Line 145 Token: ID Value: and
+Line 145 Token: ID Value: one
+Line 145 Token: ID Value: of
+Line 145 Token: ID Value: the
+Line 145 Token: ID Value: rules
+Line 145 Token: ID Value: for
+Line 145 Token: ID Value: deriving
+Line 145 Token: ID Value: symbol
+Line 145 Token: NUMCONST Value: 8  Input: 8
+Line 145 Token: ID Value: is
+Line 145 Token: ID Value: rule
+Line 145 Token: NUMCONST Value: 4  Input: 4
+Line 145 Token: ,
+Line 145 Token: ID Value: then
+Line 145 Token: |
+Line 146 Token: |
+Line 146 Token: ID Value: the
+Line 146 Token: [
+Line 146 Token: NUMCONST Value: 5  Input: 5
+Line 146 Token: -
+Line 146 Token: ID Value: ntokens
+Line 146 Token: ,
+Line 146 Token: NUMCONST Value: 4  Input: 4
+Line 146 Token: ]
+Line 146 Token: ID Value: bit
+Line 146 Token: IN
+Line 146 Token: ID Value: fderives
+Line 146 Token: ID Value: is
+Line 146 Token: ID Value: set
+ERROR(146): Invalid input character: "."
+Line 146 Token: |
+ERROR(147): Invalid input character: "`"
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: DEC
+Line 147 Token: -
+Line 147 Token: *
+Line 147 Token: /
+Line 149 Token: STATIC
+Line 149 Token: ID Value: void
+Line 150 Token: ID Value: set
+ERROR(150): Invalid input character: "_"
+Line 150 Token: ID Value: fderives
+Line 150 Token: (
+Line 150 Token: ID Value: void
+Line 150 Token: )
+Line 151 Token: {
+Line 152 Token: ID Value: symbol
+ERROR(152): Invalid input character: "_"
+Line 152 Token: ID Value: number
+Line 152 Token: ID Value: i
+Line 152 Token: ,
+Line 152 Token: ID Value: j
+Line 152 Token: ;
+Line 153 Token: ID Value: rule
+ERROR(153): Invalid input character: "_"
+Line 153 Token: ID Value: number
+Line 153 Token: ID Value: k
+Line 153 Token: ;
+Line 155 Token: ID Value: fderives
+Line 155 Token: =
+Line 155 Token: ID Value: bitsetv
+ERROR(155): Invalid input character: "_"
+Line 155 Token: ID Value: create
+Line 155 Token: (
+Line 155 Token: ID Value: nvars
+Line 155 Token: ,
+Line 155 Token: ID Value: nrules
+Line 155 Token: ,
+Line 155 Token: ID Value: bitset
+ERROR(155): Invalid input character: "_"
+Line 155 Token: ID Value: fixed
+Line 155 Token: )
+Line 155 Token: ;
+Line 157 Token: ID Value: set
+ERROR(157): Invalid input character: "_"
+Line 157 Token: ID Value: firsts
+Line 157 Token: (
+Line 157 Token: )
+Line 157 Token: ;
+Line 159 Token: ID Value: for
+Line 159 Token: (
+Line 159 Token: ID Value: i
+Line 159 Token: =
+Line 159 Token: ID Value: ntokens
+Line 159 Token: ;
+Line 159 Token: ID Value: i
+Line 159 Token: <
+Line 159 Token: ID Value: nsyms
+Line 159 Token: ;
+Line 159 Token: INC
+Line 159 Token: ID Value: i
+Line 159 Token: )
+Line 160 Token: ID Value: for
+Line 160 Token: (
+Line 160 Token: ID Value: j
+Line 160 Token: =
+Line 160 Token: ID Value: ntokens
+Line 160 Token: ;
+Line 160 Token: ID Value: j
+Line 160 Token: <
+Line 160 Token: ID Value: nsyms
+Line 160 Token: ;
+Line 160 Token: INC
+Line 160 Token: ID Value: j
+Line 160 Token: )
+Line 161 Token: IF
+Line 161 Token: (
+Line 161 Token: ID Value: bitset
+ERROR(161): Invalid input character: "_"
+Line 161 Token: ID Value: test
+Line 161 Token: (
+Line 161 Token: ID Value: firsts
+Line 161 Token: (
+Line 161 Token: ID Value: i
+Line 161 Token: )
+Line 161 Token: ,
+Line 161 Token: ID Value: j
+Line 161 Token: -
+Line 161 Token: ID Value: ntokens
+Line 161 Token: )
+Line 161 Token: )
+Line 162 Token: ID Value: for
+Line 162 Token: (
+Line 162 Token: ID Value: k
+Line 162 Token: =
+Line 162 Token: NUMCONST Value: 0  Input: 0
+Line 162 Token: ;
+Line 162 Token: ID Value: derives
+Line 162 Token: [
+Line 162 Token: ID Value: j
+Line 162 Token: -
+Line 162 Token: ID Value: ntokens
+Line 162 Token: ]
+Line 162 Token: [
+Line 162 Token: ID Value: k
+Line 162 Token: ]
+Line 162 Token: ;
+Line 162 Token: INC
+Line 162 Token: ID Value: k
+Line 162 Token: )
+Line 163 Token: ID Value: bitset
+ERROR(163): Invalid input character: "_"
+Line 163 Token: ID Value: set
+Line 163 Token: (
+Line 163 Token: ID Value: fderives
+Line 163 Token: (
+Line 163 Token: ID Value: i
+Line 163 Token: )
+Line 163 Token: ,
+Line 163 Token: ID Value: derives
+Line 163 Token: [
+Line 163 Token: ID Value: j
+Line 163 Token: -
+Line 163 Token: ID Value: ntokens
+Line 163 Token: ]
+Line 163 Token: [
+Line 163 Token: ID Value: k
+Line 163 Token: ]
+Line 163 Token: -
+Line 163 Token: >
+Line 163 Token: ID Value: number
+Line 163 Token: )
+Line 163 Token: ;
+Line 165 Token: IF
+Line 165 Token: (
+Line 165 Token: ID Value: trace
+ERROR(165): Invalid input character: "_"
+Line 165 Token: ID Value: flag
+Line 165 Token: &
+Line 165 Token: ID Value: trace
+ERROR(165): Invalid input character: "_"
+Line 165 Token: ID Value: sets
+Line 165 Token: )
+Line 166 Token: ID Value: print
+ERROR(166): Invalid input character: "_"
+Line 166 Token: ID Value: fderives
+Line 166 Token: (
+Line 166 Token: )
+Line 166 Token: ;
+Line 168 Token: ID Value: bitsetv
+ERROR(168): Invalid input character: "_"
+Line 168 Token: ID Value: free
+Line 168 Token: (
+Line 168 Token: ID Value: firsts
+Line 168 Token: )
+Line 168 Token: ;
+Line 169 Token: }

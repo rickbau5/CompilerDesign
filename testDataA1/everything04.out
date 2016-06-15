@@ -1,0 +1,651 @@
+Line 6 Token: INT
+Line 6 Token: ID Value: gromit
+Line 6 Token: ;
+Line 8 Token: ID Value: wallace
+Line 8 Token: (
+Line 8 Token: INT
+Line 8 Token: ID Value: wrong
+Line 8 Token: ,
+Line 8 Token: ID Value: trousers
+Line 8 Token: )
+Line 9 Token: {
+Line 10 Token: BOOL
+Line 10 Token: ID Value: close
+Line 10 Token: :
+Line 10 Token: BOOLCONST Value: 1  Input: true
+Line 10 Token: ,
+Line 10 Token: ID Value: shave
+Line 10 Token: :
+Line 10 Token: BOOLCONST Value: 0  Input: false
+Line 10 Token: ;
+Line 12 Token: NUMCONST Value: 1729  Input: 1729
+Line 12 Token: ;
+Line 13 Token: ID Value: close
+Line 13 Token: ;
+Line 14 Token: NUMCONST Value: 11  Input: 11
+Line 14 Token: *
+Line 14 Token: NUMCONST Value: 22  Input: 22
+Line 14 Token: +
+Line 14 Token: NUMCONST Value: 33  Input: 33
+Line 14 Token: *
+Line 14 Token: NUMCONST Value: 44  Input: 44
+Line 14 Token: ;
+Line 15 Token: ID Value: close
+Line 15 Token: =
+Line 15 Token: ID Value: shave
+Line 15 Token: ;
+Line 16 Token: ID Value: wrong
+Line 16 Token: =
+Line 16 Token: ID Value: trousers
+Line 16 Token: %
+Line 16 Token: (
+Line 16 Token: NUMCONST Value: 666  Input: 666
+Line 16 Token: /
+Line 16 Token: ID Value: wrong
+Line 16 Token: )
+Line 16 Token: ;
+Line 17 Token: ID Value: gromit
+Line 17 Token: =
+Line 17 Token: ID Value: wrong
+Line 17 Token: *
+Line 17 Token: ID Value: trousers
+Line 17 Token: -
+Line 17 Token: ID Value: gromit
+Line 17 Token: +
+Line 17 Token: -
+Line 17 Token: NUMCONST Value: 42  Input: 42
+Line 17 Token: ;
+Line 18 Token: ID Value: gromit
+Line 18 Token: ADDASS
+Line 18 Token: NUMCONST Value: 27182818  Input: 27182818
+Line 18 Token: ;
+Line 19 Token: ID Value: gromit
+Line 19 Token: SUBASS
+Line 19 Token: -
+Line 19 Token: NUMCONST Value: 31415927  Input: 31415927
+Line 19 Token: ;
+Line 20 Token: ID Value: gromit
+Line 20 Token: DIVASS
+Line 20 Token: (
+Line 20 Token: ID Value: wrong
+Line 20 Token: MULASS
+Line 20 Token: NUMCONST Value: 42  Input: 42
+Line 20 Token: )
+Line 20 Token: ;
+Line 21 Token: ID Value: close
+Line 21 Token: =
+Line 21 Token: ID Value: wrong
+Line 21 Token: <
+Line 21 Token: ID Value: trousers
+Line 21 Token: &
+Line 21 Token: ID Value: trousers
+Line 21 Token: LESSEQ
+Line 21 Token: ID Value: gromit
+Line 21 Token: ;
+Line 22 Token: ID Value: shave
+Line 22 Token: =
+Line 22 Token: ID Value: wrong
+Line 22 Token: >
+Line 22 Token: ID Value: trousers
+Line 22 Token: &
+Line 22 Token: ID Value: trousers
+Line 22 Token: GRTEQ
+Line 22 Token: ID Value: gromit
+Line 22 Token: ;
+Line 23 Token: {
+Line 24 Token: INT
+Line 24 Token: ID Value: a
+Line 24 Token: ,
+Line 24 Token: ID Value: grand
+Line 24 Token: :
+Line 24 Token: NUMCONST Value: 1  Input: 1
+Line 24 Token: /
+Line 24 Token: NUMCONST Value: 2  Input: 2
+Line 24 Token: ,
+Line 24 Token: ID Value: day
+Line 24 Token: :
+Line 24 Token: NUMCONST Value: 3  Input: 3
+Line 24 Token: *
+Line 24 Token: NUMCONST Value: 4  Input: 4
+Line 24 Token: ,
+Line 24 Token: ID Value: out
+Line 24 Token: :
+Line 24 Token: -
+Line 24 Token: NUMCONST Value: 9  Input: 9
+Line 24 Token: ;
+Line 25 Token: ID Value: a
+Line 25 Token: =
+Line 25 Token: ID Value: grand
+Line 25 Token: ADDASS
+Line 25 Token: ID Value: day
+Line 25 Token: SUBASS
+Line 25 Token: ID Value: out
+Line 25 Token: ;
+Line 26 Token: }
+Line 27 Token: ID Value: close
+Line 27 Token: =
+Line 27 Token: -
+Line 27 Token: NUMCONST Value: 1  Input: 1
+Line 27 Token: *
+Line 27 Token: NUMCONST Value: 2  Input: 2
+Line 27 Token: +
+Line 27 Token: NUMCONST Value: 3  Input: 3
+Line 27 Token: <
+Line 27 Token: NUMCONST Value: 4  Input: 4
+Line 27 Token: *
+Line 27 Token: NUMCONST Value: 5  Input: 5
+Line 27 Token: &
+Line 27 Token: NUMCONST Value: 6  Input: 6
+Line 27 Token: +
+Line 27 Token: NUMCONST Value: 7  Input: 7
+Line 27 Token: >
+Line 27 Token: -
+Line 27 Token: NUMCONST Value: 3  Input: 3
+Line 27 Token: ;
+Line 28 Token: ID Value: shave
+Line 28 Token: =
+Line 28 Token: BOOLCONST Value: 1  Input: true
+Line 28 Token: |
+Line 28 Token: (
+Line 28 Token: (
+Line 28 Token: -
+Line 28 Token: (
+Line 28 Token: NUMCONST Value: 1  Input: 1
+Line 28 Token: *
+Line 28 Token: (
+Line 28 Token: NUMCONST Value: 2  Input: 2
+Line 28 Token: +
+Line 28 Token: NUMCONST Value: 3  Input: 3
+Line 28 Token: )
+Line 28 Token: )
+Line 28 Token: )
+Line 28 Token: <
+Line 28 Token: (
+Line 28 Token: NUMCONST Value: 4  Input: 4
+Line 28 Token: *
+Line 28 Token: NUMCONST Value: 5  Input: 5
+Line 28 Token: )
+Line 28 Token: &
+Line 28 Token: (
+Line 28 Token: (
+Line 28 Token: NUMCONST Value: 6  Input: 6
+Line 28 Token: +
+Line 28 Token: NUMCONST Value: 7  Input: 7
+Line 28 Token: )
+Line 28 Token: >
+Line 28 Token: (
+Line 28 Token: -
+Line 28 Token: NUMCONST Value: 3  Input: 3
+Line 28 Token: )
+Line 28 Token: )
+Line 28 Token: )
+Line 28 Token: ;
+Line 29 Token: IF
+Line 29 Token: (
+Line 29 Token: ID Value: shave
+Line 29 Token: NOTEQ
+Line 29 Token: ID Value: close
+Line 29 Token: )
+Line 29 Token: ID Value: shave
+Line 29 Token: =
+Line 29 Token: !
+Line 29 Token: ID Value: close
+Line 29 Token: ;
+Line 30 Token: IF
+Line 30 Token: (
+Line 30 Token: !
+Line 30 Token: (
+Line 30 Token: ID Value: shave
+Line 30 Token: EQ
+Line 30 Token: ID Value: close
+Line 30 Token: )
+Line 30 Token: |
+Line 30 Token: !
+Line 30 Token: ID Value: close
+Line 30 Token: )
+Line 30 Token: ID Value: shave
+Line 30 Token: =
+Line 30 Token: BOOLCONST Value: 1  Input: true
+Line 30 Token: ;
+Line 31 Token: ELSE
+Line 31 Token: ID Value: close
+Line 31 Token: =
+Line 31 Token: BOOLCONST Value: 0  Input: false
+Line 31 Token: ;
+Line 32 Token: WHILE
+Line 32 Token: (
+Line 32 Token: ID Value: shave
+Line 32 Token: )
+Line 32 Token: {
+Line 33 Token: STATIC
+Line 33 Token: INT
+Line 33 Token: ID Value: were
+Line 33 Token: ,
+Line 33 Token: ID Value: rabbit
+Line 33 Token: ;
+Line 34 Token: STATIC
+Line 34 Token: INT
+Line 34 Token: ID Value: sheep
+Line 34 Token: [
+Line 34 Token: NUMCONST Value: 10  Input: 10
+Line 34 Token: ]
+Line 34 Token: ;
+Line 36 Token: ID Value: sheep
+Line 36 Token: [
+Line 36 Token: NUMCONST Value: 2  Input: 2
+Line 36 Token: ]
+Line 36 Token: =
+Line 36 Token: NUMCONST Value: 1618  Input: 1618
+Line 36 Token: ;
+Line 37 Token: IF
+Line 37 Token: (
+Line 37 Token: ID Value: sheep
+Line 37 Token: [
+Line 37 Token: NUMCONST Value: 2  Input: 2
+Line 37 Token: ]
+Line 37 Token: <
+Line 37 Token: NUMCONST Value: 496  Input: 496
+Line 37 Token: )
+Line 37 Token: BREAK
+Line 37 Token: ;
+Line 38 Token: ID Value: wallace
+Line 38 Token: (
+Line 38 Token: ID Value: gromit
+Line 38 Token: DEC
+Line 38 Token: ,
+Line 38 Token: ID Value: were
+Line 38 Token: -
+Line 38 Token: ID Value: rabbit
+Line 38 Token: )
+Line 38 Token: ;
+Line 39 Token: {
+Line 40 Token: INT
+Line 40 Token: ID Value: the
+Line 40 Token: ,
+Line 40 Token: ID Value: wrong
+Line 40 Token: ,
+Line 40 Token: ID Value: trousers
+Line 40 Token: ;
+Line 42 Token: ID Value: the
+Line 42 Token: =
+Line 42 Token: ID Value: wrong
+Line 42 Token: ADDASS
+Line 42 Token: ID Value: trousers
+Line 42 Token: INC
+Line 42 Token: ;
+Line 43 Token: IF
+Line 43 Token: (
+Line 43 Token: ID Value: were
+Line 43 Token: EQ
+Line 43 Token: ID Value: rabbit
+Line 43 Token: )
+Line 43 Token: ID Value: were
+Line 43 Token: =
+Line 43 Token: ID Value: wrong
+Line 43 Token: DEC
+Line 43 Token: ;
+Line 44 Token: }
+Line 45 Token: }
+Line 46 Token: RETURN
+Line 46 Token: ;
+Line 47 Token: }
+Line 50 Token: BOOL
+Line 50 Token: ID Value: penguin
+Line 50 Token: (
+Line 50 Token: CHAR
+Line 50 Token: ID Value: Feathers
+Line 50 Token: ,
+Line 50 Token: ID Value: McGraw
+Line 50 Token: [
+Line 50 Token: ]
+Line 50 Token: ;
+Line 50 Token: BOOL
+Line 50 Token: ID Value: moon
+Line 50 Token: ,
+Line 50 Token: ID Value: cheese
+Line 50 Token: ;
+Line 50 Token: INT
+Line 50 Token: ID Value: launch
+Line 50 Token: )
+Line 51 Token: {
+Line 52 Token: STATIC
+Line 52 Token: CHAR
+Line 52 Token: ID Value: tottington
+Line 52 Token: :
+Line 52 Token: CHARCONST Value: 'x'  Input: 'x'
+Line 52 Token: ;
+Line 53 Token: CHAR
+Line 53 Token: ID Value: Wensleydale
+Line 53 Token: [
+Line 53 Token: NUMCONST Value: 17  Input: 17
+Line 53 Token: ]
+Line 53 Token: :
+Line 53 Token: STRINGCONST Value of length 10: "cheeeeeese"  Input: "cheeeeeese"
+Line 53 Token: ;
+Line 54 Token: CHAR
+Line 54 Token: ID Value: c
+Line 54 Token: ;
+Line 55 Token: INT
+Line 55 Token: ID Value: i
+Line 55 Token: ;
+Line 57 Token: ID Value: tottington
+Line 57 Token: =
+Line 57 Token: ID Value: Feathers
+Line 57 Token: ;
+Line 58 Token: ID Value: McGraw
+Line 58 Token: =
+Line 58 Token: ID Value: Feathers
+Line 58 Token: ;
+Line 59 Token: ID Value: Wensleydale
+Line 59 Token: =
+Line 59 Token: ID Value: McGraw
+Line 59 Token: ;
+Line 60 Token: ID Value: Wensleydale
+Line 60 Token: [
+Line 60 Token: *
+Line 60 Token: ID Value: McGraw
+Line 60 Token: ]
+Line 60 Token: =
+Line 60 Token: CHARCONST Value: '*'  Input: '*'
+Line 60 Token: ;
+Line 61 Token: ID Value: McGraw
+Line 61 Token: =
+Line 61 Token: STRINGCONST Value of length 26: "A Matter of Loaf and Death"  Input: "A Matter of Loaf and Death"
+Line 61 Token: ;
+Line 63 Token: {
+Line 63 Token: CHAR
+Line 63 Token: ID Value: c
+Line 63 Token: ;
+Line 64 Token: INT
+Line 64 Token: ID Value: i
+Line 64 Token: ;
+Line 65 Token: FOREACH
+Line 65 Token: (
+Line 65 Token: ID Value: c
+Line 65 Token: IN
+Line 65 Token: ID Value: McGraw
+Line 65 Token: )
+Line 65 Token: IF
+Line 65 Token: (
+Line 65 Token: ID Value: c
+Line 65 Token: EQ
+Line 65 Token: CHARCONST Value: 'f'  Input: 'f'
+Line 65 Token: )
+Line 65 Token: RETURN
+Line 65 Token: BOOLCONST Value: 1  Input: true
+Line 65 Token: ;
+Line 66 Token: FOREACH
+Line 66 Token: (
+Line 66 Token: ID Value: i
+Line 66 Token: IN
+Line 66 Token: *
+Line 66 Token: ID Value: McGraw
+Line 66 Token: )
+Line 66 Token: IF
+Line 66 Token: (
+Line 66 Token: ID Value: McGraw
+Line 66 Token: [
+Line 66 Token: ID Value: i
+Line 66 Token: ]
+Line 66 Token: EQ
+Line 66 Token: CHARCONST Value: 'f'  Input: 'f'
+Line 66 Token: )
+Line 66 Token: RETURN
+Line 66 Token: BOOLCONST Value: 1  Input: true
+Line 66 Token: ;
+Line 67 Token: }
+Line 68 Token: }
+Line 70 Token: INT
+Line 70 Token: ID Value: Wendolene
+Line 70 Token: (
+Line 70 Token: INT
+Line 70 Token: ID Value: wool
+Line 70 Token: ;
+Line 70 Token: BOOL
+Line 70 Token: ID Value: shaun
+Line 70 Token: ;
+Line 70 Token: INT
+Line 70 Token: ID Value: yarn
+Line 70 Token: [
+Line 70 Token: ]
+Line 70 Token: ;
+Line 70 Token: BOOL
+Line 70 Token: ID Value: preston
+Line 70 Token: [
+Line 70 Token: ]
+Line 70 Token: )
+Line 71 Token: {
+Line 72 Token: INT
+Line 72 Token: ID Value: void
+Line 72 Token: ;
+Line 73 Token: RETURN
+Line 73 Token: ID Value: wool
+Line 73 Token: +
+Line 73 Token: ID Value: yarn
+Line 73 Token: [
+Line 73 Token: NUMCONST Value: 0  Input: 0
+Line 73 Token: ]
+Line 73 Token: +
+Line 73 Token: *
+Line 73 Token: ID Value: yarn
+Line 73 Token: +
+Line 73 Token: ID Value: yarn
+Line 73 Token: [
+Line 73 Token: NUMCONST Value: 7  Input: 7
+Line 73 Token: *
+Line 73 Token: ID Value: wool
+Line 73 Token: ]
+Line 73 Token: ;
+Line 74 Token: }
+Line 77 Token: BOOL
+Line 77 Token: ID Value: ramsBottom
+Line 77 Token: (
+Line 77 Token: )
+Line 78 Token: {
+Line 79 Token: INT
+Line 79 Token: ID Value: chicken
+Line 79 Token: [
+Line 79 Token: NUMCONST Value: 2  Input: 2
+Line 79 Token: ]
+Line 79 Token: ;
+Line 80 Token: BOOL
+Line 80 Token: ID Value: run
+Line 80 Token: [
+Line 80 Token: NUMCONST Value: 3  Input: 3
+Line 80 Token: ]
+Line 80 Token: ;
+Line 81 Token: INT
+Line 81 Token: ID Value: wallace
+Line 81 Token: [
+Line 81 Token: NUMCONST Value: 2  Input: 2
+Line 81 Token: ]
+Line 81 Token: ,
+Line 81 Token: ID Value: gromit
+Line 81 Token: [
+Line 81 Token: NUMCONST Value: 3  Input: 3
+Line 81 Token: ]
+Line 81 Token: ;
+Line 83 Token: NUMCONST Value: 42  Input: 42
+Line 83 Token: *
+Line 83 Token: ID Value: Wendolene
+Line 83 Token: (
+Line 83 Token: NUMCONST Value: 1  Input: 1
+Line 83 Token: +
+Line 83 Token: NUMCONST Value: 2  Input: 2
+Line 83 Token: +
+Line 83 Token: NUMCONST Value: 3  Input: 3
+Line 83 Token: ,
+Line 83 Token: !
+Line 83 Token: BOOLCONST Value: 1  Input: true
+Line 83 Token: |
+Line 83 Token: BOOLCONST Value: 1  Input: true
+Line 83 Token: &
+Line 83 Token: BOOLCONST Value: 0  Input: false
+Line 83 Token: ,
+Line 83 Token: ID Value: chicken
+Line 83 Token: ,
+Line 83 Token: ID Value: run
+Line 83 Token: )
+Line 83 Token: ;
+Line 84 Token: ID Value: run
+Line 84 Token: [
+Line 84 Token: *
+Line 84 Token: ID Value: run
+Line 84 Token: -
+Line 84 Token: NUMCONST Value: 1  Input: 1
+Line 84 Token: ]
+Line 84 Token: ;
+Line 86 Token: RETURN
+Line 86 Token: !
+Line 86 Token: ID Value: wallace
+Line 86 Token: [
+Line 86 Token: NUMCONST Value: 1  Input: 1
+Line 86 Token: ]
+Line 86 Token: GRTEQ
+Line 86 Token: -
+Line 86 Token: ID Value: gromit
+Line 86 Token: [
+Line 86 Token: NUMCONST Value: 2  Input: 2
+Line 86 Token: ]
+Line 86 Token: *
+Line 86 Token: NUMCONST Value: 3  Input: 3
+Line 86 Token: ;
+Line 87 Token: }
+Line 89 Token: INT
+Line 89 Token: ID Value: cheese
+Line 89 Token: (
+Line 89 Token: INT
+Line 89 Token: ID Value: x
+Line 89 Token: ,
+Line 89 Token: ID Value: y
+Line 89 Token: )
+Line 89 Token: WHILE
+Line 89 Token: (
+Line 89 Token: ID Value: x
+Line 89 Token: >
+Line 89 Token: NUMCONST Value: 0  Input: 0
+Line 89 Token: )
+Line 89 Token: IF
+Line 89 Token: (
+Line 89 Token: ID Value: y
+Line 89 Token: >
+Line 89 Token: NUMCONST Value: 3  Input: 3
+Line 89 Token: )
+Line 89 Token: ID Value: x
+Line 89 Token: DEC
+Line 89 Token: ;
+Line 89 Token: ELSE
+Line 89 Token: RETURN
+Line 89 Token: ID Value: x
+Line 89 Token: *
+Line 89 Token: ID Value: x
+Line 89 Token: %
+Line 89 Token: ID Value: y
+Line 89 Token: ;
+Line 91 Token: INT
+Line 91 Token: ID Value: Wensleydale
+Line 91 Token: (
+Line 91 Token: INT
+Line 91 Token: ID Value: x
+Line 91 Token: ;
+Line 91 Token: INT
+Line 91 Token: ID Value: y
+Line 91 Token: )
+Line 91 Token: RETURN
+Line 91 Token: ID Value: cheese
+Line 91 Token: (
+Line 91 Token: ID Value: x
+Line 91 Token: ,
+Line 91 Token: ID Value: gromit
+Line 91 Token: )
+Line 91 Token: ;
+Line 93 Token: INT
+Line 93 Token: ID Value: main
+Line 93 Token: (
+Line 93 Token: )
+Line 94 Token: {
+Line 95 Token: INT
+Line 95 Token: ID Value: wool
+Line 95 Token: ,
+Line 95 Token: ID Value: yarn
+Line 95 Token: [
+Line 95 Token: NUMCONST Value: 113  Input: 113
+Line 95 Token: ]
+Line 95 Token: ;
+Line 96 Token: BOOL
+Line 96 Token: ID Value: shaun
+Line 96 Token: ,
+Line 96 Token: ID Value: preston
+Line 96 Token: [
+Line 96 Token: NUMCONST Value: 22  Input: 22
+Line 96 Token: ]
+Line 96 Token: ;
+Line 98 Token: ID Value: wallace
+Line 98 Token: (
+Line 98 Token: ID Value: cheese
+Line 98 Token: (
+Line 98 Token: NUMCONST Value: 62  Input: 62
+Line 98 Token: ,
+Line 98 Token: -
+Line 98 Token: NUMCONST Value: 311  Input: 311
+Line 98 Token: )
+Line 98 Token: ,
+Line 98 Token: ID Value: gromit
+Line 98 Token: )
+Line 98 Token: ;
+Line 99 Token: RETURN
+Line 99 Token: ID Value: Wendolene
+Line 99 Token: (
+Line 99 Token: *
+Line 99 Token: ID Value: preston
+Line 99 Token: *
+Line 99 Token: *
+Line 99 Token: ID Value: yarn
+Line 99 Token: ,
+Line 99 Token: ID Value: shaun
+Line 99 Token: ,
+Line 99 Token: ID Value: yarn
+Line 99 Token: ,
+Line 99 Token: ID Value: preston
+Line 99 Token: )
+Line 99 Token: ;
+Line 100 Token: }
+Line 102 Token: BOOL
+Line 102 Token: ID Value: aBigLongVariableName6
+Line 102 Token: ;
+Line 103 Token: INT
+Line 103 Token: ID Value: odd
+Line 103 Token: ,
+Line 103 Token: ID Value: separation
+Line 103 Token: ,
+Line 103 Token: ID Value: of
+Line 103 Token: ,
+Line 104 Token: ID Value: stuff
+Line 104 Token: ;
+Line 106 Token: CHAR
+Line 106 Token: ID Value: ant
+Line 106 Token: [
+Line 106 Token: NUMCONST Value: 10  Input: 10
+Line 106 Token: ]
+Line 106 Token: :
+Line 106 Token: STRINGCONST Value of length 2: ""'"  Input: "\"'"
+Line 106 Token: ;
+Line 107 Token: CHAR
+Line 107 Token: ID Value: bat
+Line 107 Token: :
+Line 107 Token: STRINGCONST Value of length 1: "'"  Input: "\'"
+Line 107 Token: ;
+Line 108 Token: CHAR
+Line 108 Token: ID Value: cat
+Line 108 Token: [
+Line 108 Token: NUMCONST Value: 10  Input: 10
+Line 108 Token: ]
+Line 108 Token: :
+Line 108 Token: STRINGCONST Value of length 4: "t
+"  Input: "\t\n\0\\"
+Line 108 Token: ;
+Line 109 Token: CHAR
+Line 109 Token: ID Value: dog
+Line 109 Token: :
+Line 109 Token: CHARCONST Value: 't'  Input: '\t'
+Line 109 Token: ;

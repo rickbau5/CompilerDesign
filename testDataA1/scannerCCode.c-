@@ -1,0 +1,169 @@
+/* closures for bison
+
+   copyright (c) 1984, 1989, 2000, 2001, 2002, 2004, 2005 free
+   software foundation, inc.
+
+   this file is part of bison, the gnu compiler compiler.
+
+   you should have received a copy of the gnu general public license
+   along with bison; see the file copying.  if not, write to the free
+   software foundation, inc., 51 franklin street, fifth floor, boston, ma
+   02110-1301, usa.  */
+
+#include <config.h>
+#include "system.h"
+
+#include <bitset.h>
+#include <bitsetv-print.h>
+#include <bitsetv.h>
+#include <quotearg.h>
+
+#include "closure.h"
+#include "derives.h"
+#include "getargs.h"
+#include "gram.h"
+#include "reader.h"
+#include "symtab.h"
+
+/* nitemset is the size of the array itemset.  */
+item_number *itemset;
+size_t nritemset;
+
+static bitset ruleset;
+
+/* internal data.  see comments before set_fderives and set_firsts.  */
+static bitsetv fderives = null;
+static bitsetv firsts = null;
+
+/* retrieve the fderives/firsts sets of the nonterminals numbered var.  */
+#define fderives(var)   fderives[(var) - ntokens]
+#define   firsts(var)   firsts[(var) - ntokens]
+
+/*-----------------.
+| debugging code.  |
+`-----------------*/
+
+static void
+print_closure (char const *title, item_number *array, size_t size)
+{
+  size_t i;
+  fprintf (stderr, "closure: %s\n", title);
+  for (i = 0; i < size; ++i)
+    {
+      item_number *rp;
+      fprintf (stderr, "  %2d: .", array[i]);
+      for (rp = &ritem[array[i]]; *rp >= 0; ++rp)
+	fprintf (stderr, " %s", symbols[*rp]->tag);
+      fprintf (stderr, "  (rule %d)\n", -*rp - 1);
+    }
+  fputs ("\n\n", stderr);
+}
+
+
+static void
+print_firsts (void)
+{
+  symbol_number i, j;
+
+  fprintf (stderr, "firsts\n");
+  for (i = ntokens; i < nsyms; i++)
+    {
+      bitset_iterator iter;
+      fprintf (stderr, "\t%s firsts\n", symbols[i]->tag);
+      bitset_for_each (iter, firsts (i), j, 0)
+	{
+	  fprintf (stderr, "\t\t%s\n",
+		   symbols[j + ntokens]->tag);
+	}
+    }
+  fprintf (stderr, "\n\n");
+}
+
+
+static void
+print_fderives (void)
+{
+  int i;
+  rule_number r;
+
+  fprintf (stderr, "fderives\n");
+  for (i = ntokens; i < nsyms; i++)
+    {
+      bitset_iterator iter;
+      fprintf (stderr, "\t%s derives\n", symbols[i]->tag);
+      bitset_for_each (iter, fderives (i), r, 0)
+	{
+	  fprintf (stderr, "\t\t%3d ", r);
+	  rule_rhs_print (&rules[r], stderr);
+	}
+    }
+  fprintf (stderr, "\n\n");
+}
+
+/*------------------------------------------------------------------.
+| set firsts to be an nvars array of nvars bitsets indicating which |
+| items can represent the beginning of the input corresponding to   |
+| which other items.                                                |
+|                                                                   |
+| for example, if some rule expands symbol 5 into the sequence of   |
+| symbols 8 3 20, the symbol 8 can be the beginning of the data for |
+| symbol 5, so the bit [8 - ntokens] in first[5 - ntokens] (= first |
+| (5)) is set.                                                      |
+`------------------------------------------------------------------*/
+
+static void
+set_firsts (void)
+{
+  symbol_number i, j;
+
+  firsts = bitsetv_create (nvars, nvars, bitset_fixed);
+
+  for (i = ntokens; i < nsyms; i++)
+    for (j = 0; derives[i - ntokens][j]; ++j)
+      {
+	item_number sym = derives[i - ntokens][j]->rhs[0];
+	if (isvar (sym))
+	  bitset_set (firsts (i), sym - ntokens);
+      }
+
+  if (trace_flag & trace_sets)
+    bitsetv_matrix_dump (stderr, "rtc: firsts input", firsts);
+  bitsetv_reflexive_transitive_closure (firsts);
+  if (trace_flag & trace_sets)
+    bitsetv_matrix_dump (stderr, "rtc: firsts output", firsts);
+
+  if (trace_flag & trace_sets)
+    print_firsts ();
+}
+
+/*-------------------------------------------------------------------.
+| set fderives to an nvars by nrules matrix of bits indicating which |
+| rules can help derive the beginning of the data for each           |
+| nonterminal.                                                       |
+|                                                                    |
+| for example, if symbol 5 can be derived as the sequence of symbols |
+| 8 3 20, and one of the rules for deriving symbol 8 is rule 4, then |
+| the [5 - ntokens, 4] bit in fderives is set.                       |
+`-------------------------------------------------------------------*/
+
+static void
+set_fderives (void)
+{
+  symbol_number i, j;
+  rule_number k;
+
+  fderives = bitsetv_create (nvars, nrules, bitset_fixed);
+
+  set_firsts ();
+
+  for (i = ntokens; i < nsyms; ++i)
+    for (j = ntokens; j < nsyms; ++j)
+      if (bitset_test (firsts (i), j - ntokens))
+	for (k = 0; derives[j - ntokens][k]; ++k)
+	  bitset_set (fderives (i), derives[j - ntokens][k]->number);
+
+  if (trace_flag & trace_sets)
+    print_fderives ();
+
+  bitsetv_free (firsts);
+}
