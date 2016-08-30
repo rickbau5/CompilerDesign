@@ -5,7 +5,10 @@ W [ \t]
 N \n
 
 %{
+
 #include <iostream>
+#include "scanType.h"
+
 using namespace std;
 
 #define YY_DECL extern "C" int yylex()
@@ -22,7 +25,7 @@ int linenum = 1;
 {W}                 ;
 {N}                 { ++linenum; }
 
-{L}{I}+             { cout << linenum << ": Found an identifier: " << yytext << endl; }
+{L}{I}*             { yylval.sval = strdup(yytext); return ID; }
 {D}+                { cout << linenum << ": Found a NUMCONST: " << yytext << endl; }
 '(\\.|[^\\'])*'     { cout << linenum << ": Found a CHARCONST: " << yytext << endl; }
 
@@ -35,18 +38,3 @@ int linenum = 1;
 <MULTICOMMENT>[^\n] ;
 <MULTICOMMENT>{N}   { ++linenum; }
 
-%%
-
-int main (int argc, char** argv) {
-    if (argc > 1) {
-        FILE* f = fopen(argv[1], "r");
-        if (!f) {
-            cout << "Couldn't open the input file: " << argv[1] << endl;
-            return -1;
-        }
-        yyin = f;
-    }
-    yylex();
-
-    return 0;
-}
