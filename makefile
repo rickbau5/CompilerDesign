@@ -1,16 +1,19 @@
+BIN=c-
+TOKS=scanType.h
+
 all: compile
 
 clean:
-	- rm lex.yy.c c- c-.tab.c scanType.h
+	- rm lex.yy.c c- $(BIN).tab.c $(TOKS) $(BIN).output 
 
 flex:
-	flex c-.l
+	flex $(BIN).l
 
 bison:
-	bison --defines=scanType.h c-.y
+	bison -v -t --defines=$(TOKS) $(BIN).y
 
 compile: clean flex bison
-	g++ c-.tab.c lex.yy.c -ll -o c-
+	g++ $(BIN).tab.c lex.yy.c -ll -o c-
 
 test:
-	./c- test.c-
+	./$(BIN) test.c-

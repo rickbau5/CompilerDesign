@@ -4,6 +4,8 @@ I [a-zA-Z0-9]
 W [ \t]
 N \n
 
+C (\\.|[^\\'\n])
+
 %{
 
 #include <iostream>
@@ -26,8 +28,8 @@ int linenum = 1;
 {N}                 { ++linenum; }
 
 {L}{I}*             { yylval.sval = strdup(yytext); return ID; }
-{D}+                { cout << linenum << ": Found a NUMCONST: " << yytext << endl; }
-'(\\.|[^\\'])*'     { cout << linenum << ": Found a CHARCONST: " << yytext << endl; }
+{D}+                { yylval.ival = atoi(yytext); return NUMCONST; }
+L?'"\\"?{C}'        { yylval.sval = strdup(yytext); return CHARCONST; }
 
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;
@@ -38,3 +40,4 @@ int linenum = 1;
 <MULTICOMMENT>[^\n] ;
 <MULTICOMMENT>{N}   { ++linenum; }
 
+.                   { return INVALID; } 

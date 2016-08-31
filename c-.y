@@ -11,9 +11,18 @@ void yyerror(const char *s);
 const char* prefix();
 
 extern "C" FILE *yyin;
+extern "C" char* yytext;
 
 extern int linenum;
 
+typedef struct {
+    char* input;
+    char  output;
+} charbox;
+
+charbox transChar(char*);
+
+// Use TokenData *tokenData; below in union
 %}
 
 %union {
@@ -25,6 +34,8 @@ extern int linenum;
 
 %token ENDL
 %token WHITESPACE
+
+%token INVALID
 
 %token <sval> ID
 %token <ival> NUMCONST
@@ -45,7 +56,20 @@ line:
     | WHITESPACES
     ;
 TOKEN:
-     ID { printf("%s: ID Value: %s\n", prefix(), $1);  }
+     ID             { printf("%s ID Value: %s\n", prefix(), $1);  }
+     | NUMCONST     { printf("%s NUMCONST Value: %d  Input: %s\n", prefix(), $1, yytext); }
+     | CHARCONST    { 
+        charbox box = transChar($1);
+        printf("%s CHARCONST Value: '%c'  Input: %s\n", prefix(), box.output, box.input); 
+     }
+     | INVALID {
+        yyerrok;
+        string msg = "Invalid or misplaced input character: \"";
+        msg += yytext;
+        msg += "\"";
+        yyerror(msg.c_str());
+     }
+     ;
 WHITESPACES:
            | WHITESPACE
            | ENDL
@@ -73,10 +97,35 @@ int main (int argc, char** argv) {
 const char* prefix() {
     string message = "Line ";
     message += to_string(linenum);
-    message += " Token: ";
+    message += " Token:";
     return message.c_str();
 }
 
 void yyerror(const char *s) {
    printf("ERROR(%d): %s\n", linenum, s); 
+}
+
+charbox transChar(char *charString) {
+    int length = strlen(charString) - 2;
+    
+    char theChar;
+
+    if (length == 1) {
+        theChar = charString[1];
+    } else {
+        switch (charString[2]) {
+        case 'n':
+            theChar = '\n';
+            break;
+        case '0':
+            theChar = '\0';
+            break;
+        default:
+            theChar = charString[2];
+            break;
+        }
+    }
+    
+    charbox box = { charString, theChar };
+    return box; 
 }

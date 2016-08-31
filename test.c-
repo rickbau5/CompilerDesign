@@ -1,13 +1,12 @@
-ThisIsAnId
-soIsThis
-0
-1234
-1
-0004
-'hey'
-'' // this is ignored
-' '
+CharConstTests
+'x'
+'\x'
+'"'
 '\''
-ThisHasA /* 
-peekaboo 
-*/ HiddenThing
+'\"'
+'\n'
+'\0'
+'\\'
+'dogs'
+''
+'\'
