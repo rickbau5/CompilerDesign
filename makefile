@@ -1,5 +1,6 @@
 BIN=c-
 TOKS=scanType.h
+TOK=tokenData.c
 
 all: compile
 
@@ -9,11 +10,11 @@ clean:
 flex:
 	flex $(BIN).l
 
-bison:
+bison: $(TOK)
 	bison -v -t --defines=$(TOKS) $(BIN).y
 
 compile: clean flex bison
-	g++ $(BIN).tab.c lex.yy.c -ll -o c-
+	g++ $(BIN).tab.c $(TOK) lex.yy.c -ll -o c-
 
 test:
 	./$(BIN) test.c-

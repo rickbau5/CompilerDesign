@@ -9,6 +9,7 @@ C (\\.|[^\\'\n])
 %{
 
 #include <iostream>
+#include "tokenData.h"
 #include "scanType.h"
 
 using namespace std;
@@ -27,9 +28,9 @@ int linenum = 1;
 {W}                 ;
 {N}                 { ++linenum; }
 
-{L}{I}*             { yylval.sval = strdup(yytext); return ID; }
-{D}+                { yylval.ival = atoi(yytext); return NUMCONST; }
-L?'"\\"?{C}'        { yylval.sval = strdup(yytext); return CHARCONST; }
+{L}{I}*             { yylval.tokenData = new TokenData(new Id(yytext)); return ID; }
+{D}+                { yylval.tokenData = new TokenData(new Num(yytext)); return NUMCONST; }
+L?'"\\"?{C}'        { yylval.tokenData = new TokenData(new CharConst(yytext)); return CHARCONST; }
 
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;

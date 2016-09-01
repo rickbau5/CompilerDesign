@@ -1,6 +1,7 @@
 %{
 
 #include <iostream>
+#include "tokenData.h"
 
 using namespace std;
 
@@ -15,21 +16,10 @@ extern "C" char* yytext;
 
 extern int linenum;
 
-typedef struct {
-    char* input;
-    char  output;
-} charbox;
-
-charbox transChar(char*);
-
-// Use TokenData *tokenData; below in union
 %}
 
 %union {
-    int ival;
-    bool bval;
-    char *sval;
-    char cval;
+    TokenData *tokenData;
 }
 
 %token ENDL
@@ -37,10 +27,10 @@ charbox transChar(char*);
 
 %token INVALID
 
-%token <sval> ID
-%token <ival> NUMCONST
-%token <bval> BOOLCONST
-%token <sval> CHARCONST
+%token <tokenData> ID
+%token <tokenData> NUMCONST
+%token <tokenData> BOOLCONST
+%token <tokenData> CHARCONST
 
 %%
 
@@ -56,11 +46,17 @@ line:
     | WHITESPACES
     ;
 TOKEN:
-     ID             { printf("%s ID Value: %s\n", prefix(), $1);  }
-     | NUMCONST     { printf("%s NUMCONST Value: %d  Input: %s\n", prefix(), $1, yytext); }
+     ID             { 
+        Id* id = (Id*)($1->getContainer());
+        printf("%s ID Value: %s\n", prefix(), id->value); 
+     }
+     | NUMCONST     { 
+        Num* num = (Num*)($1->getContainer());
+        printf("%s NUMCONST Value: %d  Input: %s\n", prefix(), num->value, num->input);
+     }
      | CHARCONST    { 
-        charbox box = transChar($1);
-        printf("%s CHARCONST Value: '%c'  Input: %s\n", prefix(), box.output, box.input); 
+        CharConst* charConst = (CharConst*)($1->getContainer());
+        printf("%s CHARCONST Value: '%c'  Input: %s\n", prefix(), charConst->value, charConst->input); 
      }
      | INVALID {
         yyerrok;
@@ -105,27 +101,3 @@ void yyerror(const char *s) {
    printf("ERROR(%d): %s\n", linenum, s); 
 }
 
-charbox transChar(char *charString) {
-    int length = strlen(charString) - 2;
-    
-    char theChar;
-
-    if (length == 1) {
-        theChar = charString[1];
-    } else {
-        switch (charString[2]) {
-        case 'n':
-            theChar = '\n';
-            break;
-        case '0':
-            theChar = '\0';
-            break;
-        default:
-            theChar = charString[2];
-            break;
-        }
-    }
-    
-    charbox box = { charString, theChar };
-    return box; 
-}
