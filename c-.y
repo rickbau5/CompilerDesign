@@ -47,15 +47,15 @@ line:
     ;
 TOKEN:
      ID             { 
-        Id* id = (Id*)($1->getContainer());
+        Id* id = (Id*)$1;
         printf("%s ID Value: %s\n", prefix(), id->value); 
      }
      | NUMCONST     { 
-        Num* num = (Num*)($1->getContainer());
+        Num* num = (Num*)$1;
         printf("%s NUMCONST Value: %d  Input: %s\n", prefix(), num->value, num->input);
      }
      | CHARCONST    { 
-        CharConst* charConst = (CharConst*)($1->getContainer());
+        CharConst* charConst = (CharConst*)$1;
         printf("%s CHARCONST Value: '%c'  Input: %s\n", prefix(), charConst->value, charConst->input); 
      }
      | INVALID {

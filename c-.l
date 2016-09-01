@@ -28,9 +28,9 @@ int linenum = 1;
 {W}                 ;
 {N}                 { ++linenum; }
 
-{L}{I}*             { yylval.tokenData = new TokenData(new Id(yytext)); return ID; }
-{D}+                { yylval.tokenData = new TokenData(new Num(yytext)); return NUMCONST; }
-L?'"\\"?{C}'        { yylval.tokenData = new TokenData(new CharConst(yytext)); return CHARCONST; }
+{L}{I}*             { yylval.tokenData = new Id(yytext); return ID; }
+{D}+                { yylval.tokenData = new Num(yytext); return NUMCONST; }
+L?'"\\"?{C}'        { yylval.tokenData = new CharConst(yytext); return CHARCONST; }
 
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;
