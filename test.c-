@@ -15,3 +15,23 @@ CharConstTests
 1
 0
 
+true false        // whitespace
+true	false     // tab
+
+bool
+break
+char
+else
+foreach
+if
+in
+int
+record
+string
+return
+static
+while
+false
+true
+trueAsTheSkyIsBlue
+truefalse

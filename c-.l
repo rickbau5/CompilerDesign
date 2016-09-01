@@ -25,6 +25,23 @@ int linenum = 1;
 
 %%
 
+"bool"              { printf("Keyword: %s\n", yytext); }
+"int"               { printf("Keyword: %s\n", yytext); }
+"record"            { printf("Keyword: %s\n", yytext); }
+
+"break"             { printf("Keyword: %s\n", yytext); }
+"char"              { printf("Keyword: %s\n", yytext); }
+"else"              { printf("Keyword: %s\n", yytext); }
+"foreach"           { printf("Keyword: %s\n", yytext); }
+"if"                { printf("Keyword: %s\n", yytext); }
+"in"                { printf("Keyword: %s\n", yytext); }
+"return"            { printf("Keyword: %s\n", yytext); }
+"static"            { printf("Keyword: %s\n", yytext); }
+"while"             { printf("Keyword: %s\n", yytext); }
+
+"true"              { printf("Keyword: %s\n", yytext); }
+"false"             { printf("Keyword: %s\n", yytext); }
+
 {W}                 ;
 {N}                 { ++linenum; }
 
