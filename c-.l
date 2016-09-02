@@ -9,14 +9,17 @@ C (\\.|[^\\'\n])
 %{
 
 #include <iostream>
-#include "tokenData.h"
 #include "scanType.h"
+#include "c-.tab.h"
 
 using namespace std;
 
 #define YY_DECL extern "C" int yylex()
 
-int linenum = 1;
+int lineno = 1;
+
+int setTokenData(int);
+char formatCharConst(char*);
 
 %}
 
@@ -25,37 +28,81 @@ int linenum = 1;
 
 %%
 
-"bool"              { printf("Keyword: %s\n", yytext); }
-"int"               { printf("Keyword: %s\n", yytext); }
-"record"            { printf("Keyword: %s\n", yytext); }
-
-"break"             { printf("Keyword: %s\n", yytext); }
-"char"              { printf("Keyword: %s\n", yytext); }
-"else"              { printf("Keyword: %s\n", yytext); }
-"foreach"           { printf("Keyword: %s\n", yytext); }
-"if"                { printf("Keyword: %s\n", yytext); }
-"in"                { printf("Keyword: %s\n", yytext); }
-"return"            { printf("Keyword: %s\n", yytext); }
-"static"            { printf("Keyword: %s\n", yytext); }
-"while"             { printf("Keyword: %s\n", yytext); }
-
-"true"              { printf("Keyword: %s\n", yytext); }
-"false"             { printf("Keyword: %s\n", yytext); }
+"true"|"false"      { return setTokenData(BOOLCONST); }
 
 {W}                 ;
-{N}                 { ++linenum; }
+{N}                 { ++lineno; }
 
-{L}{I}*             { yylval.tokenData = new Id(yytext); return ID; }
-{D}+                { yylval.tokenData = new Num(yytext); return NUMCONST; }
-L?'"\\"?{C}'        { yylval.tokenData = new CharConst(yytext); return CHARCONST; }
+{L}{I}*             { return setTokenData(ID); }
+{D}+                { return setTokenData(NUMCONST); }
+
+L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
 
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;
-<COMMENT>{N}        { ++linenum; BEGIN(INITIAL); }
+<COMMENT>{N}        { ++lineno; BEGIN(INITIAL); }
 
 "/*"                BEGIN(MULTICOMMENT);
 <MULTICOMMENT>"*/"  BEGIN(INITIAL);
 <MULTICOMMENT>[^\n] ;
-<MULTICOMMENT>{N}   { ++linenum; }
+<MULTICOMMENT>{N}   { ++lineno; }
 
 .                   { return INVALID; } 
+
+%%
+
+int setTokenData(int tokenClass) {
+    yylval.tokenData = new TokenData;
+    yylval.tokenData->tokenClass = tokenClass;
+    yylval.tokenData->lineno = lineno;
+    yylval.tokenData->tokenString = strdup(yytext);
+
+    switch (tokenClass) {
+    case BOOLCONST: 
+        if (strcmp("true", yytext) == 0) {
+            yylval.tokenData->bval = true;
+        } else {
+            yylval.tokenData->bval = false;
+        }
+
+        break;
+    case ID:
+        ;
+        break;
+    case NUMCONST:
+        yylval.tokenData->ival = atoi(yylval.tokenData->tokenString);
+        break;
+    case CHARCONST:
+        yylval.tokenData->cval = formatCharConst(yylval.tokenData->tokenString);
+        break;
+    default:
+        ;
+        break;
+    }
+
+    return tokenClass;
+}
+
+char formatCharConst(char *charString) {
+    int length = strlen(charString) - 2;
+    
+    char theChar;
+
+    if (length == 1) {
+        theChar = charString[1];
+    } else {
+        switch (charString[2]) {
+        case 'n':
+            theChar = '\n';
+            break;
+        case '0':
+            theChar = '\0';
+            break;
+        default:
+            theChar = charString[2];
+            break;
+        }
+    }
+    
+    return theChar; 
+}

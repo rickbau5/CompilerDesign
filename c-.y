@@ -1,7 +1,7 @@
 %{
 
 #include <iostream>
-#include "tokenData.h"
+#include "scanType.h"
 
 using namespace std;
 
@@ -14,23 +14,23 @@ const char* prefix();
 extern "C" FILE *yyin;
 extern "C" char* yytext;
 
-extern int linenum;
+extern int lineno;
 
 %}
-
-%union {
-    TokenData *tokenData;
-}
 
 %token ENDL
 %token WHITESPACE
 
 %token INVALID
 
-%token <tokenData> ID
-%token <tokenData> NUMCONST
 %token <tokenData> BOOLCONST
+%token <tokenData> ID
 %token <tokenData> CHARCONST
+%token <tokenData> NUMCONST
+
+%union {
+    TokenData *tokenData;
+}
 
 %%
 
@@ -46,19 +46,19 @@ line:
     | WHITESPACES
     ;
 TOKEN:
-     ID             { 
-        Id* id = (Id*)$1;
-        printf("%s ID Value: %s\n", prefix(), id->value); 
+     ID {
+        printf("%s ID Value: %s\n", prefix(), $1->tokenString);
      }
-     | NUMCONST     { 
-        Num* num = (Num*)$1;
-        printf("%s NUMCONST Value: %d  Input: %s\n", prefix(), num->value, num->input);
+     | NUMCONST {
+        printf("%s NUMCONST Value: %d  Input: %s\n", prefix(), $1->ival, $1->tokenString);
      }
-     | CHARCONST    { 
-        CharConst* charConst = (CharConst*)$1;
-        printf("%s CHARCONST Value: '%c'  Input: %s\n", prefix(), charConst->value, charConst->input); 
+     | CHARCONST {
+        printf("%s CHARCONST Value: '%c'  Input: %s\n", prefix(), $1->cval, $1->tokenString);
      }
-     | INVALID {
+     | BOOLCONST { 
+        printf("%s BOOLCONST Value: %d  Input: %s\n", prefix(), $1->bval, $1->tokenString);
+     }
+     | INVALID  {
         yyerrok;
         string msg = "Invalid or misplaced input character: \"";
         msg += yytext;
@@ -92,12 +92,12 @@ int main (int argc, char** argv) {
 
 const char* prefix() {
     string message = "Line ";
-    message += to_string(linenum);
+    message += to_string(lineno);
     message += " Token:";
     return message.c_str();
 }
 
 void yyerror(const char *s) {
-   printf("ERROR(%d): %s\n", linenum, s); 
+   printf("ERROR(%d): %s\n", lineno, s); 
 }
 
