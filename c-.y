@@ -28,6 +28,12 @@ extern int lineno;
 %token <tokenData> CHARCONST
 %token <tokenData> NUMCONST
 
+%token <tokenData> RELOP
+%token LESSEQ
+%token NOTEQ
+%token GRTEQ
+%token EQ
+
 %union {
     TokenData *tokenData;
 }
@@ -57,6 +63,9 @@ TOKEN:
      }
      | BOOLCONST { 
         printf("%s BOOLCONST Value: %d  Input: %s\n", prefix(), $1->bval, $1->tokenString);
+     }
+     | RELOP {
+        printf("%s %s\n", prefix(), $1->relopString); 
      }
      | INVALID  {
         yyerrok;

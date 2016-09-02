@@ -30,6 +30,11 @@ char formatCharConst(char*);
 
 "true"|"false"      { return setTokenData(BOOLCONST); }
 
+"<="                { return setTokenData(LESSEQ); }
+"!="                { return setTokenData(NOTEQ);  }
+">="                { return setTokenData(GRTEQ);  }
+"=="                { return setTokenData(EQ);     }
+
 {W}                 ;
 {N}                 { ++lineno; }
 
@@ -41,11 +46,6 @@ L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;
 <COMMENT>{N}        { ++lineno; BEGIN(INITIAL); }
-
-"/*"                BEGIN(MULTICOMMENT);
-<MULTICOMMENT>"*/"  BEGIN(INITIAL);
-<MULTICOMMENT>[^\n] ;
-<MULTICOMMENT>{N}   { ++lineno; }
 
 .                   { return INVALID; } 
 
@@ -64,10 +64,8 @@ int setTokenData(int tokenClass) {
         } else {
             yylval.tokenData->bval = false;
         }
-
         break;
     case ID:
-        ;
         break;
     case NUMCONST:
         yylval.tokenData->ival = atoi(yylval.tokenData->tokenString);
@@ -75,12 +73,32 @@ int setTokenData(int tokenClass) {
     case CHARCONST:
         yylval.tokenData->cval = formatCharConst(yylval.tokenData->tokenString);
         break;
+    case LESSEQ:
+        yylval.tokenData->relopval = LESSEQ;
+        yylval.tokenData->tokenClass = RELOP;
+        yylval.tokenData->relopString = "LESSEQ";
+        break;
+    case GRTEQ:
+        yylval.tokenData->relopval = GRTEQ;
+        yylval.tokenData->tokenClass = RELOP;
+        yylval.tokenData->relopString = "GRTEQ";
+        break;
+    case NOTEQ:
+        yylval.tokenData->relopval = NOTEQ;
+        yylval.tokenData->tokenClass = RELOP;
+        yylval.tokenData->relopString = "NOTEQ";
+        break;
+    case EQ:
+        yylval.tokenData->relopval = EQ;
+        yylval.tokenData->tokenClass = RELOP;
+        yylval.tokenData->relopString = "EQ";
+        break;
     default:
         ;
         break;
     }
 
-    return tokenClass;
+    return yylval.tokenData->tokenClass;
 }
 
 char formatCharConst(char *charString) {
