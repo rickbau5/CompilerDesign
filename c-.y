@@ -23,6 +23,8 @@ extern int lineno;
 
 %token INVALID
 
+%token <tokenData> TOK
+
 %token <tokenData> BOOLCONST
 %token <tokenData> ID
 %token <tokenData> CHARCONST
@@ -33,6 +35,32 @@ extern int lineno;
 %token NOTEQ
 %token GRTEQ
 %token EQ
+%token LESS
+%token GRTR
+
+%token <tokenData> AND
+%token <tokenData> NOT
+%token <tokenData> OR
+
+%token <tokenData> ASS
+%token <tokenData> ADDASS
+%token <tokenData> SUBASS
+%token <tokenData> MULASS
+%token <tokenData> DIVASS
+
+%token <tokenData> INC
+%token <tokenData> DEC
+%token <tokenData> BOOL
+%token <tokenData> BREAK
+%token <tokenData> CHAR
+%token <tokenData> ELSE
+%token <tokenData> IF
+%token <tokenData> IN
+%token <tokenData> INT
+%token <tokenData> RECORD
+%token <tokenData> RETURN
+%token <tokenData> STATIC
+%token <tokenData> WHILE
 
 %union {
     TokenData *tokenData;
@@ -66,6 +94,18 @@ TOKEN:
      }
      | RELOP {
         printf("%s %s\n", prefix(), $1->relopString); 
+     }
+     | AND {
+        printf("%s AND\n", prefix());
+     }
+     | NOT {
+        printf("%s NOT\n", prefix());
+     }
+     | OR {
+        printf("%s OR\n", prefix());
+     }
+     | TOK {
+        printf("%s %s\n", prefix(), $1->tokenStringRep);
      }
      | INVALID  {
         yyerrok;

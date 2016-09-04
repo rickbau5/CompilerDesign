@@ -4,6 +4,9 @@ I [a-zA-Z0-9]
 W [ \t]
 N \n
 
+O [\*\-\?\+\-\/\%]
+P [,:;\{\}\(\)\[\]]
+
 C (\\.|[^\\'\n])
 
 %{
@@ -35,13 +38,45 @@ char formatCharConst(char*);
 ">="                { return setTokenData(GRTEQ);  }
 "=="                { return setTokenData(EQ);     }
 
+">"                 { return setTokenData(GRTR); }
+"<"                 { return setTokenData(LESS); }
+
+"="                 { return setTokenData(ASS);    }
+"+="                { return setTokenData(ADDASS); }
+"-="                { return setTokenData(SUBASS); }
+"*="                { return setTokenData(MULASS); }
+"/="                { return setTokenData(DIVASS); }
+
+"++"                { return setTokenData(INC); }
+"--"                { return setTokenData(DEC); }
+
+"and"               { return setTokenData(AND); }
+"not"               { return setTokenData(NOT); }
+"or"                { return setTokenData(OR);  }
+
+"."                 { return setTokenData(TOK); }
+
+"bool"              { return setTokenData(BOOL);   }
+"break"             { return setTokenData(BREAK);  }
+"char"              { return setTokenData(CHAR);   }
+"else"              { return setTokenData(ELSE);   }
+"if"                { return setTokenData(IF);     }
+"in"                { return setTokenData(IN);     }
+"int"               { return setTokenData(INT);    }
+"record"            { return setTokenData(RECORD); }
+"return"            { return setTokenData(RETURN); }
+"static"            { return setTokenData(STATIC); }
+"while"             { return setTokenData(WHILE);  }
+
 {W}                 ;
 {N}                 { ++lineno; }
 
 {L}{I}*             { return setTokenData(ID); }
 {D}+                { return setTokenData(NUMCONST); }
-
 L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
+
+{O}                 { return setTokenData(TOK); }
+{P}                 { return setTokenData(TOK); }
 
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;
@@ -56,6 +91,7 @@ int setTokenData(int tokenClass) {
     yylval.tokenData->tokenClass = tokenClass;
     yylval.tokenData->lineno = lineno;
     yylval.tokenData->tokenString = strdup(yytext);
+    yylval.tokenData->tokenStringRep = strdup(yytext);
 
     switch (tokenClass) {
     case BOOLCONST: 
@@ -92,6 +128,87 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->relopval = EQ;
         yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = "EQ";
+        break;
+    case LESS:
+        yylval.tokenData->relopval = LESS;
+        yylval.tokenData->tokenClass = RELOP;
+        yylval.tokenData->relopString = "<";
+        break;
+    case GRTR:
+        yylval.tokenData->relopval = GRTR;
+        yylval.tokenData->tokenClass = RELOP;
+        yylval.tokenData->relopString = ">";
+        break;
+    case ASS:
+        yylval.tokenData->tokenClass = TOK;
+        break;
+    case ADDASS:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "ADDASS";
+        break;
+    case SUBASS:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "SUBASS";
+        break;
+    case MULASS:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "MULASS";
+        break;
+    case DIVASS:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "DIVASS";
+        break;
+    case INC:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "INC";
+        break;
+    case DEC:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "DEC";
+        break;
+    case BOOL:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "BOOL";
+        break;
+    case BREAK:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "BREAK";
+        break;
+    case CHAR:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "CHAR";
+        break;
+    case ELSE:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "ELSE";
+        break;
+    case IF:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "IF";
+        break;
+    case IN:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "IN";
+        break;
+    case INT:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "INT";
+        break;
+    case RECORD:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "RECORD";
+        break;
+    case RETURN:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "RETURN";
+        break;
+    case STATIC:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "STATIC";
+        break;
+    case WHILE:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "WHILE";
         break;
     default:
         ;
