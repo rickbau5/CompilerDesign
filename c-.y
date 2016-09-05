@@ -1,6 +1,7 @@
 %{
 
 #include <iostream>
+#include <string>
 #include "scanType.h"
 
 using namespace std;
@@ -140,10 +141,9 @@ int main (int argc, char** argv) {
 }
 
 const char* prefix() {
-    string message = "Line ";
-    message += to_string(lineno);
-    message += " Token:";
-    return message.c_str();
+    static char message[64];
+    sprintf(message, "Line %d Token:", lineno);
+    return message;
 }
 
 void yyerror(const char *s) {
