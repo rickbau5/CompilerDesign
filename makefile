@@ -69,6 +69,6 @@ submit: clean tmp
 	cat makefile | sed 's/$(OSXLIB)/$(NIXLIB)/g' > $(TMP)/makefile 
 	cd tmp && $(TAR) $(SUBT) $(BIN).l $(BIN).y makefile $(TOK).h
 	curl -F "student=$(ME)" -F "assignment=$(ASS)" -F "submittedfile=@$(FILE)" $(SUBURL) > $(TMP)/$(SUBRESULT) 
-	echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."
 	$(EMAIL)
 	open $(TMP)/$(SUBRESULT)
+	echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."

@@ -1,7 +1,6 @@
 %{
 
 #include <iostream>
-#include <string>
 #include "scanType.h"
 
 using namespace std;
@@ -13,7 +12,7 @@ void yyerror(const char *s);
 const char* prefix();
 
 extern "C" FILE *yyin;
-extern "C" char* yytext;
+extern "C" char *yytext;
 
 extern int lineno;
 
@@ -56,7 +55,6 @@ extern int lineno;
 %token <tokenData> CHAR
 %token <tokenData> ELSE
 %token <tokenData> IF
-%token <tokenData> IN
 %token <tokenData> INT
 %token <tokenData> RECORD
 %token <tokenData> RETURN
@@ -77,7 +75,8 @@ lines:
      | line
      ;
 line:
-    TOKEN WHITESPACES
+    TOKEN
+    | TOKEN WHITESPACES
     | WHITESPACES
     ;
 TOKEN:
@@ -96,48 +95,40 @@ TOKEN:
      | RELOP {
         printf("%s %s\n", prefix(), $1->relopString); 
      }
-     | AND {
-        printf("%s AND\n", prefix());
-     }
-     | NOT {
-        printf("%s NOT\n", prefix());
-     }
-     | OR {
-        printf("%s OR\n", prefix());
-     }
      | TOK {
         printf("%s %s\n", prefix(), $1->tokenStringRep);
      }
      | INVALID  {
         yyerrok;
-        string msg = "Invalid or misplaced input character: \"";
-        msg += yytext;
-        msg += "\"";
-        yyerror(msg.c_str());
+        char message[64];
+        sprintf(message, "Invalid or misplaced input character: \"%s\"", yytext);
+        yyerror(message);
      }
      ;
 WHITESPACES:
-           | WHITESPACE
+           WHITESPACE
            | ENDL
            ;
 %%
 
-int main (int argc, char** argv) {
+int main (int argc, char **argv) {
     printf(""); // WTF
     if (argc > 1) {
         FILE* f = fopen(argv[1], "r");
         if (!f) {
             cout << "Couldn't open the input file: " << argv[1] << endl;
-            return -1;
+            return EXIT_FAILURE;
         }
         yyin = f;
+    } else {
+        yyin = stdin;
     }
     
-    do {
+    while (!feof(yyin)) {
         yyparse();
-    } while (!feof(yyin));
+    }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 const char* prefix() {

@@ -26,6 +26,8 @@ char formatCharConst(char*);
 
 %}
 
+%option noyywrap
+
 %x COMMENT
 %x MULTICOMMENT
 
@@ -61,7 +63,6 @@ char formatCharConst(char*);
 "char"              { return setTokenData(CHAR);   }
 "else"              { return setTokenData(ELSE);   }
 "if"                { return setTokenData(IF);     }
-"in"                { return setTokenData(IN);     }
 "int"               { return setTokenData(INT);    }
 "record"            { return setTokenData(RECORD); }
 "return"            { return setTokenData(RETURN); }
@@ -88,8 +89,8 @@ L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
 
 int setTokenData(int tokenClass) {
     yylval.tokenData = new TokenData;
-    yylval.tokenData->tokenClass = tokenClass;
     yylval.tokenData->lineno = lineno;
+    yylval.tokenData->tokenClass = tokenClass;
     yylval.tokenData->tokenString = strdup(yytext);
     yylval.tokenData->tokenStringRep = strdup(yytext);
 
@@ -108,6 +109,18 @@ int setTokenData(int tokenClass) {
         break;
     case CHARCONST:
         yylval.tokenData->cval = formatCharConst(yylval.tokenData->tokenString);
+        break;
+    case AND:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "AND";
+        break;
+    case OR:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "OR";
+        break;
+    case NOT:
+        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenStringRep = "NOT";
         break;
     case LESSEQ:
         yylval.tokenData->relopval = LESSEQ;
@@ -185,10 +198,6 @@ int setTokenData(int tokenClass) {
     case IF:
         yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "IF";
-        break;
-    case IN:
-        yylval.tokenData->tokenClass = TOK;
-        yylval.tokenData->tokenStringRep = "IN";
         break;
     case INT:
         yylval.tokenData->tokenClass = TOK;
