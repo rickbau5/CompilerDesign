@@ -203,7 +203,7 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "CHAR";
         break;
     case ELSE:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = ELSE;
         yylval.tokenData->tokenStringRep = "ELSE";
         break;
     case IF:

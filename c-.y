@@ -150,10 +150,25 @@ paramId:
        | ID '[' ']'
        ;
 statement:
+         matched
+         | unmatched
+         ;
+
+matched:
+       IF '(' expression ')' matched ELSE matched        { log("Got a fully matched if statement"); }
+       | otherstatements
+       ;
+unmatched:
+         IF '(' expression ')' matched                   { log("Got an if statement without an else"); }
+         | IF '(' expression ')' unmatched               { log("Got an if statement with an inner unmatched statement."); }
+         | IF '(' expression ')' matched ELSE unmatched  { log("Got an if statement with an inner matched statement but an unmatched statement within the else block."); }
+         ;
+
+otherstatements:
          expressionStmt
          | compoundStmt
-         | selectionStmt
          ;
+
 compoundStmt:
             '{' localDeclarations statementList  '}'
             ;
@@ -168,6 +183,7 @@ statementList:
 expressionStmt:
               expression ';' 
               | ';'
+              ;
 
 expression:
           mutable '=' expression
@@ -178,6 +194,7 @@ expression:
           | mutable INC
           | mutable DEC
           | simpleExpression
+          ;
 
 simpleExpression:
                 simpleExpression OR andExpression
@@ -202,6 +219,7 @@ sumExpression:
 sumop:
      '+'
      | '-'
+     ;
 term:
     term mulop unaryExpression
     | unaryExpression
@@ -210,7 +228,7 @@ mulop:
      '*'
      | '/'
      | '%'
-
+     ;
 unaryExpression:
                unaryop unaryExpression
                | factor
@@ -219,7 +237,7 @@ unaryop:
        '-'
        | '*'
        | '?'
-
+       ;
 factor:
       immutable
       | mutable

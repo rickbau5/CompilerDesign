@@ -1,13 +1,11 @@
-int thing(int argument) {
 
+
+
+int main() {
+    if (true) false; else false;
+    if (true) if (false) true; else false;
+    if (true) if (false) true; else false; else true;
 }
-otherThing() {
-
-}
-
-int try(int a; int b; char a,b,c) {
-
-} 
 
 int x, a, b,c;
 bool y;
