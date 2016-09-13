@@ -16,10 +16,11 @@ extern "C" char *yytext;
 
 extern int lineno;
 
-%}
+void log(const char *msg) {
+    printf("Line %d: %s\n", lineno, msg);
+}
 
-%token ENDL
-%token WHITESPACE
+%}
 
 %token INVALID
 
@@ -37,6 +38,10 @@ extern int lineno;
 %token EQ
 %token LESS
 %token GRTR
+
+%token <tokenData> SUMOP
+%token ADD
+%token SUB
 
 %token <tokenData> AND
 %token <tokenData> NOT
@@ -67,48 +72,191 @@ extern int lineno;
 
 %%
 
-file:
-    lines
+program:
+    declarationList
     ;
-lines:
-     lines line
-     | line
-     ;
-line:
-    TOKEN
-    | TOKEN WHITESPACES
-    | WHITESPACES
-    ;
-TOKEN:
-     ID {
-        printf("%s ID Value: %s\n", prefix(), $1->tokenString);
-     }
-     | NUMCONST {
-        printf("%s NUMCONST Value: %d  Input: %s\n", prefix(), $1->ival, $1->tokenString);
-     }
-     | CHARCONST {
-        printf("%s CHARCONST Value: '%c'  Input: %s\n", prefix(), $1->cval, $1->tokenString);
-     }
-     | BOOLCONST { 
-        printf("%s BOOLCONST Value: %d  Input: %s\n", prefix(), $1->bval, $1->tokenString);
-     }
-     | RELOP {
-        printf("%s %s\n", prefix(), $1->relopString); 
-     }
-     | TOK {
-        printf("%s %s\n", prefix(), $1->tokenStringRep);
-     }
-     | INVALID  {
-        yyerrok;
-        char message[64];
-        sprintf(message, "Invalid or misplaced input character: \"%s\"", yytext);
-        yyerror(message);
-     }
-     ;
-WHITESPACES:
-           WHITESPACE
-           | ENDL
+
+declarationList:
+               declarationList declaration
+               | declaration
+               ;
+
+declaration:
+           varDeclaration
+           | funDeclaration
+           | recDeclaration
            ;
+
+recDeclaration:
+              RECORD ID '{' localDeclarations '}'   { printf("Got a record, id %s\n", $2->tokenString); }
+              ;
+
+scopedVarDeclarations:
+                     scopedTypeSpecifier varDeclList ';'
+                     ;
+
+varDeclaration:
+              typeSpecifier varDeclList ';'
+              ;
+varDeclList:
+           varDeclList ',' varDeclInitialize   { log("Got a var declaration list"); }
+           | varDeclInitialize
+           ;
+varDeclInitialize:
+                 varDeclId
+                 | varDeclId ':' simpleExpression
+                 ;
+varDeclId:
+         ID
+         | ID '[' NUMCONST ']'
+         ;
+
+scopedTypeSpecifier:
+                   STATIC typeSpecifier
+                   | typeSpecifier
+                   ;
+
+typeSpecifier:
+             returnTypeSpecifier 
+             ;
+
+returnTypeSpecifier:
+               INT
+               | BOOL
+               | CHAR
+               ;
+
+funDeclaration:
+              typeSpecifier ID '(' params ')' statement   { printf("Got a function id %s\n", $2->tokenString); } 
+              | ID '(' params ')' statement { printf("Got function without type, id %s\n", $1->tokenString); }
+              ;
+params:
+      paramList
+      |
+      ;
+paramList:
+         paramList ';' paramTypeList
+         | paramTypeList
+         ;
+paramTypeList:
+             typeSpecifier paramIdList
+             ;
+paramIdList:
+           paramIdList ',' paramId
+           | paramId
+           ;
+paramId:
+       ID
+       | ID '[' ']'
+       ;
+statement:
+         expressionStmt
+         | compoundStmt
+         | selectionStmt
+         ;
+compoundStmt:
+            '{' localDeclarations statementList  '}'
+            ;
+localDeclarations:
+                 localDeclarations scopedVarDeclarations
+                 | 
+                 ;
+statementList:
+             statementList statement
+             |
+             ;
+expressionStmt:
+              expression ';' 
+              | ';'
+
+expression:
+          mutable '=' expression
+          | mutable ADDASS expression
+          | mutable SUBASS expression
+          | mutable MULASS expression
+          | mutable DIVASS expression
+          | mutable INC
+          | mutable DEC
+          | simpleExpression
+
+simpleExpression:
+                simpleExpression OR andExpression
+                | andExpression
+                ;
+andExpression:
+             andExpression AND unaryRelExpression
+             | unaryRelExpression
+             ;
+unaryRelExpression:
+                  NOT unaryRelExpression
+                  | relExpression
+                  ;
+relExpression:
+             sumExpression RELOP sumExpression
+             | sumExpression
+             ;
+sumExpression:
+             sumExpression sumop term
+             | term
+             ;
+sumop:
+     '+'
+     | '-'
+term:
+    term mulop unaryExpression
+    | unaryExpression
+    ;
+mulop:
+     '*'
+     | '/'
+     | '%'
+
+unaryExpression:
+               unaryop unaryExpression
+               | factor
+               ;
+unaryop:
+       '-'
+       | '*'
+       | '?'
+
+factor:
+      immutable
+      | mutable
+      ;
+mutable:
+       ID
+       | ID '[' expression ']'
+       | mutable '.' ID
+       ;
+immutable:
+         '(' expression ')'
+         | call
+         | constant
+         ;
+
+call:
+    ID '(' args ')'             { printf("function call %s\n", $1->tokenString); }
+
+args:
+    argList
+    |
+    ;
+argList:
+       argList ',' expression
+       | expression
+       ;
+constant:
+        NUMCONST
+        | CHARCONST
+        | BOOLCONST
+        | INVALID
+        {
+            yyerrok;
+            yyerror("Match error");
+        }
+        ;
+
 %%
 
 int main (int argc, char **argv) {
@@ -138,6 +286,6 @@ const char* prefix() {
 }
 
 void yyerror(const char *s) {
-   printf("ERROR(%d): %s\n", lineno, s); 
+   printf("ERROR(%d): %s: \"%s\"\n", lineno, s, yytext); 
 }
 

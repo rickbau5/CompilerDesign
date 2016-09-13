@@ -4,9 +4,6 @@ I [a-zA-Z0-9]
 W [ \t]
 N \n
 
-O [\*\-\?\+\-\/\%]
-P [,:;\{\}\(\)\[\]]
-
 C (\\.|[^\\'\n])
 
 %{
@@ -43,7 +40,6 @@ char formatCharConst(char*);
 ">"                 { return setTokenData(GRTR); }
 "<"                 { return setTokenData(LESS); }
 
-"="                 { return setTokenData(ASS);    }
 "+="                { return setTokenData(ADDASS); }
 "-="                { return setTokenData(SUBASS); }
 "*="                { return setTokenData(MULASS); }
@@ -52,11 +48,19 @@ char formatCharConst(char*);
 "++"                { return setTokenData(INC); }
 "--"                { return setTokenData(DEC); }
 
+"="                 { return '='; }
+"+"                 { return '+'; }
+"-"                 { return '-'; }
+"*"                 { return '*'; }
+"/"                 { return '/'; }
+"%"                 { return '%'; }
+"?"                 { return '?'; }
+
 "and"               { return setTokenData(AND); }
 "not"               { return setTokenData(NOT); }
 "or"                { return setTokenData(OR);  }
 
-"."                 { return setTokenData(TOK); }
+"."                 { return '.'; }
 
 "bool"              { return setTokenData(BOOL);   }
 "break"             { return setTokenData(BREAK);  }
@@ -69,15 +73,22 @@ char formatCharConst(char*);
 "static"            { return setTokenData(STATIC); }
 "while"             { return setTokenData(WHILE);  }
 
+";"                 { return ';'; }
+":"                 { return ':'; }
+","                 { return ','; }
+"("                 { return '('; }
+")"                 { return ')'; }
+"["                 { return '['; }
+"]"                 { return ']'; }
+"{"                 { return '{'; }
+"}"                 { return '}'; }
+
 {W}                 ;
 {N}                 { ++lineno; }
 
 {L}{I}*             { return setTokenData(ID); }
 {D}+                { return setTokenData(NUMCONST); }
 L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
-
-{O}                 { return setTokenData(TOK); }
-{P}                 { return setTokenData(TOK); }
 
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;
@@ -111,15 +122,15 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->cval = formatCharConst(yylval.tokenData->tokenString);
         break;
     case AND:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = AND;
         yylval.tokenData->tokenStringRep = "AND";
         break;
     case OR:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = OR;
         yylval.tokenData->tokenStringRep = "OR";
         break;
     case NOT:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = NOT;
         yylval.tokenData->tokenStringRep = "NOT";
         break;
     case LESSEQ:
@@ -180,7 +191,7 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "DEC";
         break;
     case BOOL:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = BOOL;
         yylval.tokenData->tokenStringRep = "BOOL";
         break;
     case BREAK:
@@ -188,7 +199,7 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "BREAK";
         break;
     case CHAR:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = CHAR;
         yylval.tokenData->tokenStringRep = "CHAR";
         break;
     case ELSE:
@@ -196,15 +207,15 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "ELSE";
         break;
     case IF:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = IF;
         yylval.tokenData->tokenStringRep = "IF";
         break;
     case INT:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = INT;
         yylval.tokenData->tokenStringRep = "INT";
         break;
     case RECORD:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = RECORD;
         yylval.tokenData->tokenStringRep = "RECORD";
         break;
     case RETURN:
@@ -212,7 +223,7 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "RETURN";
         break;
     case STATIC:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = STATIC;
         yylval.tokenData->tokenStringRep = "STATIC";
         break;
     case WHILE:

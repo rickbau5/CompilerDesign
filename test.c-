@@ -1,37 +1,30 @@
-CharConstTests
-'x'
-'\x'
-'"'
-'\''
-'\"'
-'\n'
-'\0'
-'\\'
-'dogs'
-''
-'\'
+int thing(int argument) {
 
-1234
-1
-0
+}
+otherThing() {
 
-true false        // whitespace
-true	false     // tab
+}
 
-bool
-break
-char
-else
-foreach
-if
-in
-int
-record
-string
-return
-static
-while
-false
-true
-trueAsTheSkyIsBlue
-truefalse
+int try(int a; int b; char a,b,c) {
+
+} 
+
+int x, a, b,c;
+bool y;
+char z;
+int x[1];
+
+int result : sup(dick, man);
+
+record hey {
+    int f;
+    int asdf[10];
+}
+
+record hasStatic {
+    static char isStatic;
+}
+record empty {}
+record alsoEmpty {
+
+}
