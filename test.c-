@@ -1,10 +1,25 @@
+int x : 1;
+test() {
 
-
+}
 
 int main() {
+    int result : sup(test);
+    int r;
     if (true) false; else false;
     if (true) if (false) true; else false;
     if (true) if (false) true; else false; else true;
+    
+    while (true) {
+        // do a thing
+    } 
+
+    if (true) while (true) false; else false;
+
+    // int r;   // can only have var declaration at beginning
+
+    // also TYPE ID : FUNC(...) syntax is unavailable here
+    r = 1;
 }
 
 int x, a, b,c;
@@ -12,17 +27,17 @@ bool y;
 char z;
 int x[1];
 
-int result : sup(dick, man);
+int result : sup(man);
 
-record hey {
+record Info {
     int f;
     int asdf[10];
 }
 
-record hasStatic {
+record HasStatic {
     static char isStatic;
 }
-record empty {}
-record alsoEmpty {
+record Empty {}
+record AlsoEmpty {
 
 }

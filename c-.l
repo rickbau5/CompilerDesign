@@ -195,7 +195,7 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "BOOL";
         break;
     case BREAK:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = BREAK;
         yylval.tokenData->tokenStringRep = "BREAK";
         break;
     case CHAR:
@@ -219,7 +219,7 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "RECORD";
         break;
     case RETURN:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = RETURN;
         yylval.tokenData->tokenStringRep = "RETURN";
         break;
     case STATIC:
@@ -227,7 +227,7 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "STATIC";
         break;
     case WHILE:
-        yylval.tokenData->tokenClass = TOK;
+        yylval.tokenData->tokenClass = WHILE;
         yylval.tokenData->tokenStringRep = "WHILE";
         break;
     default:

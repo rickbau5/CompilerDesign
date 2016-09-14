@@ -72,121 +72,127 @@ void log(const char *msg) {
 
 %%
 
-program:
-    declarationList
+program: declarationList
     ;
 
-declarationList:
-               declarationList declaration
+declarationList: declarationList declaration
                | declaration
                ;
 
-declaration:
-           varDeclaration
+declaration: varDeclaration
            | funDeclaration
            | recDeclaration
            ;
 
-recDeclaration:
-              RECORD ID '{' localDeclarations '}'   { printf("Got a record, id %s\n", $2->tokenString); }
+recDeclaration: RECORD ID '{' localDeclarations '}'   {
+                    printf("Got a record, id %s\n", $2->tokenString);
+              }
               ;
 
-scopedVarDeclarations:
-                     scopedTypeSpecifier varDeclList ';'
+scopedVarDeclarations: scopedTypeSpecifier varDeclList ';'
                      ;
 
-varDeclaration:
-              typeSpecifier varDeclList ';'
+varDeclaration: typeSpecifier varDeclList ';'
               ;
-varDeclList:
-           varDeclList ',' varDeclInitialize   { log("Got a var declaration list"); }
+
+varDeclList: varDeclList ',' varDeclInitialize   { log("Got a var declaration list"); }
            | varDeclInitialize
            ;
-varDeclInitialize:
-                 varDeclId
+varDeclInitialize: varDeclId
                  | varDeclId ':' simpleExpression
                  ;
-varDeclId:
-         ID
+varDeclId: ID
          | ID '[' NUMCONST ']'
          ;
 
-scopedTypeSpecifier:
-                   STATIC typeSpecifier
+scopedTypeSpecifier: STATIC typeSpecifier
                    | typeSpecifier
                    ;
 
-typeSpecifier:
-             returnTypeSpecifier 
+typeSpecifier: INT
+             | BOOL
+             | CHAR
              ;
 
-returnTypeSpecifier:
-               INT
-               | BOOL
-               | CHAR
-               ;
-
-funDeclaration:
-              typeSpecifier ID '(' params ')' statement   { printf("Got a function id %s\n", $2->tokenString); } 
-              | ID '(' params ')' statement { printf("Got function without type, id %s\n", $1->tokenString); }
+funDeclaration: typeSpecifier ID '(' params ')' statement { 
+                    printf("Got a function id %s\n", $2->tokenString);
+              } 
+              | ID '(' params ')' statement {
+                    printf("Got function without type, id %s\n", $1->tokenString);
+              }
               ;
-params:
-      paramList
+
+params: paramList
       |
       ;
-paramList:
-         paramList ';' paramTypeList
+
+paramList: paramList ';' paramTypeList
          | paramTypeList
          ;
-paramTypeList:
-             typeSpecifier paramIdList
+
+paramTypeList: typeSpecifier paramIdList
              ;
-paramIdList:
-           paramIdList ',' paramId
+
+paramIdList: paramIdList ',' paramId
            | paramId
            ;
-paramId:
-       ID
+
+paramId: ID
        | ID '[' ']'
        ;
-statement:
-         matched
+
+statement: matched
          | unmatched
          ;
 
-matched:
-       IF '(' expression ')' matched ELSE matched        { log("Got a fully matched if statement"); }
+matched: IF '(' simpleExpression ')' matched ELSE matched       {
+            log("Got a fully matched if statement");
+       }
+       | WHILE '(' simpleExpression ')' matched                 {
+             log("Got a while statement");
+       }
        | otherstatements
        ;
-unmatched:
-         IF '(' expression ')' matched                   { log("Got an if statement without an else"); }
-         | IF '(' expression ')' unmatched               { log("Got an if statement with an inner unmatched statement."); }
-         | IF '(' expression ')' matched ELSE unmatched  { log("Got an if statement with an inner matched statement but an unmatched statement within the else block."); }
+
+unmatched: IF '(' simpleExpression ')' matched                  {
+              log("Got an if statement without an else");
+         }
+         | IF '(' simpleExpression ')' unmatched                {
+              log("Got an if statement with an inner unmatched statement.");
+         }
+         | IF '(' simpleExpression ')' matched ELSE unmatched   { 
+              log("Got an if statement with an inner matched statement but an unmatched statement within the else block.");
+         }
          ;
 
-otherstatements:
-         expressionStmt
+otherstatements: expressionStmt
          | compoundStmt
+         | returnStmt
+         | breakStmt
          ;
 
-compoundStmt:
-            '{' localDeclarations statementList  '}'
+compoundStmt: '{' localDeclarations statementList  '}'
             ;
-localDeclarations:
-                 localDeclarations scopedVarDeclarations
+
+localDeclarations: localDeclarations scopedVarDeclarations
                  | 
                  ;
-statementList:
-             statementList statement
+
+statementList: statementList statement
              |
              ;
-expressionStmt:
-              expression ';' 
+
+expressionStmt: expression ';' 
               | ';'
               ;
 
-expression:
-          mutable '=' expression
+returnStmt: RETURN ';'                  { log("Got a simple return statement"); }
+          | RETURN expression ';'       { log("Got a return statement with an expression in it."); }
+          ;
+breakStmt: BREAK ';'
+         ;
+
+expression: mutable '=' expression        { log("Got an assignment statement"); }
           | mutable ADDASS expression
           | mutable SUBASS expression
           | mutable MULASS expression
@@ -196,76 +202,62 @@ expression:
           | simpleExpression
           ;
 
-simpleExpression:
-                simpleExpression OR andExpression
+simpleExpression: simpleExpression OR andExpression {
+                    // $$ = $1 && $3
+                }
                 | andExpression
                 ;
-andExpression:
-             andExpression AND unaryRelExpression
+
+andExpression: andExpression AND unaryRelExpression
              | unaryRelExpression
              ;
-unaryRelExpression:
-                  NOT unaryRelExpression
+unaryRelExpression: NOT unaryRelExpression
                   | relExpression
                   ;
-relExpression:
-             sumExpression RELOP sumExpression
+relExpression: sumExpression RELOP sumExpression
              | sumExpression
              ;
-sumExpression:
-             sumExpression sumop term
+sumExpression: sumExpression sumop term
              | term
              ;
-sumop:
-     '+'
+sumop: '+'
      | '-'
      ;
-term:
-    term mulop unaryExpression
+term: term mulop unaryExpression
     | unaryExpression
     ;
-mulop:
-     '*'
+mulop: '*'
      | '/'
      | '%'
      ;
-unaryExpression:
-               unaryop unaryExpression
+unaryExpression: unaryop unaryExpression
                | factor
                ;
-unaryop:
-       '-'
+unaryop: '-'
        | '*'
        | '?'
        ;
-factor:
-      immutable
+factor: immutable
       | mutable
       ;
-mutable:
-       ID
+mutable: ID
        | ID '[' expression ']'
        | mutable '.' ID
        ;
-immutable:
-         '(' expression ')'
+immutable: '(' expression ')'
          | call
          | constant
          ;
 
-call:
-    ID '(' args ')'             { printf("function call %s\n", $1->tokenString); }
+call: ID '(' args ')'             { printf("function call %s\n", $1->tokenString); }
 
-args:
-    argList
+args: argList
     |
     ;
-argList:
-       argList ',' expression
+argList: argList ',' expression
        | expression
        ;
-constant:
-        NUMCONST
+constant: NUMCONST
         | CHARCONST
         | BOOLCONST
         | INVALID
