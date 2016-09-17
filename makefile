@@ -1,9 +1,11 @@
 BIN=c-
 LIB=-ll
 
+ASSN=2
+
 TOK=scanType
-TESTD=testDataA1
-TESTF=scannerTest
+TESTD=testData/A$(ASSN)
+TESTF=init
 OUT=out
 TMP=tmp
 
@@ -17,7 +19,6 @@ TAR=tar -cvf
 UNTAR=tar -xvf
 
 ME=boss
-ASSN=1
 ASS=CS445 F16 Assignment $(ASSN)
 FILE=`pwd`/$(TMP)/$(SUBT)
 HOST=http://ec2-52-89-93-46.us-west-2.compute.amazonaws.com
@@ -37,7 +38,7 @@ bison:
 	bison -v -t -d $(BIN).y
 
 compile: clean flex bison
-	g++ $(BIN).tab.c lex.yy.c $(LIB) -o $(BIN)
+	g++ util.cpp $(BIN).tab.c lex.yy.c $(LIB) -o $(BIN)
 
 test:
 	./$(BIN) test.c-

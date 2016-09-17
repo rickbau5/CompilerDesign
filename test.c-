@@ -1,43 +1,7 @@
-int x : 1;
-test() {
+first(int x; bool y, z, x) {
 
 }
 
-int main() {
-    int result : sup(test);
-    int r;
-    if (true) false; else false;
-    if (true) if (false) true; else false;
-    if (true) if (false) true; else false; else true;
-    
-    while (true) {
-        // do a thing
-    } 
-
-    if (true) while (true) false; else false;
-
-    // int r;   // can only have var declaration at beginning
-
-    // also TYPE ID : FUNC(...) syntax is unavailable here
-    r = 1;
-}
-
-int x, a, b,c;
-bool y;
-char z;
-int x[1];
-
-int result : sup(man);
-
-record Info {
-    int f;
-    int asdf[10];
-}
-
-record HasStatic {
-    static char isStatic;
-}
-record Empty {}
-record AlsoEmpty {
+second() {
 
 }

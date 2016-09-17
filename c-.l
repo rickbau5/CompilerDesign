@@ -163,9 +163,6 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = ">";
         break;
-    case ASS:
-        yylval.tokenData->tokenClass = TOK;
-        break;
     case ADDASS:
         yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "ADDASS";
