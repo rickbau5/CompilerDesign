@@ -78,7 +78,7 @@ Node* root;
 %token <tokenData> STATIC
 %token <tokenData> WHILE
 
-%type <nodePtr> declarationList declaration varDeclaration varDeclList scopedVarDeclarations varDeclInitialize varDeclId funDeclaration recDeclaration statement matched unmatched otherstatements compoundStmt localDeclarations statementList expressionStmt expression simpleExpression andExpression unaryRelExpression relExpression sumExpression term unaryExpression factor params paramList paramTypeList paramIdList paramId constant mutable 
+%type <nodePtr> declarationList declaration varDeclaration varDeclList scopedVarDeclarations varDeclInitialize varDeclId funDeclaration recDeclaration statement matched unmatched otherstatements compoundStmt localDeclarations statementList expressionStmt expression simpleExpression andExpression unaryRelExpression relExpression sumExpression term unaryExpression factor params paramList paramTypeList paramIdList paramId typeSpecifier scopedTypeSpecifier constant mutable 
 
 %union {
     TokenData *tokenData;
@@ -131,6 +131,7 @@ varDeclInitialize: varDeclId                        {
                     
                  }
                  ;
+
 varDeclId: ID                   { $$ = newNode(nodes::Identifier, $1); }
          | ID '[' NUMCONST ']'  { 
             Node* node = newNode(nodes::Identifier, $1);
@@ -139,24 +140,26 @@ varDeclId: ID                   { $$ = newNode(nodes::Identifier, $1); }
          } 
          ;
 
-scopedTypeSpecifier: STATIC typeSpecifier
-                   | typeSpecifier
+scopedTypeSpecifier: STATIC typeSpecifier   { $2->isStatic = true; $$ = $2 }
+                   | typeSpecifier          { $$ = $1; }
                    ;
 
-typeSpecifier: INT
-             | BOOL
-             | CHAR
+typeSpecifier: INT      { $$ = newNode(nodes::Type, $1); }
+             | BOOL     { $$ = newNode(nodes::Type, $1); }
+             | CHAR     { $$ = newNode(nodes::Type, $1); }
              ;
 
 funDeclaration: typeSpecifier ID '(' params ')' statement { 
                     Node* node = newNode(nodes::Function, $2);
+                    node->returnType = $1->tokenString;
                     addChild(node, $4);
                     $$ = node;
               } 
               | ID '(' params ')' statement {
                     Node* node = newNode(nodes::Function, $1);
-                    node->tokenString = $1->tokenString;
+                    node->returnType = "void";
                     addChild(node, $3);
+                    addChild(node, $5);
                     $$ = node;
               }
               ;
@@ -172,7 +175,15 @@ paramList: paramList ';' paramTypeList      {
          | paramTypeList    { $$ = $1; }
          ;
 
-paramTypeList: typeSpecifier paramIdList    { $$ = newNode(nodes::ParamList, NULL);}
+paramTypeList: typeSpecifier paramIdList    {
+                Node* node = newNode(nodes::ParamList, NULL);
+                node->lineno = $1->lineno;
+                node->type = $1->tokenString;
+                for(Node* s = $2; s != NULL; s = s->sibling)
+                    s->type = node->type;
+                addChild(node, $2);
+                $$ = node;
+             }
              ;
 
 paramIdList: paramIdList ',' paramId        {
@@ -186,7 +197,7 @@ paramId: ID             { $$ = newNode(nodes::Parameter, $1); }
        | ID '[' ']'     { $$ = newNode(nodes::Parameter, $1); }
        ;
 
-statement: matched      { $$ = NULL; }
+statement: matched      { $$ = $1; }
          | unmatched    { $$ = NULL; }
          ;
 
@@ -198,7 +209,7 @@ matched: IF '(' simpleExpression ')' matched ELSE matched       {
             log("Got a while statement");
             $$ = NULL;
        }
-       | otherstatements    { $$ = NULL; }
+       | otherstatements    { $$ = $1; }
        ;
 
 unmatched: IF '(' simpleExpression ')' matched                  {

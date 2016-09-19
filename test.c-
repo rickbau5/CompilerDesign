@@ -1,7 +1,17 @@
 first(int x; bool y, z, x) {
-
+    char asdf;
+    x = 13;
+    {
+        int compound;
+    }
 }
 
 second() {
 
 }
+
+int add(int a, b) {
+    return a + b;
+}   
+
+bool x;
