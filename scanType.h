@@ -17,7 +17,12 @@ namespace nodes {
         Assignment,
         Compound,
         Variable,
-        Type
+        Type,
+        IfStatement,
+        WhileStatement,
+        FunctionCall,
+        Error,
+        Empty
     } NodeType;
 }
 
@@ -50,6 +55,8 @@ typedef struct treeNode {
     const char* returnType;
 
     bool isStatic;
+    bool isArray;
+    int arraySize;
 } Node;
 
 #endif

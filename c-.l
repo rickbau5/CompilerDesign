@@ -48,19 +48,19 @@ char formatCharConst(char*);
 "++"                { return setTokenData(INC); }
 "--"                { return setTokenData(DEC); }
 
-"="                 { return '='; }
-"+"                 { return '+'; }
-"-"                 { return '-'; }
-"*"                 { return '*'; }
-"/"                 { return '/'; }
-"%"                 { return '%'; }
-"?"                 { return '?'; }
+"="                 { return setTokenData(ASS); }
+"+"                 { return setTokenData(ADDOP); }
+"-"                 { return setTokenData(SUBOP); }
+"*"                 { return setTokenData(MULOP); }
+"/"                 { return setTokenData(DIVOP); }
+"%"                 { return setTokenData(MODOP); }
+"?"                 { return setTokenData(QUEOP); }
 
 "and"               { return setTokenData(AND); }
 "not"               { return setTokenData(NOT); }
 "or"                { return setTokenData(OR);  }
 
-"."                 { return '.'; }
+"."                 { return setTokenData(ACC); }
 
 "bool"              { return setTokenData(BOOL);   }
 "break"             { return setTokenData(BREAK);  }
@@ -78,10 +78,10 @@ char formatCharConst(char*);
 ","                 { return ','; }
 "("                 { return '('; }
 ")"                 { return ')'; }
-"["                 { return '['; }
-"]"                 { return ']'; }
-"{"                 { return '{'; }
-"}"                 { return '}'; }
+"["                 { return setTokenData(LBRACKET); }
+"]"                 { return setTokenData(RBRACKET); }
+"{"                 { return setTokenData(LBRACE);   }
+"}"                 { return setTokenData(RBRACE);   }
 
 {W}                 ;
 {N}                 { ++lineno; }
@@ -94,7 +94,7 @@ L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
 <COMMENT>[^\n]      ;
 <COMMENT>{N}        { ++lineno; BEGIN(INITIAL); }
 
-.                   { return INVALID; } 
+.                   { return setTokenData(INVALID); } 
 
 %%
 

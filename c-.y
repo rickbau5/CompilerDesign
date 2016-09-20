@@ -4,6 +4,9 @@
 #include "scanType.h"
 #include "util.h"
 
+#define MAX_ERRORS 256
+#define YYDEBUG 1
+
 using namespace std;
 
 extern "C" int yylex();
@@ -13,9 +16,12 @@ void yyerror(const char *s);
 const char* prefix();
 
 Node* newNode(nodes::NodeType, TokenData*);
+Node* errorNode(TokenData*);
 Node* addSibling(Node*, Node*);
 Node* addChild(Node*, Node*);
 Node* addChild(Node*, Node*, int);
+
+void printErrors();
 
 extern "C" FILE *yyin;
 extern "C" char *yytext;
@@ -27,14 +33,14 @@ void log(const char *msg) {
 }
 
 Node* root; 
-
-#define YYDEBUG 1
+Node* errors[MAX_ERRORS];
+int numErrors = 0;
 
 %}
 
 %debug
 
-%token INVALID
+%token <tokenData> INVALID
 
 %token <tokenData> TOK
 
@@ -51,9 +57,15 @@ Node* root;
 %token LESS
 %token GRTR
 
-%token <tokenData> SUMOP
-%token ADD
-%token SUB
+%type <tokenData> sumop
+%type <tokenData> mulop
+%type <tokenData> unaryop
+%token <tokenData> ADDOP
+%token <tokenData> SUBOP
+%token <tokenData> MULOP
+%token <tokenData> DIVOP
+%token <tokenData> MODOP
+%token <tokenData> QUEOP
 
 %token <tokenData> AND
 %token <tokenData> NOT
@@ -78,7 +90,13 @@ Node* root;
 %token <tokenData> STATIC
 %token <tokenData> WHILE
 
-%type <nodePtr> declarationList declaration varDeclaration varDeclList scopedVarDeclarations varDeclInitialize varDeclId funDeclaration recDeclaration statement matched unmatched otherstatements compoundStmt localDeclarations statementList expressionStmt expression simpleExpression andExpression unaryRelExpression relExpression sumExpression term unaryExpression factor params paramList paramTypeList paramIdList paramId typeSpecifier scopedTypeSpecifier constant mutable 
+%token <tokenData> LBRACE
+%token <tokenData> RBRACE
+%token <tokenData> LBRACKET
+%token <tokenData> RBRACKET
+%token <tokenData> ACC
+
+%type <nodePtr> declarationList declaration varDeclaration varDeclList scopedVarDeclarations varDeclInitialize varDeclId funDeclaration recDeclaration returnStmt breakStmt statement matched unmatched otherstatements compoundStmt localDeclarations statementList expressionStmt expression simpleExpression andExpression unaryRelExpression relExpression sumExpression term unaryExpression factor params paramList paramTypeList paramIdList paramId typeSpecifier scopedTypeSpecifier constant mutable immutable call args argList
 
 %union {
     TokenData *tokenData;
@@ -102,20 +120,30 @@ declarationList: declarationList declaration    {
 declaration: varDeclaration     { $$ = $1; }
            | funDeclaration     { $$ = $1; }
            | recDeclaration     { $$ = $1; }
-           | error ';'          { $$ = NULL; printf("error %d\n", lineno);  }
+           | error ';'          { yyerrok; yyclearin; $$ = errorNode(NULL); printf("error %d\n", lineno);  }
            ;
 
-recDeclaration: RECORD ID '{' localDeclarations '}'   {
+recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
                     printf("Got a record, id %s\n", $2->tokenString);
               }
               ;
 
 scopedVarDeclarations: scopedTypeSpecifier varDeclList ';'  {
+                        // For declarations in statements, loop through siblings and attach type and static info
+                        for (Node* decl = $2; decl != NULL; decl = decl->sibling) {
+                            decl->type = $1->tokenString;
+                            decl->isStatic = $1->tokenString;
+                        }
                         $$ = $2;
                      }
                      ;
 
-varDeclaration: typeSpecifier varDeclList ';'   { $$ = $2; }
+varDeclaration: typeSpecifier varDeclList ';'  {
+                 $2->type = $1->tokenString;
+                 for (Node *s = $2->sibling; s != NULL; s = s->sibling)
+                    s->type = $1->tokenString;
+                 $$ = $2;
+              }
               ;
 
 varDeclList: varDeclList ',' varDeclInitialize   { 
@@ -123,9 +151,9 @@ varDeclList: varDeclList ',' varDeclInitialize   {
            }
            | varDeclInitialize                   { $$ = $1; }
            ;
+
 varDeclInitialize: varDeclId                        {
-                    Node* node = newNode(nodes::Variable, NULL);
-                    $$ = node;
+                    $$ = $1;
                  }
                  | varDeclId ':' simpleExpression   {
                     
@@ -133,9 +161,10 @@ varDeclInitialize: varDeclId                        {
                  ;
 
 varDeclId: ID                   { $$ = newNode(nodes::Identifier, $1); }
-         | ID '[' NUMCONST ']'  { 
+         | ID LBRACKET NUMCONST RBRACKET { 
             Node* node = newNode(nodes::Identifier, $1);
-            addChild(node, newNode(nodes::Constant, $3));
+            node->arraySize = atoi($3->tokenString);
+            node->isArray = true;
             $$ = node;
          } 
          ;
@@ -153,19 +182,25 @@ funDeclaration: typeSpecifier ID '(' params ')' statement {
                     Node* node = newNode(nodes::Function, $2);
                     node->returnType = $1->tokenString;
                     addChild(node, $4);
+                    //addChild(node, $6);
                     $$ = node;
               } 
               | ID '(' params ')' statement {
                     Node* node = newNode(nodes::Function, $1);
                     node->returnType = "void";
-                    addChild(node, $3);
-                    addChild(node, $5);
+                    // addChild(node, $3);
+                    // addChild(node, $5);
                     $$ = node;
               }
               ;
 
-params: paramList       { $$ = $1; }
-      |                 { $$ = NULL; }
+params: paramList       {
+            int idx = -1;
+            for(Node* s = $1; s != NULL; s = s->sibling)
+                s-> siblingIndex = idx++;
+            $$ = $1;
+      }
+      |                 { $$ = newNode(nodes::Empty, NULL); }
       ;
 
 paramList: paramList ';' paramTypeList      { 
@@ -176,12 +211,11 @@ paramList: paramList ';' paramTypeList      {
          ;
 
 paramTypeList: typeSpecifier paramIdList    {
-                Node* node = newNode(nodes::ParamList, NULL);
+                Node* node = $2;
                 node->lineno = $1->lineno;
                 node->type = $1->tokenString;
                 for(Node* s = $2; s != NULL; s = s->sibling)
                     s->type = node->type;
-                addChild(node, $2);
                 $$ = node;
              }
              ;
@@ -194,49 +228,57 @@ paramIdList: paramIdList ',' paramId        {
            ;
 
 paramId: ID             { $$ = newNode(nodes::Parameter, $1); }
-       | ID '[' ']'     { $$ = newNode(nodes::Parameter, $1); }
+       | ID LBRACKET RBRACKET     { $$ = newNode(nodes::Parameter, $1); $$->isArray = true; }
        ;
 
 statement: matched      { $$ = $1; }
-         | unmatched    { $$ = NULL; }
+         | unmatched    { $$ = errorNode(NULL); }
          ;
 
 matched: IF '(' simpleExpression ')' matched ELSE matched       {
-            log("Got a fully matched if statement");
-            $$ = NULL;
+            Node* node = newNode(nodes::IfStatement, $1);
+            addChild(node, $3);
+            addChild(node, $5);
+            addChild(node, $7);
+            $$ = node;
        }
        | WHILE '(' simpleExpression ')' matched                 {
-            log("Got a while statement");
-            $$ = NULL;
+            Node* node = newNode(nodes::WhileStatement, $1);
+            printf("got a while statement.\n");
+            addChild(node, $3);
+            addChild(node, $5);
+            $$ = node;
        }
        | otherstatements    { $$ = $1; }
        ;
 
 unmatched: IF '(' simpleExpression ')' matched                  {
             log("Got an if statement without an else");
-            $$ = NULL;
+            $$ = errorNode($1);
          }
          | IF '(' simpleExpression ')' unmatched                {
             log("Got an if statement with an inner unmatched statement.");
-            $$ = NULL;
+            $$ = errorNode($1);
          }
          | IF '(' simpleExpression ')' matched ELSE unmatched   { 
             log("Got an if statement with an inner matched statement but an unmatched statement within the else block.");
-            $$ = NULL;
+            $$ = errorNode($1);
          }
          ;
 
-otherstatements: expressionStmt     { $$ = NULL; }
+otherstatements: expressionStmt     { $$ = $1; }
          | compoundStmt             { $$ = $1; }
-         | returnStmt               { $$ = NULL; }
-         | breakStmt                { $$ = NULL; }
+         | returnStmt               { $$ = $1; }
+         | breakStmt                { $$ = $1; }
          ;
 
-compoundStmt: '{' localDeclarations statementList  '}'  {
-                Node* node = newNode(nodes::Compound, NULL);
-                node->lineno = lineno; 
+compoundStmt: LBRACE localDeclarations statementList  RBRACE  {
+                Node* node = newNode(nodes::Compound, $1);
                 addChild(node, $2);
                 addChild(node, $3);
+                for(int i = 0; i < node->numChildren; i++) 
+                    if (node->children[i] == NULL) printf("Null child\n");
+                    else printf("Child %d: %s\n", i, stringifyNode(node->children[i]));
                 $$ = node;
             }
             ;
@@ -244,94 +286,128 @@ compoundStmt: '{' localDeclarations statementList  '}'  {
 localDeclarations: localDeclarations scopedVarDeclarations  {
                     $$ = addSibling($1, $2); 
                  }
-                 |  { $$ = NULL; }
+                 |  { ; }
                  ;
 
 statementList: statementList statement  {
                 $$ = addSibling($1, $2); 
              }
-             |      { $$ = NULL; }
+             |  { ; } 
              ;
 
 expressionStmt: expression ';'  { $$ = $1; } 
-              | ';'             { $$ = NULL; }  
+              | ';'             { ; }  
               ;
 
-returnStmt: RETURN ';'                  { log("Got a simple return statement"); }
-          | RETURN expression ';'       { log("Got a return statement with an expression in it."); }
-          ;
-breakStmt: BREAK ';'
+returnStmt: RETURN ';'                  { $$ = errorNode($1); log("Got a simple return statement"); }
+          | RETURN expression ';'       { $$ = errorNode($1); log("Got a return statement with an expression in it."); }
+          
+breakStmt: BREAK ';'                    { $$ = errorNode($1); } 
          ;
 
-expression: mutable '=' expression      { $$ = NULL; }
-          | mutable ADDASS expression   { $$ = NULL; } 
-          | mutable SUBASS expression   { $$ = NULL; }  
-          | mutable MULASS expression   { $$ = NULL; } 
-          | mutable DIVASS expression   { $$ = NULL; } 
-          | mutable INC                 { $$ = NULL; } 
-          | mutable DEC                 { $$ = NULL; } 
+expression: mutable ASS expression      {
+            Node* node = newNode(nodes::Assignment, $2);
+            addChild(node, $1);
+            addChild(node, $3);
+            $$ = node;
+          }
+          | mutable ADDASS expression   { $$ = errorNode($2); } 
+          | mutable SUBASS expression   { $$ = errorNode($2); }  
+          | mutable MULASS expression   { $$ = errorNode($2); } 
+          | mutable DIVASS expression   { $$ = errorNode($2); } 
+          | mutable INC                 { $$ = errorNode($2); } 
+          | mutable DEC                 { $$ = errorNode($2); } 
           | simpleExpression            { $$ = $1; }
           ;
 
-simpleExpression: simpleExpression OR andExpression { $$ = NULL; }
+simpleExpression: simpleExpression OR andExpression { $$ = errorNode($2); }
                 | andExpression                     { $$ = $1; }
                 ;
-andExpression: andExpression AND unaryRelExpression { $$ = NULL; }
+andExpression: andExpression AND unaryRelExpression { $$ = errorNode($2); }
              | unaryRelExpression                   { $$ = $1; }
              ;
-unaryRelExpression: NOT unaryRelExpression          { $$ = NULL; }
+unaryRelExpression: NOT unaryRelExpression          { $$ = errorNode($1); }
                   | relExpression                   { $$ = $1; }
                   ;
-relExpression: sumExpression RELOP sumExpression    { $$ = NULL; }
+relExpression: sumExpression RELOP sumExpression    { 
+                Node* node = newNode(nodes::Operator, $2);
+                addChild(node, $1);
+                addChild(node, $3);
+                $$ = node;
+             }
              | sumExpression                        { $$ = $1; }
              ;
-sumExpression: sumExpression sumop term     { $$ = NULL; }
+sumExpression: sumExpression sumop term     {
+                Node* node = newNode(nodes::Operator, $2);
+                addChild(node, $1);
+                addChild(node, $3);
+                $$ = node;
+             }
              | term                         { $$ = $1; }
              ;
-sumop: '+'
-     | '-'
+
+sumop: ADDOP        
+     | SUBOP
      ;
-term: term mulop unaryExpression    { $$ = NULL; }
+
+term: term mulop unaryExpression    {
+        Node* node = newNode(nodes::Operator, $2);
+        addChild(node, $1);
+        addChild(node, $3);
+        $$ = node;
+    }
     | unaryExpression               { $$ = $1; }
     ;
-mulop: '*'
-     | '/'
-     | '%'
+
+mulop: MULOP
+     | DIVOP
+     | MODOP
      ;
-unaryExpression: unaryop unaryExpression    { $$ = NULL; }
+
+unaryExpression: unaryop unaryExpression    { $$ = errorNode($1); }
                | factor                     { $$ = $1; }
                ;
-unaryop: '-'
-       | '*'
-       | '?'
+unaryop: SUBOP
+       | MULOP
+       | QUEOP
        ;
-factor: immutable   { $$ = NULL; }
+factor: immutable   { $$ = $1; }
       | mutable     { $$ = $1; }
+      | error       { $$ = errorNode(NULL); }
       ;
 mutable: ID                     { 
             $$ = newNode(nodes::Identifier, $1);
        }
-       | ID '[' expression ']'  {
-           //  Node* t = newNode(nodes::Identifier, $1);
-           //  addChild(t, expression);
+       | ID LBRACKET expression RBRACKET  {
+            Node* t = newNode(nodes::Operator, $2);
+            addChild(t, newNode(nodes::Identifier, $1));
+            addChild(t, $3);
+            $$ = t;
        }
-       | mutable '.' ID
+       | mutable ACC ID         { 
+            Node* node = newNode(nodes::Operator, $2);
+            addChild(node, $1);
+            addChild(node, newNode(nodes::Identifier, $3));
+            $$ = node;
+       }
        ;
-immutable: '(' expression ')'
-         | call
-         | constant
+immutable: '(' expression ')'   { $$ = $2; }
+         | call                 { $$ = $1; }
+         | constant             { $$ = $1; }
          ;
 
-call: ID '(' args ')' 
-
-args: argList
-    |
+call: ID '(' args ')'           { $$ = newNode(nodes::FunctionCall, $1); addChild($$, $3); } 
     ;
-argList: argList ',' expression
-       | expression
+
+args: argList                   { $$ = $1; }
+    |                           { $$ = newNode(nodes::Empty, NULL); }
+    ;
+argList: argList ',' expression { $$ = addSibling($1, $3); }
+       | expression             { $$ = $1; }
        ;
 constant: NUMCONST  {
-            $$ = newNode(nodes::Constant, $1);
+            Node* n = newNode(nodes::Constant, $1);
+            $$ = n; 
         }
         | CHARCONST {
             $$ = newNode(nodes::Constant, $1);
@@ -342,37 +418,49 @@ constant: NUMCONST  {
         | INVALID
         {
             yyerrok;
+            yyclearin;
             yyerror("Match error");
+            $$ = errorNode($1);
         }
         ;
 
 %%
 
+bool override = true;
+
 int main (int argc, char **argv) {
     printf(""); // WTF
-    if (argc > 1) {
-        FILE* f = fopen(argv[1], "r");
-        if (!f) {
-            cout << "Couldn't open the input file: " << argv[1] << endl;
-            return EXIT_FAILURE;
-        }
+    if (override) {
+        FILE* f = fopen("test.c-", "r");
         yyin = f;
     } else {
-        yyin = stdin;
+        if (argc > 1) {
+            FILE* f = fopen(argv[1], "r");
+            if (!f) {
+                cout << "Couldn't open the input file: " << argv[1] << endl;
+                return EXIT_FAILURE;
+            }
+            yyin = f;
+        } else {
+            yyin = stdin;
+        }
     }
     
     while (!feof(yyin)) {
         yyparse();
     }
 
-    printf("There are %d nodes.\n", countNodes(root));
-
     prettyPrintTree(root);
+
+    printf("Number of errors: %d\n", numErrors);
+    if (numErrors > 0) 
+        printErrors();
 
     return EXIT_SUCCESS;
 }
 
 Node* newNode(nodes::NodeType type, TokenData* token) {
+    printf("creating node %s\n", toString(type)); 
     Node* node = new Node;
     node->nodeType = type;
     if (token != NULL) {
@@ -380,7 +468,8 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     }
     node->type = toString(type);
 
-    node->sibling = NULL;
+    node->sibling = nullptr;
+    node->siblingIndex = -1;
     
     for (int i = 0; i < MAX_CHILDREN; i++)
         node->children[i] = NULL;
@@ -391,17 +480,36 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     return node;
 }
 
+Node* errorNode(TokenData* data) {
+    Node* err = newNode(nodes::Error, data);
+    errors[numErrors++] = err;    
+    return err;
+}
+
+void printErrors() {
+    int i = 0;
+    for (Node* err = errors[i]; err != NULL; err = errors[++i]) {
+       printf("Error %d of %d at line %d: %s\n", i + 1, numErrors, err->lineno, err->tokenString); 
+    }
+}
+
 Node* addSibling(Node* existing, Node* addition) {
+    printf("Add sibling call: %s -> %s\n", stringifyNode(existing), stringifyNode(addition));
     if (existing != NULL) {
+        if (addition == NULL) return existing;
         Node* t = existing;
+        if (t->sibling == NULL) printf("yeah\n");
         while (t->sibling != NULL) {
+            printf("Looking at node %s\n", stringifyNode(t));
             t = t->sibling;
         }
-        printf("Attaching %s to %s\n", t->type, addition->type);
         addition->siblingIndex = t->siblingIndex + 1;
         t->sibling = addition;
+        printf("Attched sibling %s->%s\n", t->tokenString, addition->tokenString);
         return existing;
     } else {
+        if (addition == NULL)
+            return existing;
         return addition;
     }
 }
@@ -413,11 +521,17 @@ Node* addChild(Node* parent, Node* child) {
 
 Node* addChild(Node* parent, Node* child, int idx) {
     if (idx < parent->numChildren) {
-        fprintf(stderr, "Index is below current child count for [%s]->[%s], index %d, but count is %d!\n", parent->type, child->type, idx, parent->numChildren);
+        printf("Index is below current child count for [%s]->[%s], index %d, but count is %d!\n", parent->type, child->type, idx, parent->numChildren);
     } else if (idx >= MAX_CHILDREN) {
-        fprintf(stderr, "Trying to add child [%s] to [%s] but %d exceeds max children %d!\n", parent->type, child->type, idx, MAX_CHILDREN);
+        printf("Trying to add child [%s] to [%s] but %d exceeds max children %d!\n", parent->type, child->type, idx, MAX_CHILDREN);
     } else {
         parent->children[idx] = child;
+        if (child == NULL) 
+            printf("null child for parent %s\n", stringifyNode(parent));
+        printf("Child: %s\n", toString(child->nodeType));
+        const char* str = stringifyNode(child);
+        printf("Child: %s\n", str);
+        printf("Added child %s to %s at index %d\n", str, stringifyNode(parent), idx);
         parent->numChildren++;
     }
 

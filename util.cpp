@@ -3,6 +3,8 @@
 #include <stdio.h>
 
 void prettyPrintTree(Node* root) {
+    if (root == NULL)
+        return;
     printf("%s [line: %d]\n", stringifyNode(root), root->lineno);
     _prettyPrint(root, 0);
     puts("");
@@ -10,19 +12,24 @@ void prettyPrintTree(Node* root) {
 
 void _prettyPrint(Node* node, int level) {
     if (node != NULL) {
+        int i = 0;
         Node* c;
-        for (int i = 0; i < node->numChildren; i++) {
+        for(int i = 0; i < node->numChildren; i++) {
             if ((c = node->children[i]) != NULL) {
-                _printLevel(level); 
-                printf("|  Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
+                // if (c->nodeType != nodes::Empty) {
+                    _printLevel(level); 
+                    printf("!  Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
+                // }
                 _prettyPrint(c, level + 1);
-            }
+            } 
         }
         if (node->sibling != NULL) {
-            _printLevel(level);
             Node* sib = node->sibling;
-            printf("|Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
-            _prettyPrint(node->sibling, level);
+            // if (sib->nodeType != nodes::Empty) {
+                _printLevel(level);
+                printf("Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+            //}
+            _prettyPrint(sib, level);
         }
     } else {
         ;
@@ -30,7 +37,11 @@ void _prettyPrint(Node* node, int level) {
 }
 
 const char* stringifyNode(Node* node) {
-    static char nodeString[60]; 
+    if (node == NULL || &(node->nodeType) == NULL) 
+        return "NULL NODE";
+    static char nodeString[256]; 
+    for(int i = 0; i < 60; i++)
+        nodeString[i] = '\0';
     switch(node->nodeType) {
         case nodes::Function:
            sprintf(nodeString, "%s %s returns type %s", toString(node->nodeType), node->tokenString, node->returnType);
@@ -39,17 +50,51 @@ const char* stringifyNode(Node* node) {
            sprintf(nodeString, "%s of type %s length %d", toString(node->nodeType), node->type, node->numChildren);
            return nodeString;
         case nodes::Parameter:
-           sprintf(nodeString, "%s %s of type %s", toString(node->nodeType), node->tokenString, node->type);
+           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->type);
            return nodeString;
-        default: return "Undefined";
-            
+        case nodes::Variable:
+           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->type);
+           return nodeString;
+        case nodes::Compound:
+           return "Compound";
+        case nodes::IfStatement:
+           return "If";
+        case nodes::WhileStatement:
+           return "While";
+        case nodes::Identifier:
+           sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
+           return nodeString;
+        case nodes::Operator:
+           sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
+           return nodeString;
+        case nodes::Assignment:
+           sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
+           return nodeString;
+        case nodes::Constant:
+           sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
+           return nodeString;
+        case nodes::FunctionCall:
+           sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
+           return nodeString;
+
+
+        case nodes::Error:
+           sprintf(nodeString, "%s: \'%s\'", toString(node->nodeType), node->tokenString);
+           return nodeString;
+        case nodes::Empty:
+           sprintf(nodeString, "%s", toString(node->nodeType));
+           return nodeString;
+        default: 
+           sprintf(nodeString, "Undefined: %s at %d", toString(node->nodeType), node->lineno);
+           return nodeString;
     }
-    return "";
+    printf("Oddity: %s\n", toString(node->nodeType));
+    return "nil";
 }
 
 void _printLevel(int level) {
     for (int i = 0; i < level; i++) {
-        printf("|  ");
+        printf("!  ");
     }
 }
 
@@ -86,5 +131,11 @@ const char* toString(nodes::NodeType typ) {
         case nodes::Compound: return "Compound" ; break;
         case nodes::Variable: return "Var" ; break;
         case nodes::Type: return "type" ; break;
+        case nodes::IfStatement: return "If" ; break;
+        case nodes::WhileStatement: return "While" ; break;
+        case nodes::FunctionCall: return "Call" ; break;
+
+        case nodes::Error: return "Error" ; break;
+        case nodes::Empty: return "Empty" ; break;
     }
 }

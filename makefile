@@ -40,15 +40,22 @@ bison:
 compile: clean flex bison
 	g++ util.cpp $(BIN).tab.c lex.yy.c $(LIB) -o $(BIN)
 
+debug: clean flex bison
+	g++ -g util.cpp $(BIN).tab.c lex.yy.c $(LIB) -o $(BIN)
+
 test:
 	./$(BIN) test.c-
 
 outdir:
 	- mkdir out
 
-comp: compile outdir
+comp-old: compile outdir
 	./$(BIN) $(TESTD)/$(TESTF).c- > $(OUT)/$(TESTF).out
 	$(DIFF) $(OUT)/$(TESTF).out $(TESTD)/$(TESTF).out 
+
+comp: compile outdir
+	./$(BIN) test.c- > $(OUT)/test.out
+	$(DIFF) $(OUT)/test.out $(TESTD)/small.out 
 
 tar:
 	$(TAR) $(SUBT) $(BIN).l $(BIN).y makefile $(TOK).h

@@ -3,6 +3,11 @@
 
 #include "scanType.h"
 
+typedef struct errorContainer {
+    const char* tokenString;
+    int lineno;
+} ErrorContainer;
+
 const char* toString(nodes::NodeType);
 void _printLevel(int);
 void _prettyPrint(Node*, int);
