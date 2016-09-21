@@ -1,7 +1,10 @@
 #ifndef UTILH
 #define UTILH
 
+#include <iostream>
 #include "scanType.h"
+
+extern FILE* out;
 
 typedef struct errorContainer {
     const char* tokenString;

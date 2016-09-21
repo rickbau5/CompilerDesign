@@ -5,7 +5,7 @@
 void prettyPrintTree(Node* root) {
     if (root == NULL)
         return;
-    printf("%s [line: %d]\n", stringifyNode(root), root->lineno);
+    fprintf(out, "%s [line: %d]\n", stringifyNode(root), root->lineno);
     _prettyPrint(root, 0);
     puts("");
 }
@@ -18,7 +18,7 @@ void _prettyPrint(Node* node, int level) {
             if ((c = node->children[i]) != NULL) {
                 // if (c->nodeType != nodes::Empty) {
                     _printLevel(level); 
-                    printf("!  Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
+                    fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
                 // }
                 _prettyPrint(c, level + 1);
             } 
@@ -27,7 +27,7 @@ void _prettyPrint(Node* node, int level) {
             Node* sib = node->sibling;
             // if (sib->nodeType != nodes::Empty) {
                 _printLevel(level);
-                printf("Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+                fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
             //}
             _prettyPrint(sib, level);
         }
@@ -39,8 +39,9 @@ void _prettyPrint(Node* node, int level) {
 const char* stringifyNode(Node* node) {
     if (node == NULL || &(node->nodeType) == NULL) 
         return "NULL NODE";
+
     static char nodeString[256]; 
-    for(int i = 0; i < 60; i++)
+    for(int i = 0; i < 256; i++)
         nodeString[i] = '\0';
     switch(node->nodeType) {
         case nodes::Function:
@@ -76,7 +77,10 @@ const char* stringifyNode(Node* node) {
         case nodes::FunctionCall:
            sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
            return nodeString;
-
+        case nodes::Return:
+           return "Return";
+        case nodes::ReturnStatement:
+           return "Return";
 
         case nodes::Error:
            sprintf(nodeString, "%s: \'%s\'", toString(node->nodeType), node->tokenString);
@@ -94,7 +98,7 @@ const char* stringifyNode(Node* node) {
 
 void _printLevel(int level) {
     for (int i = 0; i < level; i++) {
-        printf("!  ");
+        fprintf(out, "!   ");
     }
 }
 
@@ -134,8 +138,12 @@ const char* toString(nodes::NodeType typ) {
         case nodes::IfStatement: return "If" ; break;
         case nodes::WhileStatement: return "While" ; break;
         case nodes::FunctionCall: return "Call" ; break;
+        case nodes::Return: return "Return" ; break;
+        case nodes::ReturnStatement: return "Return" ; break;
 
         case nodes::Error: return "Error" ; break;
         case nodes::Empty: return "Empty" ; break;
+        default:
+            return "Unhandled type";
     }
 }

@@ -1,0 +1,6 @@
+int arr[100], b;
+char c;
+char dog:'\t';
+bool d;
+func1() {}
+int func2() {}

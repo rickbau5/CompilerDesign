@@ -1,6 +1,8 @@
 BIN=c-
 LIB=-ll
 
+
+
 ASSN=2
 
 TOK=scanType
@@ -29,7 +31,7 @@ EMAIL=open https://outlook.office.com/owa/?realm=vandals.uidaho.edu&path=/mail/i
 all: compile
 
 clean:
-	- rm -rf lex.yy.c $(BIN) $(BIN).tab.c $(BIN).tab.h $(BIN).output $(SUBT) $(TMP)
+	- rm -rf lex.yy.c $(BIN) $(BIN).tab.c $(BIN).tab.h $(BIN).output $(SUBT) $(TMP) testing/*.out
 
 flex:
 	flex $(BIN).l
@@ -38,13 +40,18 @@ bison:
 	bison -v -t -d $(BIN).y
 
 compile: clean flex bison
-	g++ util.cpp $(BIN).tab.c lex.yy.c $(LIB) -o $(BIN)
+	g++ util.cpp $(BIN).tab.c lex.yy.c main.cpp $(LIB) -o $(BIN)
 
 debug: clean flex bison
-	g++ -g util.cpp $(BIN).tab.c lex.yy.c $(LIB) -o $(BIN)
+	g++ -g util.cpp $(BIN).tab.c lex.yy.c main.cpp $(LIB) -o $(BIN)
 
 test:
 	./$(BIN) test.c-
+
+tests: clean flex bison
+	g++ -g util.cpp tests.cpp c-.tab.c lex.yy.c -o tests 
+	./tests
+	./compare.sh
 
 outdir:
 	- mkdir out

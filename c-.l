@@ -73,7 +73,7 @@ char formatCharConst(char*);
 "static"            { return setTokenData(STATIC); }
 "while"             { return setTokenData(WHILE);  }
 
-";"                 { return ';'; }
+";"                 { return setTokenData(SEMI); }
 ":"                 { return ':'; }
 ","                 { return ','; }
 "("                 { return '('; }

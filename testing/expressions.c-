@@ -1,0 +1,17 @@
+int main() {
+    // Basic
+    assign = ment;
+    arr[1] = ay;
+    ohne[2];
+    structure.member = something;
+    struct.x;
+    struct.y.z = 'y';
+
+    // Relative
+    a == b;
+    b != c;
+    d <= e;
+    f >= g;
+    h < i;
+    j > k;
+}

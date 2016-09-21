@@ -1,3 +1,20 @@
-int max()
-{
+int b[100];
+int zed: 2;
+test(int a[]) {
+    int x;
+    bool y;
+    
+    char z;
+
+    while(x == y) dog = cat; 
+
+    arr[1];
+    structure.member = something;
+    
+    test();
+    test(z, y, x);
+    z = x;
+    y = a;
+    return;
+    return a;
 }

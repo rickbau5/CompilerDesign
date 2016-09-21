@@ -1,0 +1,28 @@
+simple() {}
+int functions() {}
+
+single(int x, y, z) {}
+double(int x, y, z; bool a, b, c) {}
+
+acrossLines(int a;
+            bool c;
+            char a,
+            d, e, f)
+{
+}
+
+noDeclarations() {
+    x = z;
+}
+
+noStatements() {
+    int x;
+    bool z;
+}
+
+calling() {
+    test();
+    testTwo(x, y, z);
+}
+
+arrays(int a[], b; bool c, d[]; char e[]) {}

@@ -20,6 +20,8 @@ namespace nodes {
         Type,
         IfStatement,
         WhileStatement,
+        Return,
+        ReturnStatement,
         FunctionCall,
         Error,
         Empty
@@ -38,6 +40,8 @@ struct TokenData {
 
     int relopval;
     const char* relopString; 
+
+    bool isStatic;
 };
 
 typedef struct treeNode {
@@ -57,6 +61,7 @@ typedef struct treeNode {
     bool isStatic;
     bool isArray;
     int arraySize;
+    int nodeId;
 } Node;
 
 #endif
