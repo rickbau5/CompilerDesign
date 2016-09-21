@@ -7,6 +7,26 @@ int main() {
     struct.x;
     struct.y.z = 'y';
 
+    // Mul ops
+    four = 4 * 1;
+    five = 15 / 3;
+    one = 3 % 2;
+
+    // Add ops
+    two = 5 - 3;
+    four = two + 2;
+
+    // Unary ops
+    neg = -1;
+    mul = *6;
+    question = ?4;
+    multi = -*?yes;
+
+    // Word ops
+    ord = true or false;
+    anded = false and (true or false);
+    notted = not true;
+
     // Relative
     a == b;
     b != c;

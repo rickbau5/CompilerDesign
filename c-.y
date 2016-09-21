@@ -274,8 +274,8 @@ otherstatements: expressionStmt     { $$ = $1; }
 
 compoundStmt: LBRACE localDeclarations statementList  RBRACE  {
                 Node* node = newNode(nodes::Compound, $1);
-                addChild(node, $2);
-                addChild(node, $3);
+                addChild(node, $2, 0);
+                addChild(node, $3, 1);
                 $$ = node;
             }
             ;
@@ -321,13 +321,27 @@ expression: mutable ASS expression      {
           | simpleExpression            { $$ = $1; }
           ;
 
-simpleExpression: simpleExpression OR andExpression { /*$$ = errorNode($2);*/$$ = NULL; }
+simpleExpression: simpleExpression OR andExpression {
+                    Node* node = newNode(nodes::Operator, $2);
+                    addChild(node, $1);
+                    addChild(node, $3);
+                    $$ = node;
+                }
                 | andExpression                     { $$ = $1; }
                 ;
-andExpression: andExpression AND unaryRelExpression { /*$$ = errorNode($2);*/$$ = NULL; }
+andExpression: andExpression AND unaryRelExpression {
+                    Node* node = newNode(nodes::Operator, $2);
+                    addChild(node, $1);
+                    addChild(node, $3);
+                    $$ = node;
+             }
              | unaryRelExpression                   { $$ = $1; }
              ;
-unaryRelExpression: NOT unaryRelExpression          { /* $$ = errorNode($1);*/$$ = NULL;  }
+unaryRelExpression: NOT unaryRelExpression          {
+                    Node* node = newNode(nodes::Operator, $1);
+                    addChild(node, $2);
+                    $$ = node;
+                  }
                   | relExpression                   { $$ = $1; }
                   ;
 relExpression: sumExpression RELOP sumExpression    { 
@@ -339,11 +353,10 @@ relExpression: sumExpression RELOP sumExpression    {
              | sumExpression                        { $$ = $1; }
              ;
 sumExpression: sumExpression sumop term     {
-                // Node* node = newNode(nodes::Operator, $2);
-                // addChild(node, $1);
-                // addChild(node, $3);
-                // $$ = node;
-                $$ = NULL;
+                Node* node = newNode(nodes::Operator, $2);
+                addChild(node, $1);
+                addChild(node, $3);
+                $$ = node;
              }
              | term                         { $$ = $1; }
              ;
@@ -353,11 +366,10 @@ sumop: ADDOP
      ;
 
 term: term mulop unaryExpression    {
-       //  Node* node = newNode(nodes::Operator, $2);
-       //  addChild(node, $1);
-       //  addChild(node, $3);
-       //  $$ = node;
-        $$ = NULL;
+        Node* node = newNode(nodes::Operator, $2);
+        addChild(node, $1);
+        addChild(node, $3);
+        $$ = node;
     }
     | unaryExpression               { $$ = $1; }
     ;
@@ -367,7 +379,11 @@ mulop: MULOP
      | MODOP
      ;
 
-unaryExpression: unaryop unaryExpression    { /*$$ = errorNode($1);*/ $$ = NULL; }
+unaryExpression: unaryop unaryExpression    { 
+                    Node* node = newNode(nodes::Operator, $1);
+                    addChild(node, $2);
+                    $$ = node;
+               }
                | factor                     { $$ = $1; }
                ;
 unaryop: SUBOP
@@ -524,25 +540,24 @@ Node* addChild(Node* parent, Node* child) {
 }
 
 Node* addChild(Node* parent, Node* child, int idx) {
-    if (child == NULL) 
-        return parent;
     if (idx < parent->numChildren) {
         printf("Index is below current child count for [%s]->[%s], index %d, but count is %d!\n", parent->type, child->type, idx, parent->numChildren);
     } else if (idx >= MAX_CHILDREN) {
         printf("Trying to add child [%s] to [%s] but %d exceeds max children %d!\n", parent->type, child->type, idx, MAX_CHILDREN);
     } else {
-        if (child == NULL) {
+        parent->children[idx] = child;
+        parent->numChildren++;
+        if (child != NULL) {
+            if (parent->nodeId == child->nodeId) {
+                printf("Attempting to add node to itself as a child: %s line %d\n", stringifyNode(parent), parent->lineno);
+                return parent;
+            }
+            char word[30];
+            sprintf(word, "%s", stringifyNode(child));
+            printf("Added child %s[%d] to %s[%d] at index %d\n", word, child->nodeId, stringifyNode(parent), parent->nodeId, idx);
+        } else {
             printf("null child for parent %s\n", stringifyNode(parent));
         }
-        if (parent->nodeId == child->nodeId) {
-            printf("Attempting to add node to itself as a child: %s line %d\n", stringifyNode(parent), parent->lineno);
-            return parent;
-        }
-        parent->children[idx] = child;
-        char word[30];
-        sprintf(word, "%s", stringifyNode(child));
-        printf("Added child %s[%d] to %s[%d] at index %d\n", word, child->nodeId, stringifyNode(parent), parent->nodeId, idx);
-        parent->numChildren++;
     }
 
     return parent;
