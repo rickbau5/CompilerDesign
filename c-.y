@@ -1,5 +1,7 @@
 %{
 
+#include <string>
+#include <map>
 #include "c-.h"
 #include "scanType.h"
 #include "util.h"
@@ -34,6 +36,8 @@ Node* errors[MAX_ERRORS];
 int numErrors;
 
 int currNodeId = 0;
+
+std::map<std::string, TokenData*> recordTable;
 
 %}
 
@@ -95,10 +99,12 @@ int currNodeId = 0;
 %token <tokenData> RBRACKET
 %token <tokenData> SEMI
 %token <tokenData> ACC
+%token <tokenData> RECTYPE
+
 
 %type <nodePtr> declarationList declaration varDeclaration varDeclList scopedVarDeclarations varDeclInitialize varDeclId funDeclaration recDeclaration returnStmt breakStmt statement matched unmatched otherstatements compoundStmt localDeclarations statementList expressionStmt expression simpleExpression andExpression unaryRelExpression relExpression sumExpression term unaryExpression factor params paramList paramTypeList paramIdList paramId constant mutable immutable call args argList
 
-%type <tokenData> typeSpecifier scopedTypeSpecifier 
+%type <tokenData> typeSpecifier scopedTypeSpecifier returnTypeSpecifier
 
 %union {
     TokenData *tokenData;
@@ -121,12 +127,28 @@ declarationList: declarationList declaration    {
 
 declaration: varDeclaration     { $$ = $1; }
            | funDeclaration     { $$ = $1; }
-           | recDeclaration     { $$ = NULL; }
-           | error SEMI         { yyerrok; yyclearin; $$ = errorNode($2); printf("error %d\n", lineno);  }
+           | recDeclaration     { $$ = $1; }
+           | error {
+                yyerrok;
+                yyclearin;
+                $$ = errorNode(NULL); 
+                $$->lineno = lineno;
+           }
            ;
 
 recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
-                    printf("Got a record, id %s\n", $2->tokenString);
+                    Node* node = newNode(nodes::Record, $1);
+                    node->tokenString = strdup($2->tokenString);
+                    addChild(node, $4);
+
+                    //Add to the record table
+                    bool ret = recordTable.insert(std::make_pair(strdup(node->tokenString), $2)).second;
+                    if (!ret) {
+                        printf("Insertion of %s failed.", node->tokenString);
+                        $$ = errorNode($2);
+                    } else {
+                        $$ = node;
+                    }
               }
               ;
 
@@ -166,7 +188,7 @@ varDeclInitialize: varDeclId                        {
 
 varDeclId: ID                   { $$ = newNode(nodes::Variable, $1); }
          | ID LBRACKET NUMCONST RBRACKET { 
-            Node* node = newNode(nodes::Identifier, $1);
+            Node* node = newNode(nodes::Variable, $1);
             node->arraySize = atoi($3->tokenString);
             node->isArray = true;
             $$ = node;
@@ -177,10 +199,18 @@ scopedTypeSpecifier: STATIC typeSpecifier   { $2->isStatic = true;  $$ = $2; }
                    | typeSpecifier          { $1->isStatic = false; $$ = $1; }
                    ;
 
-typeSpecifier: INT
-             | BOOL
-             | CHAR
-             ;
+typeSpecifier: returnTypeSpecifier
+             | RECTYPE                      {
+                $$->recordType = strdup($$->tokenString);
+                $$->tokenString = strdup("record");
+                $$->isRecord = true;
+                $$ = $1;
+             }
+
+returnTypeSpecifier: INT
+                   | BOOL
+                   | CHAR
+                   ;
 
 funDeclaration: typeSpecifier ID '(' params ')' statement { 
                     Node* node = newNode(nodes::Function, $2);
@@ -199,9 +229,6 @@ funDeclaration: typeSpecifier ID '(' params ')' statement {
               ;
 
 params: paramList       {
-            int idx = 0;
-            for(Node* s = $1->sibling; s != NULL; s = s->sibling)
-                s-> siblingIndex = idx++;
             $$ = $1;
       }
       |                 { $$ = NULL; }
@@ -232,37 +259,43 @@ paramId: ID                       { $$ = newNode(nodes::Parameter, $1); }
        ;
 
 statement: matched      { $$ = $1; }
-         | unmatched    { $$ = errorNode(NULL); }
+         | unmatched    { $$ = $1; }
          ;
 
 matched: IF '(' simpleExpression ')' matched ELSE matched       {
-            // Node* node = newNode(nodes::IfStatement, $1);
-            // addChild(node, $3);
-            // addChild(node, $5);
-            // addChild(node, $7);
-            // $$ = node;
-            $$ = NULL;
+            Node* node = newNode(nodes::IfStatement, $1);
+            addChild(node, $3, 0);
+            addChild(node, $5, 1);
+            addChild(node, $7, 2);
+            $$ = node;
        }
-       | WHILE '(' simpleExpression ')' matched                 {
+       | WHILE '(' simpleExpression ')' statement {
             Node* node = newNode(nodes::WhileStatement, $1);
-            addChild(node, $3);
-            addChild(node, $5);
+            addChild(node, $3, 0);
+            addChild(node, $5, 1);
             $$ = node;
        }
        | otherstatements    { $$ = $1; }
        ;
 
 unmatched: IF '(' simpleExpression ')' matched                  {
-            log("Got an if statement without an else");
-            $$ = errorNode($1);
+            Node* node = newNode(nodes::IfStatement, $1);
+            addChild(node, $3, 0);
+            addChild(node, $5, 1);
+            $$ = node;
          }
          | IF '(' simpleExpression ')' unmatched                {
-            log("Got an if statement with an inner unmatched statement.");
-            $$ = errorNode($1);
+            Node* node = newNode(nodes::IfStatement, $1);
+            addChild(node, $3, 0);
+            addChild(node, $5, 1);
+            $$ = node;
          }
          | IF '(' simpleExpression ')' matched ELSE unmatched   { 
-            log("Got an if statement with an inner matched statement but an unmatched statement within the else block.");
-            $$ = errorNode($1);
+            Node* node = newNode(nodes::IfStatement, $1);
+            addChild(node, $3, 0);
+            addChild(node, $5, 1);
+            addChild(node, $7, 2);
+            $$ = node;
          }
          ;
 
@@ -280,7 +313,7 @@ compoundStmt: LBRACE localDeclarations statementList  RBRACE  {
             }
             ;
 
-localDeclarations: localDeclarations scopedVarDeclarations  {
+localDeclarations: localDeclarations scopedVarDeclarations  { 
                     $$ = addSibling($1, $2); 
                  }
                  |  { $$ = NULL; }
@@ -293,7 +326,7 @@ statementList: statementList statement  {
              ;
 
 expressionStmt: expression SEMI  { $$ = $1; } 
-              | SEMI             { ; }  
+              | SEMI             { $$ = NULL; }  
               ;
 
 returnStmt: RETURN SEMI                  { $$ = newNode(nodes::Return, $1); }
@@ -303,7 +336,7 @@ returnStmt: RETURN SEMI                  { $$ = newNode(nodes::Return, $1); }
                 $$ = node;
           }
           ;
-breakStmt: BREAK SEMI                    { $$ = errorNode($1); } 
+breakStmt: BREAK SEMI                    { $$ = newNode(nodes::Break, $1); } 
          ;
 
 expression: mutable ASS expression      {
@@ -312,12 +345,40 @@ expression: mutable ASS expression      {
             addChild(node, $3);
             $$ = node;
           }
-          | mutable ADDASS expression   { $$ = errorNode($2); } 
-          | mutable SUBASS expression   { $$ = errorNode($2); }  
-          | mutable MULASS expression   { $$ = errorNode($2); } 
-          | mutable DIVASS expression   { $$ = errorNode($2); } 
-          | mutable INC                 { $$ = errorNode($2); } 
-          | mutable DEC                 { $$ = errorNode($2); } 
+          | mutable ADDASS expression   {
+            Node* node = newNode(nodes::AddAssignment, $2);
+            addChild(node, $1);
+            addChild(node, $3);
+            $$ = node;
+          } 
+          | mutable SUBASS expression   {
+            Node* node = newNode(nodes::SubAssignment, $2);
+            addChild(node, $1);
+            addChild(node, $3);
+            $$ = node;
+          }  
+          | mutable MULASS expression   { 
+            Node* node = newNode(nodes::MulAssignment, $2);
+            addChild(node, $1);
+            addChild(node, $3);
+            $$ = node;
+          } 
+          | mutable DIVASS expression   {
+            Node* node = newNode(nodes::DivAssignment, $2);
+            addChild(node, $1);
+            addChild(node, $3);
+            $$ = node;
+          }
+          | mutable INC                 {
+            Node* node = newNode(nodes::IncrementAssignment, $2);
+            addChild(node, $1);
+            $$ = node;
+          } 
+          | mutable DEC                 { 
+            Node* node = newNode(nodes::DecrementAssignment, $2);
+            addChild(node, $1);
+            $$ = node;
+          } 
           | simpleExpression            { $$ = $1; }
           ;
 
@@ -392,14 +453,13 @@ unaryop: SUBOP
        ;
 factor: immutable   { $$ = $1; }
       | mutable     { $$ = $1; }
-      | error       { $$ = errorNode(NULL); }
       ;
 mutable: ID                     { 
             $$ = newNode(nodes::Identifier, $1);
        }
-       | ID LBRACKET expression RBRACKET  {
+       | mutable LBRACKET expression RBRACKET  {
             Node* t = newNode(nodes::Operator, $2);
-            addChild(t, newNode(nodes::Identifier, $1));
+            addChild(t, $1);
             addChild(t, $3);
             $$ = t;
        }
@@ -432,6 +492,9 @@ constant: NUMCONST  {
         }
         | CHARCONST {
             $$ = newNode(nodes::Constant, $1);
+            char c[2];
+            sprintf(c, "'%c'", $1->cval);
+            $$->tokenString = strdup(c);
         }
         | BOOLCONST {
             $$ = newNode(nodes::Constant, $1);
@@ -448,7 +511,6 @@ constant: NUMCONST  {
 %%
 
 int runWith(const char* str) {
-    printf("Opening %s\n", str);
     if (str == NULL || !strcmp(str, "")) {
         printf("Couldn't open the input file: empty string\n");
         return EXIT_FAILURE;
@@ -470,7 +532,6 @@ int run(FILE* in) {
 }
 
 Node* newNode(nodes::NodeType type, TokenData* token) {
-    printf("creating node %s\n", toString(type)); 
     Node* node = new Node;
     node->nodeId = currNodeId++;
     node->nodeType = type;
@@ -510,7 +571,6 @@ void printErrors() {
 Node* addSibling(Node* existing, Node* addition) {
     char word[30];
     sprintf(word, "%s", stringifyNode(existing));
-    printf("Add sibling call: %s -> %s\n", word, stringifyNode(addition));
     if (existing != NULL) {
         if (addition == NULL) return existing;
         if (existing->nodeId == addition->nodeId) {
@@ -520,12 +580,15 @@ Node* addSibling(Node* existing, Node* addition) {
 
         Node* t = existing;
         while (t->sibling != NULL) {
-            printf("Looking at node %s\n", stringifyNode(t));
             t = t->sibling;
-        }
+       }
         addition->siblingIndex = t->siblingIndex + 1;
         t->sibling = addition;
-        printf("Attached sibling %s->%s\n", t->tokenString, addition->tokenString);
+
+        int newSibIndex = addition->siblingIndex;
+        for (Node* sib = addition->sibling; sib != NULL; sib = sib->sibling) {
+            sib->siblingIndex = ++newSibIndex;            
+        }
         return existing;
     } else {
         if (addition == NULL)
@@ -540,7 +603,12 @@ Node* addChild(Node* parent, Node* child) {
 }
 
 Node* addChild(Node* parent, Node* child, int idx) {
+    if (parent == NULL) {
+        printf("Attempting to add child %s to null parent!", stringifyNode(child));
+        return NULL;
+    }
     if (idx < parent->numChildren) {
+        printf("Parent is %s\n", stringifyNode(parent));
         printf("Index is below current child count for [%s]->[%s], index %d, but count is %d!\n", parent->type, child->type, idx, parent->numChildren);
     } else if (idx >= MAX_CHILDREN) {
         printf("Trying to add child [%s] to [%s] but %d exceeds max children %d!\n", parent->type, child->type, idx, MAX_CHILDREN);
@@ -554,9 +622,8 @@ Node* addChild(Node* parent, Node* child, int idx) {
             }
             char word[30];
             sprintf(word, "%s", stringifyNode(child));
-            printf("Added child %s[%d] to %s[%d] at index %d\n", word, child->nodeId, stringifyNode(parent), parent->nodeId, idx);
         } else {
-            printf("null child for parent %s\n", stringifyNode(parent));
+            ;
         }
     }
 

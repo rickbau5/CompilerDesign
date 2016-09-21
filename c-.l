@@ -9,8 +9,11 @@ C (\\.|[^\\'\n])
 %{
 
 #include <iostream>
+#include <string>
+#include <map>
 #include "scanType.h"
 #include "c-.tab.h"
+#include "c-.h"
 
 using namespace std;
 
@@ -20,6 +23,8 @@ int lineno = 1;
 
 int setTokenData(int);
 char formatCharConst(char*);
+
+extern map<string, TokenData*> recordTable;
 
 %}
 
@@ -92,7 +97,7 @@ L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
 
 "//"                BEGIN(COMMENT);
 <COMMENT>[^\n]      ;
-<COMMENT>{N}        { ++lineno; BEGIN(INITIAL); }
+<COMMENT>"\n"        { ++lineno; BEGIN(INITIAL); }
 
 .                   { return setTokenData(INVALID); } 
 
@@ -104,7 +109,7 @@ int setTokenData(int tokenClass) {
     yylval.tokenData->tokenClass = tokenClass;
     yylval.tokenData->tokenString = strdup(yytext);
     yylval.tokenData->tokenStringRep = strdup(yytext);
-
+    
     switch (tokenClass) {
     case BOOLCONST: 
         if (strcmp("true", yytext) == 0) {
@@ -113,7 +118,14 @@ int setTokenData(int tokenClass) {
             yylval.tokenData->bval = false;
         }
         break;
-    case ID:
+    case ID: {
+            // Check if an ID is present in recordTable
+            //This would mean this ID refers to a record type, not a normal identifier.
+            map<string, TokenData*>::iterator it = recordTable.find(yylval.tokenData->tokenString);
+            if (it != recordTable.end()) {
+                yylval.tokenData->tokenClass = RECTYPE;
+            }
+        }
         break;
     case NUMCONST:
         yylval.tokenData->ival = atoi(yylval.tokenData->tokenString);
@@ -164,27 +176,21 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->relopString = ">";
         break;
     case ADDASS:
-        yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "ADDASS";
         break;
     case SUBASS:
-        yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "SUBASS";
         break;
     case MULASS:
-        yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "MULASS";
         break;
     case DIVASS:
-        yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "DIVASS";
         break;
     case INC:
-        yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "INC";
         break;
     case DEC:
-        yylval.tokenData->tokenClass = TOK;
         yylval.tokenData->tokenStringRep = "DEC";
         break;
     case BOOL:

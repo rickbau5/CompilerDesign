@@ -1,25 +1,13 @@
-int b[100];
-int zed: 2;
-test(int a[]) {
-    while(x == y) dog = cat; 
+// C-F16
+record Point {
+    bool defined;
+    int x, y; 
+}
 
-    arr[1];
-    structure.member = something;
-    four = 4 * 1;
-    five = 15 / 3;
-    one = 3 % 2;
-    
-    two = 5 - 3;
-    four = two + 2;
+record Line {
+    Point x, y;
+}
 
-    neg = -1;
-    mul = *1;
-    question = ?4;
-    
-    test();
-    test(z, y, x);
-    z = x;
-    y = a;
-    return;
-    return a;
+int test(Line z; Point x1, x2) {
+    char c : '\t';
 }

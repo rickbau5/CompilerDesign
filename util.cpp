@@ -7,7 +7,6 @@ void prettyPrintTree(Node* root) {
         return;
     fprintf(out, "%s [line: %d]\n", stringifyNode(root), root->lineno);
     _prettyPrint(root, 0);
-    puts("");
 }
 
 void _prettyPrint(Node* node, int level) {
@@ -71,16 +70,29 @@ const char* stringifyNode(Node* node) {
         case nodes::Assignment:
            sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
            return nodeString;
+        case nodes::AddAssignment:
+        case nodes::SubAssignment:
+        case nodes::MulAssignment:
+        case nodes::DivAssignment:
+        case nodes::IncrementAssignment:
+        case nodes::DecrementAssignment:
+           sprintf(nodeString, "Assign: %s", node->tokenString);
+           return nodeString;
         case nodes::Constant:
            sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
            return nodeString;
         case nodes::FunctionCall:
            sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
            return nodeString;
+        case nodes::Break:
+           return "Break";
         case nodes::Return:
            return "Return";
         case nodes::ReturnStatement:
            return "Return";
+        case nodes::Record:
+           sprintf(nodeString, "%s %s ", toString(node->nodeType), node->tokenString);
+           return nodeString; 
 
         case nodes::Error:
            sprintf(nodeString, "%s: \'%s\'", toString(node->nodeType), node->tokenString);
@@ -138,8 +150,10 @@ const char* toString(nodes::NodeType typ) {
         case nodes::IfStatement: return "If" ; break;
         case nodes::WhileStatement: return "While" ; break;
         case nodes::FunctionCall: return "Call" ; break;
+        case nodes::Break: return "Break" ; break;
         case nodes::Return: return "Return" ; break;
         case nodes::ReturnStatement: return "Return" ; break;
+        case nodes::Record: return "Record" ; break;
 
         case nodes::Error: return "Error" ; break;
         case nodes::Empty: return "Empty" ; break;

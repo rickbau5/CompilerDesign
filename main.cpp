@@ -6,7 +6,7 @@ FILE* out = stdout;
 bool override = false;
 
 int main (int argc, char **argv) {
-    printf("here"); // WTF
+    printf(""); // WTF
    
     int status;
     if (override) {
@@ -21,6 +21,8 @@ int main (int argc, char **argv) {
 
     if (status == EXIT_SUCCESS) {
         prettyPrintTree(root);
+        int warnings = 0;
+        printf("Number of warnings: %d\n", warnings); 
         printErrors();
     }
 

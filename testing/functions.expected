@@ -46,3 +46,5 @@ Sibling: 7  Func arrays returns type void [line: 28]
 !   Sibling: 2  Param d is array of type bool [line: 28]
 !   Sibling: 3  Param e is array of type char [line: 28]
 !   Child: 1  Compound [line: 28]
+Number of warnings: 0
+Number of errors: 0

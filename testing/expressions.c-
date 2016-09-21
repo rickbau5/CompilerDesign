@@ -7,6 +7,14 @@ int main() {
     struct.x;
     struct.y.z = 'y';
 
+    // Other assignment
+    x += 1;
+    y -= 2;
+    z /= 4;
+    v *= 6;
+    v--;
+    z++;
+
     // Mul ops
     four = 4 * 1;
     five = 15 / 3;

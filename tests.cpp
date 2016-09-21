@@ -25,6 +25,22 @@ bool testExpressions() {
     return executeTest("expressions");
 }
 
+bool testWhileIf() {
+    return executeTest("whileif");
+}
+
+bool testSmall() {
+    return executeTest("small");
+}
+
+bool testExp() {
+    return executeTest("exp");
+}
+
+bool testEverything() {
+    return executeTest("everything06");
+}
+
 void reset() {
     root = NULL;
     numErrors = 0;
@@ -38,6 +54,10 @@ int main(int argc, char **argv) {
     testFunctions();
     testTopLevel();
     testExpressions();
+    testWhileIf();
+    testSmall();
+    testExp();
+    testEverything();
     return 0;
 }
 
@@ -55,6 +75,8 @@ bool executeTest(const char* name) {
     int ret = runWith(file);
 
     prettyPrintTree(root);
+    fprintf(f, "Number of warnings: 0\n");
+    fprintf(f, "Number of errors: %d\n", numErrors);
         
     fclose(f);
     if (ret == EXIT_SUCCESS) { 

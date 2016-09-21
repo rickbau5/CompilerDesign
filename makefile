@@ -1,7 +1,4 @@
 BIN=c-
-LIB=-ll
-
-
 
 ASSN=2
 
@@ -12,9 +9,6 @@ OUT=out
 TMP=tmp
 
 DIFF=vimdiff 
-
-OSXLIB=LIB=-ll
-NIXLIB=LIB=
 
 SUBT=submission.tar
 TAR=tar -cvf
@@ -40,10 +34,10 @@ bison:
 	bison -v -t -d $(BIN).y
 
 compile: clean flex bison
-	g++ util.cpp $(BIN).tab.c lex.yy.c main.cpp $(LIB) -o $(BIN)
+	g++ util.cpp $(BIN).tab.c lex.yy.c main.cpp -o $(BIN)
 
 debug: clean flex bison
-	g++ -g util.cpp $(BIN).tab.c lex.yy.c main.cpp $(LIB) -o $(BIN)
+	g++ -g util.cpp $(BIN).tab.c lex.yy.c main.cpp -o $(BIN)
 
 test:
 	./$(BIN) test.c-
@@ -81,7 +75,7 @@ tar-test: tmp tar
 
 submit: clean tmp
 	cp $(BIN).l $(BIN).y $(TOK).h $(TMP)/ 
-	cat makefile | sed 's/$(OSXLIB)/$(NIXLIB)/g' > $(TMP)/makefile 
+	cp makefile $(TMP)/makefile
 	cd tmp && $(TAR) $(SUBT) $(BIN).l $(BIN).y makefile $(TOK).h
 	curl -F "student=$(ME)" -F "assignment=$(ASS)" -F "submittedfile=@$(FILE)" $(SUBURL) > $(TMP)/$(SUBRESULT) 
 	$(EMAIL)

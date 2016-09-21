@@ -15,6 +15,12 @@ namespace nodes {
         Identifier,
         Constant,
         Assignment,
+        AddAssignment,
+        SubAssignment,
+        MulAssignment,
+        DivAssignment,
+        IncrementAssignment,
+        DecrementAssignment,
         Compound,
         Variable,
         Type,
@@ -22,7 +28,9 @@ namespace nodes {
         WhileStatement,
         Return,
         ReturnStatement,
+        Break,
         FunctionCall,
+        Record,
         Error,
         Empty
     } NodeType;
@@ -40,7 +48,9 @@ struct TokenData {
 
     int relopval;
     const char* relopString; 
+    const char* recordType;
 
+    bool isRecord;
     bool isStatic;
 };
 

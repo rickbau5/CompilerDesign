@@ -2,9 +2,11 @@ Var arr is array of type int [line: 1]
 Sibling: 0  Var b of type int [line: 1]
 Sibling: 1  Var c of type char [line: 2]
 Sibling: 2  Var dog of type char [line: 3]
-!   Child: 0  Const: '\t' [line: 3]
+!   Child: 0  Const: 't' [line: 3]
 Sibling: 3  Var d of type bool [line: 4]
 Sibling: 4  Func func1 returns type void [line: 5]
 !   Child: 1  Compound [line: 5]
 Sibling: 5  Func func2 returns type int [line: 6]
 !   Child: 1  Compound [line: 6]
+Number of warnings: 0
+Number of errors: 0
