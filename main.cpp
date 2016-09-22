@@ -19,8 +19,8 @@ int main (int argc, char **argv) {
         }
     }
 
+    prettyPrintTree(root);
     if (status == EXIT_SUCCESS) {
-        prettyPrintTree(root);
         int warnings = 0;
         printf("Number of warnings: %d\n", warnings); 
         printErrors();
