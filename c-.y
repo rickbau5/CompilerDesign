@@ -201,8 +201,8 @@ scopedTypeSpecifier: STATIC typeSpecifier   { $2->isStatic = true;  $$ = $2; }
 
 typeSpecifier: returnTypeSpecifier
              | RECTYPE                      {
-                $$->recordType = strdup($$->tokenString);
                 $$->tokenString = strdup("record");
+                $$->recordType = strdup($$->tokenString);
                 $$->isRecord = true;
                 $$ = $1;
              }

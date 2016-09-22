@@ -25,7 +25,7 @@ EMAIL=open https://outlook.office.com/owa/?realm=vandals.uidaho.edu&path=/mail/i
 all: compile
 
 clean:
-	- rm -rf lex.yy.c $(BIN) $(BIN).tab.c $(BIN).tab.h $(BIN).output $(SUBT) $(TMP) testing/*.out
+	- rm -rf lex.yy.c $(BIN) $(BIN).tab.c $(BIN).tab.h $(BIN).output $(SUBT) $(TMP) testing/*.out *.dSYM tests
 
 flex:
 	flex $(BIN).l
