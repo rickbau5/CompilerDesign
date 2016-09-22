@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "c-.h"
+#include "symbolTable.h"
 #include "scanType.h"
 #include "util.h"
 
@@ -37,7 +38,7 @@ int numErrors;
 
 int currNodeId = 0;
 
-std::map<std::string, TokenData*> recordTable;
+SymbolTable symbolTable;
 
 %}
 
@@ -141,9 +142,7 @@ recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
                     node->tokenString = strdup($2->tokenString);
                     addChild(node, $4);
 
-                    //Add to the record table
-                    bool ret = recordTable.insert(std::make_pair(strdup(node->tokenString), $2)).second;
-                    if (!ret) {
+                    if (!symbolTable.insert(strdup($2->tokenString), $2)) {
                         printf("Insertion of %s failed.", node->tokenString);
                         $$ = errorNode($2);
                     } else {

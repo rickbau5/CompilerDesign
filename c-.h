@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include "symbolTable.h"
 #include "scanType.h"
 
 #define MAX_ERRORS 256
@@ -17,6 +18,6 @@ extern Node* root;
 extern int numErrors;
 extern int lineno;
 extern int currNodeId;
-extern std::map<std::string, TokenData*> recordTable;
+extern SymbolTable symbolTable;
 
 #endif

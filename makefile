@@ -34,16 +34,16 @@ bison:
 	bison -v -t -d $(BIN).y
 
 compile: clean flex bison
-	g++ util.cpp $(BIN).tab.c lex.yy.c main.cpp -o $(BIN)
+	g++ util.cpp $(BIN).tab.c lex.yy.c symbolTable.cpp main.cpp -o $(BIN)
 
 debug: clean flex bison
-	g++ -g util.cpp $(BIN).tab.c lex.yy.c main.cpp -o $(BIN)
+	g++ -g util.cpp $(BIN).tab.c lex.yy.c symbolTable.cpp main.cpp -o $(BIN)
 
 test:
 	./$(BIN) test.c-
 
 tests: clean flex bison
-	g++ -g util.cpp tests.cpp c-.tab.c lex.yy.c -o tests 
+	g++ -g util.cpp tests.cpp c-.tab.c lex.yy.c symbolTable.cpp -o tests 
 	./tests
 	./compare.sh
 

@@ -11,6 +11,7 @@ C (\\.|[^\\'\n])
 #include <iostream>
 #include <string>
 #include <map>
+#include "symbolTable.h"
 #include "scanType.h"
 #include "c-.tab.h"
 #include "c-.h"
@@ -24,7 +25,7 @@ int lineno = 1;
 int setTokenData(int);
 char formatCharConst(char*);
 
-extern map<string, TokenData*> recordTable;
+extern SymbolTable symbolTable;
 
 %}
 
@@ -119,12 +120,20 @@ int setTokenData(int tokenClass) {
         }
         break;
     case ID: {
+            void* data = symbolTable.lookup(yylval.tokenData->tokenString);
+
+            if (data != NULL) {
+                printf("Found an ID that is actually a record: %s line %d\n", yylval.tokenData->tokenString, lineno);
+                yylval.tokenData->tokenClass = RECTYPE;
+            } else {
+                ;
+            }
             // Check if an ID is present in recordTable
             //This would mean this ID refers to a record type, not a normal identifier.
-            map<string, TokenData*>::iterator it = recordTable.find(yylval.tokenData->tokenString);
-            if (it != recordTable.end()) {
-                yylval.tokenData->tokenClass = RECTYPE;
-            }
+            // map<string, TokenData*>::iterator it = recordTable.find(yylval.tokenData->tokenString);
+            // if (it != recordTable.end()) {
+            //     yylval.tokenData->tokenClass = RECTYPE;
+            // }
         }
         break;
     case NUMCONST:
