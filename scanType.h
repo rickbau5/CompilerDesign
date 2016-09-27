@@ -1,8 +1,8 @@
 #ifndef SCANTYPEH
 #define SCANTYPEH
 
-#define MAX_SIBLINGS 100
-#define MAX_CHILDREN 25
+#define MAX_SIBLINGS 2056
+#define MAX_CHILDREN 1024
 
 namespace nodes {
     typedef enum {

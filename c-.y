@@ -142,7 +142,7 @@ recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
                     addChild(node, $4);
 
                     if (!symbolTable.insert(strdup($2->tokenString), $2)) {
-                        printf("Insertion of %s failed.", node->tokenString);
+                        printf("Insertion of %s failed (it probably already exists).", node->tokenString);
                         $$ = errorNode($2);
                     } else {
                         $$ = node;
@@ -306,10 +306,10 @@ unmatched: IF '(' simpleExpression ')' matched                  {
          ;
 
 otherstatements: expressionStmt     { $$ = $1; }
-         | compoundStmt             { $$ = $1; }
-         | returnStmt               { $$ = $1; }
-         | breakStmt                { $$ = $1; }
-         ;
+               | compoundStmt       { $$ = $1; }
+               | returnStmt         { $$ = $1; }
+               | breakStmt          { $$ = $1; }
+               ;
 
 compoundStmt: LBRACE localDeclarations statementList  RBRACE  {
                 Node* node = newNode(nodes::Compound, $1);
@@ -575,8 +575,6 @@ void printErrors() {
 }
 
 Node* addSibling(Node* existing, Node* addition) {
-    char word[30];
-    sprintf(word, "%s", stringifyNode(existing));
     if (existing != NULL) {
         if (addition == NULL) return existing;
         if (existing->nodeId == addition->nodeId) {
@@ -587,10 +585,11 @@ Node* addSibling(Node* existing, Node* addition) {
         Node* t = existing;
         while (t->sibling != NULL) {
             t = t->sibling;
-       }
+        }
         addition->siblingIndex = t->siblingIndex + 1;
         t->sibling = addition;
 
+        // If this node being added already has siblings, we need to update their indices
         int newSibIndex = addition->siblingIndex;
         for (Node* sib = addition->sibling; sib != NULL; sib = sib->sibling) {
             sib->siblingIndex = ++newSibIndex;            

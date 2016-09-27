@@ -120,6 +120,7 @@ int setTokenData(int tokenClass) {
         }
         break;
     case ID: {
+            // Check if an ID is present in recordTable
             void* data = symbolTable.lookup(yylval.tokenData->tokenString);
 
             if (data != NULL) {
@@ -128,12 +129,6 @@ int setTokenData(int tokenClass) {
             } else {
                 ;
             }
-            // Check if an ID is present in recordTable
-            //This would mean this ID refers to a record type, not a normal identifier.
-            // map<string, TokenData*>::iterator it = recordTable.find(yylval.tokenData->tokenString);
-            // if (it != recordTable.end()) {
-            //     yylval.tokenData->tokenClass = RECTYPE;
-            // }
         }
         break;
     case NUMCONST:
