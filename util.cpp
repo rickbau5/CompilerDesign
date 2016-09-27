@@ -15,19 +15,15 @@ void _prettyPrint(Node* node, int level) {
         Node* c;
         for(int i = 0; i < node->numChildren; i++) {
             if ((c = node->children[i]) != NULL) {
-                // if (c->nodeType != nodes::Empty) {
-                    _printLevel(level); 
-                    fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
-                // }
+                _printLevel(level); 
+                fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
                 _prettyPrint(c, level + 1);
             } 
         }
         if (node->sibling != NULL) {
             Node* sib = node->sibling;
-            // if (sib->nodeType != nodes::Empty) {
-                _printLevel(level);
-                fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
-            //}
+            _printLevel(level);
+            fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
             _prettyPrint(sib, level);
         }
     } else {

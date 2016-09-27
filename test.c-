@@ -9,5 +9,7 @@ record Line {
 }
 
 int test(Line z; Point x1, x2) {
+    x1 = x2;
+
     char c : '\t';
 }

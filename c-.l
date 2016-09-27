@@ -32,7 +32,6 @@ extern SymbolTable symbolTable;
 %option noyywrap
 
 %x COMMENT
-%x MULTICOMMENT
 
 %%
 

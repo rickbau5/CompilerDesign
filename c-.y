@@ -543,6 +543,7 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     node->nodeType = type;
     if (token != NULL) {
         node->tokenString = strdup(token->tokenString);
+        node->lineno = token->lineno;
     }
     node->type = toString(type);
 
@@ -551,9 +552,6 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     
     for (int i = 0; i < MAX_CHILDREN; i++)
         node->children[i] = NULL;
-
-    if (token != NULL)
-        node->lineno = token->lineno;
 
     return node;
 }
@@ -618,6 +616,7 @@ Node* addChild(Node* parent, Node* child, int idx) {
     } else if (idx >= MAX_CHILDREN) {
         printf("Trying to add child [%s] to [%s] but %d exceeds max children %d!\n", parent->type, child->type, idx, MAX_CHILDREN);
     } else {
+
         parent->children[idx] = child;
         parent->numChildren++;
         if (child != NULL) {
@@ -625,8 +624,6 @@ Node* addChild(Node* parent, Node* child, int idx) {
                 printf("Attempting to add node to itself as a child: %s line %d\n", stringifyNode(parent), parent->lineno);
                 return parent;
             }
-            char word[30];
-            sprintf(word, "%s", stringifyNode(child));
         } else {
             ;
         }
