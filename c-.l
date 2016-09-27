@@ -9,8 +9,7 @@ C (\\.|[^\\'\n])
 %{
 
 #include <iostream>
-#include <string>
-#include <map>
+#include <string.h>
 #include "symbolTable.h"
 #include "scanType.h"
 #include "c-.tab.h"
@@ -123,7 +122,6 @@ int setTokenData(int tokenClass) {
             void* data = symbolTable.lookup(yylval.tokenData->tokenString);
 
             if (data != NULL) {
-                printf("Found an ID that is actually a record: %s line %d\n", yylval.tokenData->tokenString, lineno);
                 yylval.tokenData->tokenClass = RECTYPE;
             } else {
                 ;

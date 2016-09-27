@@ -1,7 +1,7 @@
 %{
 
-#include <string>
-#include <map>
+#include <string.h>
+#include <stdio.h>
 #include "c-.h"
 #include "symbolTable.h"
 #include "scanType.h"
@@ -166,7 +166,7 @@ varDeclaration: typeSpecifier varDeclList SEMI  {
                     s->nodeType = nodes::Variable;
                     s->type = $1->tokenString;
                 }
-                $$ = n
+                $$ = n;
               }
               ;
 
@@ -547,7 +547,7 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     }
     node->type = toString(type);
 
-    node->sibling = nullptr;
+    node->sibling = NULL;
     node->siblingIndex = -1;
     
     for (int i = 0; i < MAX_CHILDREN; i++)
