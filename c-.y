@@ -102,7 +102,6 @@ SymbolTable symbolTable;
 %token <tokenData> ACC
 %token <tokenData> RECTYPE
 
-
 %type <nodePtr> declarationList declaration varDeclaration varDeclList scopedVarDeclarations varDeclInitialize varDeclId funDeclaration recDeclaration returnStmt breakStmt statement matched unmatched otherstatements compoundStmt localDeclarations statementList expressionStmt expression simpleExpression andExpression unaryRelExpression relExpression sumExpression term unaryExpression factor params paramList paramTypeList paramIdList paramId constant mutable immutable call args argList
 
 %type <tokenData> typeSpecifier scopedTypeSpecifier returnTypeSpecifier
@@ -268,7 +267,8 @@ matched: IF '(' simpleExpression ')' matched ELSE matched       {
             addChild(node, $7, 2);
             $$ = node;
        }
-       | WHILE '(' simpleExpression ')' statement {
+       | WHILE '(' simpleExpression ')' matched {
+
             Node* node = newNode(nodes::WhileStatement, $1);
             addChild(node, $3, 0);
             addChild(node, $5, 1);
@@ -295,6 +295,13 @@ unmatched: IF '(' simpleExpression ')' matched                  {
             addChild(node, $5, 1);
             addChild(node, $7, 2);
             $$ = node;
+         }
+         | WHILE '(' simpleExpression ')' unmatched {
+
+              Node* node = newNode(nodes::WhileStatement, $1);
+              addChild(node, $3, 0);
+              addChild(node, $5, 1);
+              $$ = node;
          }
          ;
 
