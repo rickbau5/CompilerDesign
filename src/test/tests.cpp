@@ -67,7 +67,7 @@ bool executeTest(const char* name) {
     sprintf(file, "testing/%s.out", name);
     FILE* f = fopen(file, "w");
     if (f == NULL) {
-        printf("Couldn't open file.\n");
+        printf("Couldn't open file: [%s]\n", file);
         return false;
     }
     out = f;

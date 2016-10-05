@@ -1,4 +1,5 @@
 BIN=c-
+ROOT:=$(shell pwd)
 
 ASSN=2
 
@@ -14,6 +15,17 @@ SUBT=submission.tar
 TAR=tar -cvf
 UNTAR=tar -xvf
 
+SRC=src
+
+SRC_MAIN =$(ROOT)/$(SRC)/main
+SRC_TEST =$(ROOT)/$(SRC)/test
+SRC_ALL  =$(ROOT)/$(SRC)/all
+OUT_DIR  =$(ROOT)/out
+BUILD_DIR=$(ROOT)/build
+TESTS_DIR=$(ROOT)/testing
+
+SCRIPTS_DIR=$(ROOT)/scripts
+
 ME=boss
 ASS=CS445 F16 Assignment $(ASSN)
 FILE=`pwd`/$(TMP)/$(SUBT)
@@ -27,7 +39,7 @@ BSON=$(BIN).y
 INTER=$(BIN).tab.c lex.yy.c
 SRCS=util.cpp symbolTable.cpp 
 COMP=$(SRCS) $(INTER) 
-HEADERS=util.h symbolTable.h scanType.h $(BIN).h supgetopt.h
+HEADERS=*.h
 MAINSRC=main.cpp
 TESTSRC=tests.cpp
 PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
@@ -35,34 +47,54 @@ PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
 all: compile
 
 clean:
-	- rm -rf $(BIN) $(INTER) $(BIN).tab.h $(BIN).output $(SUBT) $(TMP) testing/*.out *.dSYM tests
+	- rm -rf $(OUT_DIR) $(BUILD_DIR)
 
 flex:
-	flex $(FLEX)
+	cd $(BUILD_DIR) && flex $(FLEX)
 
 bison: 
-	bison -v -t -d $(BSON) 
+	cd $(BUILD_DIR) && bison -v -t -d $(BSON)
 
-compile: clean flex bison
-	g++ $(COMP) $(MAINSRC) -o $(BIN)
+build_dir:
+	- mkdir build
 
-debug: clean flex bison
-	g++ -g $(COMP) $(MAINSRC) -o $(BIN)
+out_dir:
+	- mkdir out
+
+copy_all: build_dir
+	@cp $(SRC_ALL)/* $(BUILD_DIR)
+
+copy_main: build_dir
+	@cp $(SRC_MAIN)/* $(BUILD_DIR)
+
+copy_test: build_dir
+	@cp $(SRC_TEST)/* $(BUILD_DIR)
+
+common_deps: out_dir copy_all flex bison
+
+compile_deps: common_deps copy_main
+
+compile: clean compile_deps
+	cd $(BUILD_DIR) && g++ $(COMP) $(MAINSRC) -o $(BIN)
+	@mv $(BUILD_DIR)/$(BIN) $(OUT_DIR)/$(BIN)	
+	@cp $(OUT_DIR)/$(BIN) $(ROOT)/$(BIN)
+
+debug: clean compile_deps
+	cd $(BUILD_DIR) && g++ -g $(COMP) $(MAINSRC) -o $(BIN)
 
 test:
-	./$(BIN) test.c-
+	@$(OUT_DIR)/$(BIN) $(ROOT)/test.c-
 
-tests: clean flex bison
-	g++ -g $(COMP) $(TESTSRC) -o tests 
-	./tests
-	./compare.sh
+tests: clean common_deps copy_test
+	@cd $(BUILD_DIR) && g++ -g $(COMP) $(TESTSRC) -o tests
+	@mv $(BUILD_DIR)/tests $(OUT_DIR)/tests
+	@cp -r $(TESTS_DIR) $(OUT_DIR) 
+	@cd $(OUT_DIR); \
+		./tests; \
+		$(SCRIPTS_DIR)/compare.sh testing
 
 outdir:
 	- mkdir out
-
-comp: compile outdir
-	./$(BIN) test.c- > $(OUT)/test.out
-	$(DIFF) $(OUT)/test.out $(TESTD)/small.out 
 
 tar:
 	$(TAR) $(SUBT) $(BIN).l $(BIN).y makefile $(TOK).h
@@ -74,14 +106,19 @@ tmp:
 	- mkdir $(TMP)
 
 prep-tar: clean tmp
-	cp $(PACKAGE) $(TMP)/
-	cd tmp && $(TAR) $(SUBT) $(PACKAGE)
+	@ cp -r src makefile tmp
+	@ cd tmp && $(TAR) $(SUBT) src makefile 
+
+test-tar:
+	cd tmp; \
+		$(UNTAR) $(SUBT) -C tmp; \
+		cd tmp; \
+		make
 
 wormulon: prep-tar
 	scp $(TMP)/$(SUBT) boss2849@wormulon.cs.uidaho.edu:/home/boss2849/CS445/$(SUBT)
 
-submit: prep-tar
-	cd tmp && $(TAR) $(SUBT) $(PACKAGE) 
+submit: prep-tar test-tar
 	curl -F "student=$(ME)" -F "assignment=$(ASS)" -F "submittedfile=@$(FILE)" $(SUBURL) > $(TMP)/$(SUBRESULT) 
-	open $(TMP)/$(SUBRESULT)
+	@open $(TMP)/$(SUBRESULT)
 	echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."

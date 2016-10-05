@@ -1,13 +1,13 @@
 #!/bin/bash
 
-FILES=testing/*.out
+FILES=$1/*.out
 
 TESTS=0
 ERRORS=0
 echo ""
 for f in $FILES ; do 
     ((TESTS++))
-    DIFF=$(diff $f ${f/out/expected})
+    DIFF=$(diff $f ${f/%out/expected})
     TEST=${f#*/}
     TEST=${TEST%.*}
     if [ "$DIFF" == "" ] ; then
