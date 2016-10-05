@@ -22,37 +22,43 @@ SUBURL=$(HOST)/cgi-bin/fileCapture.py
 SUBRESULT=result.html
 EMAIL=open https://outlook.office.com/owa/?realm=vandals.uidaho.edu&path=/mail/inbox
 
+FLEX=$(BIN).l
+BSON=$(BIN).y
+INTER=$(BIN).tab.c lex.yy.c
+SRCS=util.cpp symbolTable.cpp 
+COMP=$(SRCS) $(INTER) 
+HEADERS=util.h symbolTable.h scanType.h $(BIN).h supgetopt.h
+MAINSRC=main.cpp
+TESTSRC=tests.cpp
+PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
+
 all: compile
 
 clean:
-	- rm -rf lex.yy.c $(BIN) $(BIN).tab.c $(BIN).tab.h $(BIN).output $(SUBT) $(TMP) testing/*.out *.dSYM tests
+	- rm -rf $(BIN) $(INTER) $(BIN).tab.h $(BIN).output $(SUBT) $(TMP) testing/*.out *.dSYM tests
 
 flex:
-	flex $(BIN).l
+	flex $(FLEX)
 
 bison: 
-	bison -v -t -d $(BIN).y
+	bison -v -t -d $(BSON) 
 
 compile: clean flex bison
-	g++ util.cpp $(BIN).tab.c lex.yy.c symbolTable.cpp main.cpp -o $(BIN)
+	g++ $(COMP) $(MAINSRC) -o $(BIN)
 
 debug: clean flex bison
-	g++ -g util.cpp $(BIN).tab.c lex.yy.c symbolTable.cpp main.cpp -o $(BIN)
+	g++ -g $(COMP) $(MAINSRC) -o $(BIN)
 
 test:
 	./$(BIN) test.c-
 
 tests: clean flex bison
-	g++ -g util.cpp tests.cpp c-.tab.c lex.yy.c symbolTable.cpp -o tests 
+	g++ -g $(COMP) $(TESTSRC) -o tests 
 	./tests
 	./compare.sh
 
 outdir:
 	- mkdir out
-
-comp-old: compile outdir
-	./$(BIN) $(TESTD)/$(TESTF).c- > $(OUT)/$(TESTF).out
-	$(DIFF) $(OUT)/$(TESTF).out $(TESTD)/$(TESTF).out 
 
 comp: compile outdir
 	./$(BIN) test.c- > $(OUT)/test.out
@@ -67,17 +73,15 @@ untar:
 tmp:
 	- mkdir $(TMP)
 
-tar-test: tmp tar
-	mv $(SUBT) $(TMP)
-	cp -r $(TESTD) $(TMP)/$(TESTD)
-	$(UNTAR) $(TMP)/$(SUBT) -C $(TMP)/
-	cd $(TMP) && make comp
+prep-tar: clean tmp
+	cp $(PACKAGE) $(TMP)/
+	cd tmp && $(TAR) $(SUBT) $(PACKAGE)
 
-submit: clean tmp
-	cp $(BIN).l $(BIN).y $(TOK).h $(TMP)/ 
-	cp makefile $(TMP)/makefile
-	cd tmp && $(TAR) $(SUBT) $(BIN).l $(BIN).y makefile $(TOK).h
+wormulon: prep-tar
+	scp $(TMP)/$(SUBT) boss2849@wormulon.cs.uidaho.edu:/home/boss2849/CS445/$(SUBT)
+
+submit: prep-tar
+	cd tmp && $(TAR) $(SUBT) $(PACKAGE) 
 	curl -F "student=$(ME)" -F "assignment=$(ASS)" -F "submittedfile=@$(FILE)" $(SUBURL) > $(TMP)/$(SUBRESULT) 
-	$(EMAIL)
 	open $(TMP)/$(SUBRESULT)
 	echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."

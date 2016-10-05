@@ -7,8 +7,6 @@
 #include "scanType.h"
 #include "util.h"
 
-#define YYDEBUG 1
-
 using namespace std;
 
 extern "C" int yylex();
