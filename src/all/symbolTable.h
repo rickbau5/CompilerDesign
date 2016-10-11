@@ -80,7 +80,8 @@ public:
     void applyToAllGlobal(void (*action)(std::string , void *));  // applies func to all symbol/data pairs
     void enter(std::string name);                    // enter a scope with given name
     void leave();                                    // leave a scope (not allowed to leave global)
-    void *lookup(std::string sym);                   // returns ptr associated with sym anywhere in symbol table
+    void *lookup(std::string sym);                   // returns ptr associated with sym in most recent scope or global
+    void *lookupAnywhere(std::string sym);           // returns ptr associated with sym anywhere in symbol table
                                                      // returns NULL if symbol not found
     void *lookupGlobal(std::string sym);             // returns ptr associated with sym in globals
                                                      // returns NULL if symbol not found

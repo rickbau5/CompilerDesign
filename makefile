@@ -28,7 +28,7 @@ SCRIPTS_DIR=$(ROOT)/scripts
 
 ME=boss
 ASS=CS445 F16 Assignment $(ASSN)
-FILE=`pwd`/$(TMP)/$(SUBT)
+FILE=$(ROOT)/$(TMP)/$(SUBT)
 HOST=http://ec2-52-89-93-46.us-west-2.compute.amazonaws.com
 SUBURL=$(HOST)/cgi-bin/fileCapture.py
 SUBRESULT=result.html
@@ -37,7 +37,7 @@ EMAIL=open https://outlook.office.com/owa/?realm=vandals.uidaho.edu&path=/mail/i
 FLEX=$(BIN).l
 BSON=$(BIN).y
 INTER=$(BIN).tab.c lex.yy.c
-SRCS=util.cpp symbolTable.cpp 
+SRCS=printtree.cpp semantic.cpp symbolTable.cpp 
 COMP=$(SRCS) $(INTER) 
 HEADERS=*.h
 MAINSRC=main.cpp
@@ -47,7 +47,7 @@ PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
 all: compile
 
 clean:
-	- rm -rf $(OUT_DIR) $(BUILD_DIR)
+	@- rm -rf $(BIN) $(OUT_DIR) $(BUILD_DIR)
 
 flex:
 	cd $(BUILD_DIR) && flex $(FLEX)
@@ -81,6 +81,8 @@ compile: clean compile_deps
 
 debug: clean compile_deps
 	cd $(BUILD_DIR) && g++ -g $(COMP) $(MAINSRC) -o $(BIN)
+	@mv $(BUILD_DIR)/$(BIN) $(OUT_DIR)/$(BIN)
+	@mv $(BUILD_DIR)/$(BIN).dSYM $(OUT_DIR)/$(BIN).dSYM
 
 test:
 	@$(OUT_DIR)/$(BIN) $(ROOT)/test.c-

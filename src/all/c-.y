@@ -5,7 +5,7 @@
 #include "c-.h"
 #include "symbolTable.h"
 #include "scanType.h"
-#include "util.h"
+#include "printtree.h"
 
 using namespace std;
 
@@ -51,13 +51,12 @@ SymbolTable symbolTable;
 %token <tokenData> CHARCONST
 %token <tokenData> NUMCONST
 
-%token <tokenData> RELOP
-%token LESSEQ
-%token NOTEQ
-%token GRTEQ
-%token EQ
-%token LESS
-%token GRTR
+%token <tokenData> LESSEQ
+%token <tokenData> NOTEQ
+%token <tokenData> GRTEQ
+%token <tokenData> EQ
+%token <tokenData> LESS
+%token <tokenData> GRTR
 
 %type <tokenData> sumop
 %type <tokenData> mulop
@@ -102,7 +101,7 @@ SymbolTable symbolTable;
 
 %type <nodePtr> declarationList declaration varDeclaration varDeclList scopedVarDeclarations varDeclInitialize varDeclId funDeclaration recDeclaration returnStmt breakStmt statement matched unmatched otherstatements compoundStmt localDeclarations statementList expressionStmt expression simpleExpression andExpression unaryRelExpression relExpression sumExpression term unaryExpression factor params paramList paramTypeList paramIdList paramId constant mutable immutable call args argList
 
-%type <tokenData> typeSpecifier scopedTypeSpecifier returnTypeSpecifier
+%type <tokenData> typeSpecifier scopedTypeSpecifier returnTypeSpecifier relop
 
 %union {
     TokenData *tokenData;
@@ -139,7 +138,7 @@ recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
                     node->tokenString = strdup($2->tokenString);
                     addChild(node, $4);
 
-                    if (!symbolTable.insert(strdup($2->tokenString), $2)) {
+                    if (!symbolTable.insert(strdup($2->tokenString), node)) {
                         printf("Insertion of %s failed (it probably already exists).", node->tokenString);
                         $$ = errorNode($2);
                     } else {
@@ -151,7 +150,7 @@ recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
 scopedVarDeclarations: scopedTypeSpecifier varDeclList SEMI  {
                         // For declarations in statements, loop through siblings and attach type and static info
                         for (Node* decl = $2; decl != NULL; decl = decl->sibling) {
-                            decl->type = $1->tokenString;
+                            decl->returnType = $1->tokenString;
                             decl->isStatic = $1->isStatic;
                         }
                         $$ = $2;
@@ -162,7 +161,7 @@ varDeclaration: typeSpecifier varDeclList SEMI  {
                 Node* n = $2;
                 for (Node *s = n; s != NULL; s = s->sibling) {
                     s->nodeType = nodes::Variable;
-                    s->type = $1->tokenString;
+                    s->returnType = $1->tokenString;
                 }
                 $$ = n;
               }
@@ -239,7 +238,7 @@ paramList: paramList SEMI paramTypeList      {
 paramTypeList: typeSpecifier paramIdList    {
                 Node* node = $2;
                 for (Node* s = node; s != NULL; s = s->sibling)
-                    s->type = $1->tokenString;
+                    s->returnType = $1->tokenString;
                 $$ = $2; 
              }
              ;
@@ -409,7 +408,7 @@ unaryRelExpression: NOT unaryRelExpression          {
                   }
                   | relExpression                   { $$ = $1; }
                   ;
-relExpression: sumExpression RELOP sumExpression    { 
+relExpression: sumExpression relop sumExpression    { 
                 Node* node = newNode(nodes::Operator, $2);
                 addChild(node, $1);
                 addChild(node, $3);
@@ -417,6 +416,15 @@ relExpression: sumExpression RELOP sumExpression    {
              }
              | sumExpression                        { $$ = $1; }
              ;
+
+relop: EQ
+     | NOTEQ
+     | GRTEQ
+     | LESSEQ
+     | LESS
+     | GRTR
+     ;
+
 sumExpression: sumExpression sumop term     {
                 Node* node = newNode(nodes::Operator, $2);
                 addChild(node, $1);
@@ -493,15 +501,18 @@ argList: argList ',' expression { $$ = addSibling($1, $3); }
        ;
 constant: NUMCONST  {
             $$ = newNode(nodes::Constant, $1);
+            $$->returnType = strdup("int");
         }
         | CHARCONST {
             $$ = newNode(nodes::Constant, $1);
             char c[2];
             sprintf(c, "'%c'", $1->cval);
             $$->tokenString = strdup(c);
+            $$->returnType = strdup("char");
         }
         | BOOLCONST {
             $$ = newNode(nodes::Constant, $1);
+            $$->returnType = strdup("bool");
         }
         | INVALID
         {
@@ -550,6 +561,10 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     
     for (int i = 0; i < MAX_CHILDREN; i++)
         node->children[i] = NULL;
+
+    // semantic helpers
+    node->changeScope = true;
+    node->tokenData = token;
 
     return node;
 }

@@ -58,6 +58,7 @@ typedef struct treeNode {
     struct treeNode *children[MAX_CHILDREN]; 
     struct treeNode *sibling;
     nodes::NodeType nodeType;
+    struct TokenData *tokenData;
     int numChildren;
     int siblingIndex;
 
@@ -72,6 +73,8 @@ typedef struct treeNode {
     bool isArray;
     int arraySize;
     int nodeId;
+
+    bool changeScope;
 } Node;
 
 #endif

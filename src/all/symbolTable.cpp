@@ -153,9 +153,23 @@ void SymbolTable::leave()
 }
 
 
+void * SymbolTable::lookup(std::string sym) {
+    Scope* recentScope = stack.back();
+    if (recentScope == NULL) {
+        return NULL;
+    }
+    void * data = recentScope->lookup(sym);
+    
+    if (data == NULL) {
+        data = this->lookupGlobal(sym);
+    }
+
+    return data;
+}
+
 // Lookup a symbol anywhere in the stack of scopes
 // Returns NULL if symbol not found, otherwise it returns the stored void * associated with the symbol
-void * SymbolTable::lookup(std::string sym)
+void * SymbolTable::lookupAnywhere(std::string sym)
 {
     void *data;
 

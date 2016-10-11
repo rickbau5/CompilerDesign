@@ -1,15 +1,32 @@
-// C-F16
-record Point {
-    bool defined;
-    int x, y; 
-}
+int wallace, gromit;
+char preston;
+bool a, b;
 
-record Line {
-    Point x, y;
-}
+int dog(bool corgi) {
+    char cat;
+    char frog[12];
 
-int test(Line z; Point x1, x2) {
-    x1 = x2;
+    cat = 666;
+    cat = dog;
 
-    char c : '\t';
+    corgi = a and b;
+    corgi = gromit and b;
+    corgi = a and gromit;
+
+    corgi = a == b;
+    corgi = cat == cat;
+    corgi = wallace == gromit;
+    corgi = a == gromit;
+
+    corgi = a != b;
+    corgi = cat != cat;
+    corgi = a != gromit;
+    corgi = a != gromit;
+
+    gromit = *frog;
+
+    wallace = 14 * 1;
+
+    return cat;
+    return frog;
 }

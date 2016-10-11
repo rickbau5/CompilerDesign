@@ -1,4 +1,5 @@
-#include "util.h"
+#include "printtree.h"
+#include "c-.h"
 #include "scanType.h"
 #include <stdio.h>
 
@@ -46,10 +47,10 @@ const char* stringifyNode(Node* node) {
            sprintf(nodeString, "%s of type %s length %d", toString(node->nodeType), node->type, node->numChildren);
            return nodeString;
         case nodes::Parameter:
-           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->type);
+           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->returnType);
            return nodeString;
         case nodes::Variable:
-           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->type);
+           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->returnType);
            return nodeString;
         case nodes::Compound:
            return "Compound";

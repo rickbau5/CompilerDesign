@@ -119,9 +119,9 @@ int setTokenData(int tokenClass) {
         break;
     case ID: {
             // Check if an ID is present in recordTable
-            void* data = symbolTable.lookup(yylval.tokenData->tokenString);
+            Node* node = (Node*)symbolTable.lookup(yylval.tokenData->tokenString);
 
-            if (data != NULL) {
+            if (node != NULL && node->nodeType == nodes::Record) {
                 yylval.tokenData->tokenClass = RECTYPE;
             } else {
                 ;
@@ -147,33 +147,21 @@ int setTokenData(int tokenClass) {
         yylval.tokenData->tokenStringRep = "NOT";
         break;
     case LESSEQ:
-        yylval.tokenData->relopval = LESSEQ;
-        yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = "LESSEQ";
         break;
     case GRTEQ:
-        yylval.tokenData->relopval = GRTEQ;
-        yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = "GRTEQ";
         break;
     case NOTEQ:
-        yylval.tokenData->relopval = NOTEQ;
-        yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = "NOTEQ";
         break;
     case EQ:
-        yylval.tokenData->relopval = EQ;
-        yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = "EQ";
         break;
     case LESS:
-        yylval.tokenData->relopval = LESS;
-        yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = "<";
         break;
     case GRTR:
-        yylval.tokenData->relopval = GRTR;
-        yylval.tokenData->tokenClass = RELOP;
         yylval.tokenData->relopString = ">";
         break;
     case ADDASS:

@@ -1,6 +1,7 @@
 #include <string.h>
 #include "c-.h"
-#include "util.h"
+#include "printtree.h"
+#include "semantic.h"
 #include "stdlib.h"
 #include "supgetopt.h"
 
@@ -58,6 +59,8 @@ int main (int argc, char **argv) {
     }
 
     prettyPrintTree(root);
+    typeTree(root);
+
     if (status == EXIT_SUCCESS) {
         int warnings = 0;
         printf("Number of warnings: %d\n", warnings); 
