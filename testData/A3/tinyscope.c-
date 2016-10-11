@@ -1,0 +1,19 @@
+int a;
+
+dog(char a) {
+   a; // 
+   {
+      int a;
+   a; // 
+   }
+   a; // 
+   {
+      static char a;
+   a; // 
+   }
+   a; // 
+}
+
+main() {
+   a; // 
+}

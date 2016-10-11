@@ -1,0 +1,167 @@
+  1 // C-F16
+  2 //
+  3 // IMPORTANT:
+  4 //
+  5 // This file has many if not all semantic errors.
+  6 // The errors in the comments are not necessarily the
+  7 // the exact text generated for each error not  not  not   Use the
+  8 // error message text in the assignment.  If this doesn't
+  9 // test all errors then let me know.  thanks, rh
+ 10 //
+ 11 char dog(char x)
+ 12 {
+ 13     char x;   // SPECIAL CASE: params are in function compound statement
+ 14               // Symbol %s is already defined at line %d
+ 15     int b;
+ 16 
+ 17     cat(10);  // Symbol 'cat' is not defined
+ 18 
+ 19     return b; // Expecting return type of %s but got type %s
+ 20 }
+ 21 
+ 22 int dog(int x)  // Symbol %s is already defined at line %d
+ 23 {
+ 24     {
+ 25         int x;
+ 26     }
+ 27 }               // missing return warning
+ 28 
+ 29 char cat(char x)
+ 30 {
+ 31     int b;
+ 32 
+ 33     return; // Expecting a return type of %s but got none
+ 34 }
+ 35 
+ 36 char cat;        // Symbol %s is already defined at line %d
+ 37 char unusedGlobal;  // we currently don't issue a warning for this
+ 38 
+ 39 int ibex(char x[])
+ 40 {
+ 41     char unusedLocal;  // we currently don't issue a warning for this
+ 42     return true;
+ 43 }
+ 44 
+ 45 ox(char y)
+ 46 {
+ 47     return 666;  // Expecting no return value, but got one.
+ 48 }
+ 49 
+ 50 char emu(char x, y, z)
+ 51 {                    // Warning: There is no return
+ 52 }
+ 53 
+ 54 char main()
+ 55 {
+ 56     char x, yuri;
+ 57     char x;      // Symbol %s is already defined at line %d
+ 58     int x;       // Symbol already defined but type of first declaration sticks
+ 59 
+ 60     bool ba[8];
+ 61     char aa[6];
+ 62     char zz[6];
+ 63     int bb[6], cc[6];
+ 64 
+ 65     int b, c;
+ 66 
+ 67     v;     // Variable %s cannot be declared of type  
+ 68 
+ 69     if (x) x;          // Expecting intean test condition
+ 70     while (x) x;       // Expecting intean test condition
+ 71     while (ox(10)) x;  // Expecting intean test condition
+ 72 
+ 73     x = cat;   // cannot use function cat as simple variable
+ 74     x = b;     // %s requires things of the same type but lhs is %s and rhs is %s
+ 75     x += b;    // %s requires rhs to be of type char
+ 76     b -= x;    // %s requires lhs to be of type char
+ 77     b > x;     // %s requires lhs to be of type char
+ 78     b++;       // Unary %s requires things of type %s but was given type %s
+ 79 
+ 80     if (bb) x;  // Cannot use array as test condition
+ 81     while (bb) x;  // Cannot use array as test condition
+ 82 
+ 83     break;      // break statement must be inside a while loop.
+ 84 
+ 85     while (b) { break; }
+ 86 
+ 87     aa + 6;     // The operation %s does not work with arrays
+ 88     aa < zz;    // The operation %s does not work with arrays
+ 89     bb < cc;    // The operation %s does not work with arrays
+ 90 
+ 91     x == true;  // %s requires things of the same type but lhs is %s and rhs is %s
+ 92     x == 1;
+ 93     b == true;
+ 94 
+ 95     false + x;  // %s requires things of type %s but lhs is of type %s
+ 96 
+ 97     x * false;  // %s requires things of type %s but rhs is of type %s
+ 98 
+ 99     not x;      // Unary %s requires things of type %s but was given type %s
+100     not x+b;    // two errors
+101     -b;         // Unary %s requires things of type %s but was given type %s
+102 
+103     x[496];     // Cannot index nonarray %s
+104     b = x==x+x*(x and x);   // lots of errors
+105     b = x==x+x*(x and y);   // lots of errors
+106     b = x==x or x*(x and x);   // lots of errors
+107 
+108     *x;               // requires an array
+109     *aa  and  b;      // %s requires things of type %s but lhs is of type %s
+110     aa[*aa];    // OK but should not be :-)
+111     aa[666];    // for some constant array sizes we might be able to check index but we don't
+112 
+113     aa[b];      // Expecting array index to be of type char but got type %s
+114 
+115     aa[cat];    // Cannot use function 'cat' as a simple variable.
+116 
+117     aa[aa];     // Array index is the unindexed array 'aa'.
+118     AA[1];      // variables are case sensitive
+119 
+120     aa[meerkat]; // Symbol %s is not defined
+121 
+122     xyzzy;      // Symbol %s is not defined
+123     meerkat();  // Symbol %s is not defined
+124     true and xyzzy/666;  // Symbol %s is not defined
+125 
+126     flight( not 5, -true, uu, y, x+x*b);  // even though flight is undefined the errors in the arg list should be triggered
+127 
+128     x();        // %s is a simple variable and cannot be called
+129 
+130     dog(3, 5);  // Wrong number of parameters for function %s defined on line %d
+131     ibex();     // Wrong number of parameters for function %s defined on line %d
+132 
+133     dog(true);  // Expecting %s in parameter %i of call %s defined on line %d
+134 
+135     cat(aa);    // Not expecting array in parameter %i of call %s defined on line %d
+136     cat(ba);
+137 
+138     ibex(x);    // Expecting array in parameter %i of call %s defined on line %d
+139     ibex(bb);   // Give priority to type error
+140     ibex[3];    // Cannot index nonarray %s
+141 
+142     ibex + 4;   //  Cannot use function %s as a simple variable
+143     ibex;       //  Cannot use function %s as a simple variable
+144 
+145     aa[zz[1]]; 
+146     aa[zz];       // Array index is the unindexed array %s
+147     aa[ox(true)]; // two errors
+148 
+149     x = ox(28);  // '=' requires things of the same type but lhs is char and rhs is  
+150     x = x + ox(6);  // '+' requires things of type char but rhs is of type  .
+151     cat(ox(492));   // Expecting type char in parameter 1 of call to 'cat' defined on line 20 but got type  .
+152     cat(true);      // Expecting type char in parameter 1 of call to 'cat' defined on line 20 but got type int.
+153     cat(cat(492));
+154 
+155     x = x = true;   // '=' requires things of the same type but lhs is char and rhs is int.
+156     b = b = 666;    // '=' requires things of the same type but lhs is int and rhs is char.
+157     x = b = x = b;
+158         
+159     x*b and b*x;
+160 
+161     emu(x+b, parrot, b and x);
+162     emu(false, true and emu(x+b, parrot, b and x), true, x*b);
+163 
+164     bb;
+165 
+166     return aa;  // Cannot return an array
+167 }

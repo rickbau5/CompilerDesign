@@ -1,0 +1,41 @@
+SYSTEM ERROR: Unknown declaration node kind: 0
+ERROR(9): '.' requires operands of type int but lhs is of type record.
+ERROR(10): '.' requires operands of type int but lhs is of type record.
+ERROR(11): Symbol 'defined' is not defined.
+ERROR(11): '.' requires operands of type int but lhs is of type record.
+ERROR(11): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+SYSTEM ERROR: Unknown declaration node kind: 0
+ERROR(LINKER): Procedure main is not defined.
+Var x of type int [type int] [line: 1]
+Sibling: 0  Var y of type int [type int] [line: 1]
+Sibling: 1  Record Point  [undefined type] [line: 3]
+!   Child: 0  Var defined of type bool [type bool] [line: 4]
+!   Sibling: 0  Var x of type int [type int] [line: 5]
+!   Sibling: 1  Var y of type int [type int] [line: 5]
+Sibling: 2  Func setp returns type void [type void] [line: 8]
+!   Child: 0  Param p of type record [type record] [line: 8]
+!   Sibling: 0  Param x of type int [type int] [line: 8]
+!   Sibling: 1  Param y of type int [type int] [line: 8]
+!   Child: 1  Compound [type void] [line: 8]
+!   !   Child: 1  Assign: = [type int] [line: 9]
+!   !   !   Child: 0  Op: . [type int] [line: 9]
+!   !   !   !   Child: 0  Id: p [type record] [line: 9]
+!   !   !   !   Child: 1  Id: x [type int] [line: 9]
+!   !   !   Child: 1  Id: x [type int] [line: 9]
+!   !   Sibling: 0  Assign: = [type int] [line: 10]
+!   !   !   Child: 0  Op: . [type int] [line: 10]
+!   !   !   !   Child: 0  Id: p [type record] [line: 10]
+!   !   !   !   Child: 1  Id: y [type int] [line: 10]
+!   !   !   Child: 1  Id: y [type int] [line: 10]
+!   !   Sibling: 1  Assign: = [type int] [line: 11]
+!   !   !   Child: 0  Op: . [type int] [line: 11]
+!   !   !   !   Child: 0  Id: p [type record] [line: 11]
+!   !   !   !   Child: 1  Id: defined [undefined type] [line: 11]
+!   !   !   Child: 1  Const: true [type bool] [line: 11]
+Sibling: 3  Var p of type record [type record] [line: 14]
+Sibling: 4  Record Line  [undefined type] [line: 16]
+!   Child: 0  Var x of type record [type record] [line: 17]
+!   Sibling: 0  Var y of type record [type record] [line: 17]
+Sibling: 5  Var l of type record [type record] [line: 20]
+Number of warnings: 0
+Number of errors: 6

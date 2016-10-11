@@ -1,0 +1,83 @@
+ERROR(7): Symbol 'bat' is not defined.
+ERROR(8): 'or' requires operands of type bool but lhs is of type int.
+ERROR(8): 'or' requires operands of type bool but rhs is of type int.
+ERROR(14): Symbol 'b' is not defined.
+ERROR(24): Symbol 'b' is not defined.
+ERROR(25): Symbol 'c' is not defined.
+ERROR(29): Symbol 'b' is not defined.
+ERROR(30): Symbol 'c' is not defined.
+ERROR(40): Symbol 'x' is not defined.
+ERROR(45): Symbol 'u' is not defined.
+ERROR(45): Symbol 'cow' is not defined.
+ERROR(45): Symbol 'v' is not defined.
+ERROR(46): Symbol 'abraxsis' is not defined.
+ERROR(47): Symbol 'a' is not defined.
+ERROR(52): Symbol 'g' is already defined at line 2.
+ERROR(54): Symbol 'g' is already defined at line 2.
+ERROR(56): Symbol 'x' is not defined.
+ERROR(59): Symbol 'g' is already defined at line 2.
+ERROR(60): Symbol 'ant' is already defined at line 3.
+ERROR(LINKER): Procedure main is not defined.
+Var g of type int [type int] [line: 2]
+Sibling: 0  Func ant returns type int [type int] [line: 3]
+!   Child: 0  Param x of type int [type int] [line: 3]
+!   Child: 1  Compound [type void] [line: 4]
+!   !   Child: 0  Var a of type int [type int] [line: 5]
+!   !   Child: 1  Call: bat [undefined type] [line: 7]
+!   !   !   Child: 0  Const: 3 [type int] [line: 7]
+!   !   Sibling: 0  Op: or [type bool] [line: 8]
+!   !   !   Child: 0  Id: a [type int] [line: 8]
+!   !   !   Child: 1  Id: a [type int] [line: 8]
+!   !   Sibling: 1  Id: x [type int] [line: 9]
+!   !   Sibling: 2  Id: g [type int] [line: 10]
+!   !   Sibling: 3  Compound [type void] [line: 11]
+!   !   !   Child: 0  Var c of type int [type int] [line: 12]
+!   !   !   Child: 1  Id: a [type int] [line: 13]
+!   !   !   Sibling: 0  Id: b [undefined type] [line: 14]
+!   !   !   Sibling: 1  Id: c [type int] [line: 15]
+!   !   !   Sibling: 2  Id: g [type int] [line: 16]
+!   !   !   Sibling: 3  Id: x [type int] [line: 17]
+!   !   !   Sibling: 4  Compound [type void] [line: 18]
+!   !   !   !   Child: 1  Id: c [type int] [line: 19]
+!   !   !   !   Sibling: 0  Id: a [type int] [line: 20]
+!   !   Sibling: 4  Id: a [type int] [line: 23]
+!   !   Sibling: 5  Id: b [undefined type] [line: 24]
+!   !   Sibling: 6  Id: c [undefined type] [line: 25]
+!   !   Sibling: 7  Id: x [type int] [line: 26]
+!   !   Sibling: 8  Compound [type void] [line: 27]
+!   !   !   Child: 1  Id: a [type int] [line: 28]
+!   !   !   Sibling: 0  Id: b [undefined type] [line: 29]
+!   !   !   Sibling: 1  Id: c [undefined type] [line: 30]
+!   !   !   Sibling: 2  Id: x [type int] [line: 31]
+!   !   Sibling: 9  Id: x [type int] [line: 33]
+Sibling: 1  Func bat returns type int [type int] [line: 36]
+!   Child: 0  Param y of type int [type int] [line: 36]
+!   Child: 1  Compound [type void] [line: 37]
+!   !   Child: 0  Var z of type int [type int] [line: 38]
+!   !   Sibling: 0  Var bat of type int [type int] [line: 39]
+!   !   Child: 1  Id: x [undefined type] [line: 40]
+!   !   Sibling: 0  Call: ant [type int] [line: 41]
+!   !   !   Child: 0  Id: y [undefined type] [line: 41]
+!   !   Sibling: 1  Call: ant [type int] [line: 42]
+!   !   !   Child: 0  Id: g [undefined type] [line: 42]
+!   !   Sibling: 2  Call: ant [type int] [line: 43]
+!   !   !   Child: 0  Id: z [undefined type] [line: 43]
+!   !   Sibling: 3  Call: ant [type int] [line: 44]
+!   !   !   Child: 0  Id: v [undefined type] [line: 44]
+!   !   Sibling: 4  Assign: = [undefined type] [line: 45]
+!   !   !   Child: 0  Id: u [undefined type] [line: 45]
+!   !   !   Child: 1  Call: cow [undefined type] [line: 45]
+!   !   !   !   Child: 0  Id: v [undefined type] [line: 45]
+!   !   Sibling: 5  Id: abraxsis [undefined type] [line: 46]
+!   !   Sibling: 6  Id: a [undefined type] [line: 47]
+!   !   Sibling: 7  Id: z [type int] [line: 48]
+!   !   Sibling: 8  Id: g [type int] [line: 49]
+Sibling: 2  Var g of type int [type int] [line: 52]
+Sibling: 3  Func g returns type int [type int] [line: 54]
+!   Child: 1  Compound [type void] [line: 55]
+!   !   Child: 1  Return [type void] [line: 56]
+!   !   !   Child: 0  Id: x [undefined type] [line: 56]
+Sibling: 4  Func g returns type void [type void] [line: 59]
+Sibling: 5  Func ant returns type void [type void] [line: 60]
+Number of warnings: 0
+Number of errors: 20

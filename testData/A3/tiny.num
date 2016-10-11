@@ -1,0 +1,15 @@
+  1 int walace, gromit;
+  2 char preston;
+  3 
+  4 int dog(bool corgi) {
+  5     char cat;
+  6 
+  7     aspergillus = fungus;
+  8     cat = 666;
+  9     cat = dog;
+ 10     dog = cat;
+ 11     
+ 12 
+ 13     return cat;
+ 14 }
+ 15 

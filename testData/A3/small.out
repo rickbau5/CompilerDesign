@@ -1,0 +1,6 @@
+ERROR(21): Symbol 'aardvark' is not defined.
+ERROR(21): Cannot index nonarray 'aardvark'.
+ERROR(21): Cannot index nonarray.
+ERROR(LINKER): Procedure main is not defined.
+Number of warnings: 0
+Number of errors: 4

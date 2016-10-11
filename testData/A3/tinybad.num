@@ -1,0 +1,16 @@
+  1 int ant[10];
+  2 int bat;
+  3 
+  4 int dog(bool corgi) {
+  5     char cat;
+  6 
+  7     aspergillus = niger;
+  8     cat = 666;
+  9     cat = dog;
+ 10     dog = cat;
+ 11     ant['x'] = ant[cat];
+ 12     ant[dog] = ant[cow];
+ 13 
+ 14     return cat;
+ 15 }
+ 16 

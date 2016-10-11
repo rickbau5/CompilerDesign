@@ -1,0 +1,4 @@
+ERROR(2): Symbol 's' is not defined.
+ERROR(28): Symbol 'output' is not defined.
+Number of warnings: 0
+Number of errors: 2

@@ -1,0 +1,42 @@
+ERROR(5): Symbol 'bender' is already defined at line 4.
+ERROR(9): Symbol 'x' is already defined at line 7.
+ERROR(10): Symbol 'x' is already defined at line 7.
+ERROR(10): Symbol 'y' is already defined at line 9.
+ERROR(12): Symbol 'z' is not defined.
+ERROR(13): '=' requires operands of the same type but lhs is type bool and rhs is type int.
+ERROR(17): Symbol 'z' is not defined.
+ERROR(17): Symbol 'z' is not defined.
+ERROR(18): Cannot use function 'main' as a variable.
+ERROR(19): Cannot index nonarray 'x'.
+ERROR(20): Array 'y' should be indexed by type int but got type char.
+ERROR(21): Array index is the unindexed array 'y'.
+ERROR(23): Cannot index nonarray.
+ERROR(24): Cannot use function 'main' as a variable.
+ERROR(25): Cannot use function 'main' as a variable.
+ERROR(25): Cannot index nonarray 'main'.
+ERROR(25): Array 'main' should be indexed by type int but got type char.
+ERROR(26): 'and' requires operands of type bool but lhs is of type int.
+ERROR(26): 'and' requires operands of type bool but rhs is of type char.
+ERROR(29): The operation '*' only works with arrays.
+ERROR(30): The operation '*' only works with arrays.
+ERROR(31): Unary '?' requires an operand of type type int but was given type char.
+ERROR(31): Unary '?' requires an operand of type type int but was given type bool.
+ERROR(33): Symbol 'fred' is not defined.
+ERROR(33): 'and' requires operands of type bool but lhs is of type int.
+ERROR(34): '+' requires operands of type int but lhs is of type bool.
+ERROR(34): '+' requires operands of type int but rhs is of type bool.
+ERROR(35): '*' requires operands of type int but rhs is of type void.
+ERROR(36): '=' requires operands of non-void type but rhs is of type void.
+ERROR(37): '=' requires operands of the same type but lhs is type bool and rhs is type int.
+ERROR(38): '==' requires operands of non-void type but lhs is of type void.
+ERROR(38): '==' requires operands of non-void type but rhs is of type void.
+ERROR(39): '!=' requires operands of non-void type but lhs is of type void.
+ERROR(39): '!=' requires operands of non-void type but rhs is of type void.
+ERROR(40): '-' requires operands of type int but lhs is of type void.
+ERROR(40): '-' requires operands of type int but rhs is of type void.
+ERROR(42): Array 'y' should be indexed by type int but got type void.
+ERROR(43): '<' requires operands of type char or type int but lhs is of type bool.
+ERROR(43): '<' requires operands of type char or type int but rhs is of type bool.
+ERROR(44): '<' requires operands of the same type but lhs is type char and rhs is type int.
+Number of warnings: 0
+Number of errors: 40

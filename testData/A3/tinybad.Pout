@@ -1,0 +1,46 @@
+ERROR(7): Symbol 'aspergillus' is not defined.
+ERROR(7): Symbol 'niger' is not defined.
+ERROR(8): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(9): Cannot use function 'dog' as a variable.
+ERROR(10): Cannot use function 'dog' as a variable.
+ERROR(11): Array 'ant' should be indexed by type int but got type char.
+ERROR(11): Array 'ant' should be indexed by type int but got type char.
+ERROR(12): Cannot use function 'dog' as a variable.
+ERROR(12): Symbol 'cow' is not defined.
+ERROR(LINKER): Procedure main is not defined.
+Var ant is array of type int [type int] [line: 1]
+Sibling: 0  Var bat of type int [type int] [line: 2]
+Sibling: 1  Func dog returns type int [type int] [line: 4]
+!   Child: 0  Param corgi of type bool [type bool] [line: 4]
+!   Child: 1  Compound [type void] [line: 4]
+!   !   Child: 0  Var cat of type char [type char] [line: 5]
+!   !   Child: 1  Assign: = [undefined type] [line: 7]
+!   !   !   Child: 0  Id: aspergillus [undefined type] [line: 7]
+!   !   !   Child: 1  Id: niger [undefined type] [line: 7]
+!   !   Sibling: 0  Assign: = [type char] [line: 8]
+!   !   !   Child: 0  Id: cat [type char] [line: 8]
+!   !   !   Child: 1  Const: 666 [type int] [line: 8]
+!   !   Sibling: 1  Assign: = [type char] [line: 9]
+!   !   !   Child: 0  Id: cat [type char] [line: 9]
+!   !   !   Child: 1  Id: dog [undefined type] [line: 9]
+!   !   Sibling: 2  Assign: = [undefined type] [line: 10]
+!   !   !   Child: 0  Id: dog [undefined type] [line: 10]
+!   !   !   Child: 1  Id: cat [type char] [line: 10]
+!   !   Sibling: 3  Assign: = [type int] [line: 11]
+!   !   !   Child: 0  Op: [ [type int] [line: 11]
+!   !   !   !   Child: 0  Id: ant [type int] [line: 11]
+!   !   !   !   Child: 1  Const: 'x' [type char] [line: 11]
+!   !   !   Child: 1  Op: [ [type int] [line: 11]
+!   !   !   !   Child: 0  Id: ant [type int] [line: 11]
+!   !   !   !   Child: 1  Id: cat [type char] [line: 11]
+!   !   Sibling: 4  Assign: = [type int] [line: 12]
+!   !   !   Child: 0  Op: [ [type int] [line: 12]
+!   !   !   !   Child: 0  Id: ant [type int] [line: 12]
+!   !   !   !   Child: 1  Id: dog [undefined type] [line: 12]
+!   !   !   Child: 1  Op: [ [type int] [line: 12]
+!   !   !   !   Child: 0  Id: ant [type int] [line: 12]
+!   !   !   !   Child: 1  Id: cow [undefined type] [line: 12]
+!   !   Sibling: 5  Return [type void] [line: 14]
+!   !   !   Child: 0  Id: cat [type char] [line: 14]
+Number of warnings: 0
+Number of errors: 10

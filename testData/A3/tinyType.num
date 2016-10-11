@@ -1,0 +1,50 @@
+  1 // F-16
+  2 bool w, x, y;
+  3 
+  4 bender(int x);  // an empty function that returns nothing and so is void
+  5 int bender() return 666;
+  6 
+  7 int main(int x)
+  8 {
+  9     int x, y[10];
+ 10     char x, y;
+ 11 
+ 12     z + x;
+ 13     w = 72;
+ 14     { int z;
+ 15       z = z/z;
+ 16     }
+ 17     z + z;
+ 18     main = 10;
+ 19     x[2] = 3;
+ 20     y['c'] = 4;
+ 21     y[y] = 5;
+ 22     y[y[0]] = 55;
+ 23     y[6][7];
+ 24     y[main];
+ 25     main['c'];
+ 26     6 and 'x';
+ 27     y = y;
+ 28     y[*y-1];
+ 29     *x;
+ 30     *main();
+ 31     ?'u' + ?true;
+ 32     66 + y[77-11*55] * 77 > 12 or false;
+ 33     main() and fred();
+ 34     true + false + 666;
+ 35     919 * bender();
+ 36     x = bender();
+ 37     w = main();
+ 38     bender() == bender();
+ 39     bender() != bender();
+ 40     bender() - bender();
+ 41     bender(bender(4));  // this will be caught in second semantic analysis assignment.
+ 42     y[bender(3)];
+ 43     true<false;
+ 44     'a'<11;
+ 45     'a'>='b';
+ 46     6 + (x = 3);
+ 47 
+ 48     return;
+ 49     return 'x';
+ 50 }

@@ -1,0 +1,21 @@
+int x, y;
+
+record Point {
+    bool defined;
+    int x, y;
+}
+
+setp(Point p; int x, y) {
+   p.x = x;
+   p.y = y;
+   p.defined = true;
+}
+
+Point p;
+
+record Line {
+    Point x, y;
+}
+
+Line l;
+

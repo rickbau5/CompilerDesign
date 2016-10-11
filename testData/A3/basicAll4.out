@@ -1,0 +1,91 @@
+ERROR(13): Symbol 'x' is already defined at line 11.
+ERROR(17): Symbol 'cat' is not defined.
+ERROR(22): Symbol 'dog' is already defined at line 11.
+ERROR(36): Symbol 'cat' is already defined at line 29.
+ERROR(57): Symbol 'x' is already defined at line 56.
+ERROR(58): Symbol 'x' is already defined at line 56.
+ERROR(67): Symbol 'v' is not defined.
+ERROR(73): Cannot use function 'cat' as a variable.
+ERROR(74): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(75): '+=' requires operands of type int but lhs is of type char.
+ERROR(76): '-=' requires operands of type int but rhs is of type char.
+ERROR(77): '>' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(87): '+' requires operands of type int but lhs is of type char.
+ERROR(87): The operation '+' does not work with arrays.
+ERROR(88): The operation '<' does not work with arrays.
+ERROR(89): The operation '<' does not work with arrays.
+ERROR(91): '==' requires operands of the same type but lhs is type char and rhs is type bool.
+ERROR(92): '==' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(93): '==' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(95): '+' requires operands of type int but lhs is of type bool.
+ERROR(95): '+' requires operands of type int but rhs is of type char.
+ERROR(97): '*' requires operands of type int but lhs is of type char.
+ERROR(97): '*' requires operands of type int but rhs is of type bool.
+ERROR(99): Unary 'not' requires an operand of type type bool but was given type char.
+ERROR(100): '+' requires operands of type int but lhs is of type char.
+ERROR(100): Unary 'not' requires an operand of type type bool but was given type int.
+ERROR(103): Cannot index nonarray 'x'.
+ERROR(104): 'and' requires operands of type bool but lhs is of type char.
+ERROR(104): 'and' requires operands of type bool but rhs is of type char.
+ERROR(104): '*' requires operands of type int but lhs is of type char.
+ERROR(104): '*' requires operands of type int but rhs is of type bool.
+ERROR(104): '+' requires operands of type int but lhs is of type char.
+ERROR(104): '==' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(104): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(105): Symbol 'y' is not defined.
+ERROR(105): 'and' requires operands of type bool but lhs is of type char.
+ERROR(105): '*' requires operands of type int but lhs is of type char.
+ERROR(105): '*' requires operands of type int but rhs is of type bool.
+ERROR(105): '+' requires operands of type int but lhs is of type char.
+ERROR(105): '==' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(105): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(106): 'and' requires operands of type bool but lhs is of type char.
+ERROR(106): 'and' requires operands of type bool but rhs is of type char.
+ERROR(106): '*' requires operands of type int but lhs is of type char.
+ERROR(106): '*' requires operands of type int but rhs is of type bool.
+ERROR(106): 'or' requires operands of type bool but rhs is of type int.
+ERROR(106): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(108): The operation '*' only works with arrays.
+ERROR(109): 'and' requires operands of type bool but lhs is of type int.
+ERROR(109): 'and' requires operands of type bool but rhs is of type int.
+ERROR(115): Cannot use function 'cat' as a variable.
+ERROR(117): Array 'aa' should be indexed by type int but got type char.
+ERROR(117): Array index is the unindexed array 'aa'.
+ERROR(118): Symbol 'AA' is not defined.
+ERROR(118): Cannot index nonarray 'AA'.
+ERROR(120): Symbol 'meerkat' is not defined.
+ERROR(122): Symbol 'xyzzy' is not defined.
+ERROR(123): Symbol 'meerkat' is not defined.
+ERROR(124): Symbol 'xyzzy' is not defined.
+ERROR(124): 'and' requires operands of type bool but rhs is of type int.
+ERROR(126): Symbol 'flight' is not defined.
+ERROR(126): Unary 'not' requires an operand of type type bool but was given type int.
+ERROR(126): Unary '-' requires an operand of type type int but was given type bool.
+ERROR(126): Symbol 'uu' is not defined.
+ERROR(126): Symbol 'y' is not defined.
+ERROR(126): '*' requires operands of type int but lhs is of type char.
+ERROR(126): '+' requires operands of type int but lhs is of type char.
+ERROR(128): 'x' is a simple variable and cannot be called.
+ERROR(140): Cannot use function 'ibex' as a variable.
+ERROR(140): Cannot index nonarray 'ibex'.
+ERROR(142): Cannot use function 'ibex' as a variable.
+ERROR(143): Cannot use function 'ibex' as a variable.
+ERROR(145): Array 'aa' should be indexed by type int but got type char.
+ERROR(146): Array 'aa' should be indexed by type int but got type char.
+ERROR(146): Array index is the unindexed array 'zz'.
+ERROR(147): Array 'aa' should be indexed by type int but got type void.
+ERROR(149): '=' requires operands of non-void type but rhs is of type void.
+ERROR(150): '+' requires operands of type int but lhs is of type char.
+ERROR(150): '+' requires operands of type int but rhs is of type void.
+ERROR(150): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(155): '=' requires operands of the same type but lhs is type char and rhs is type bool.
+ERROR(157): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(157): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(157): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(159): '*' requires operands of type int but lhs is of type char.
+ERROR(159): '*' requires operands of type int but rhs is of type char.
+ERROR(159): 'and' requires operands of type bool but lhs is of type int.
+ERROR(159): 'and' requires operands of type bool but rhs is of type int.
+ERROR(166): Cannot return an array.
+Number of warnings: 0
+Number of errors: 89

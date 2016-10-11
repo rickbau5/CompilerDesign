@@ -1,0 +1,60 @@
+  1 // C-F16
+  2 // C-F13
+  3 // C-F09
+  4 int g;
+  5 
+  6   main()
+  7 {
+  8     {
+  9 	int x;
+ 10 	int y;
+ 11 
+ 12 	x=11;
+ 13 	y=12;
+ 14 	g=13;
+ 15 
+ 16 	x=3+4*x+y*7+x*(y+g);
+ 17 	x=(3-4/x-y/7-x/(y-g));
+ 18 	x=((3%((4))/(x)%(y/(7)%x)/(y%g)));
+ 19     }
+ 20     {
+ 21 	bool x, y, z[32];
+ 22 
+ 23 	x=true;
+ 24 	y=false;
+ 25 
+ 26 	x=true or false and x or y and 7 or x and (y or g);
+ 27 	x= not (true) or  not  not x;
+ 28 
+ 29 	x = x  and  y  and  x;
+ 30 	x = x  or  y  or  x;
+ 31 
+ 32 	x=z[1];
+ 33 	z[1]=x;
+ 34 	z[1]=z[2];
+ 35 	z[1]=z[2]+z[3];
+ 36     }
+ 37     {
+ 38 	int z[3];
+ 39 
+ 40 	x=z[1];
+ 41 	z[1]=x;
+ 42 	z[1]=z[2];
+ 43 	z[1]=z[2]+z[3];
+ 44 	x=z[1]+z[2]*z[0]+z[3]*7+x*(z[4]+g);
+ 45     }
+ 46 
+ 47     {
+ 48          int a, b, c, d;
+ 49 	 a=b=c;
+ 50 	 a=b+c+d;
+ 51 	 a=b*c*d;
+ 52          g=a+=b-=c+d;
+ 53 	 a=(b=3)+(c=4);
+ 54     }    
+ 55     { 
+ 56          int a, b;
+ 57 	 bool x, y;
+ 58 	 x = x  or  y  and  b*a>a+b;
+ 59     }
+ 60 }

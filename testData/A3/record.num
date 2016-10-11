@@ -1,0 +1,21 @@
+  1 int x, y;
+  2 
+  3 record Point {
+  4     bool defined;
+  5     int x, y;
+  6 }
+  7 
+  8 setp(Point p; int x, y) {
+  9    p.x = x;
+ 10    p.y = y;
+ 11    p.defined = true;
+ 12 }
+ 13 
+ 14 Point p;
+ 15 
+ 16 record Line {
+ 17     Point x, y;
+ 18 }
+ 19 
+ 20 Line l;
+ 21 

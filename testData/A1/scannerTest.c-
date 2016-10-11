@@ -1,0 +1,90 @@
+CharConstTests
+'x'
+'"'
+'\''
+'\"'
+'\n'
+'\0'
+'\\'
+'dogs'
+''
+
+StringConstTests
+"x"
+""
+"'"
+"\'"
+"\""
+"\n"
+"\0"
+"\\"
+"dogs"
+"dogs\'cats"
+"dogs\"cats"
+"dogs\ncats"
+"dogs\0cats"
+"dogs\\cats"
+"\0\0\0\0dogs and cats"
+
+BadCharTests
+#^&*?#^_@~
+"#^&*?#^_@~"
+
+IDTest
+and
+or
+not
+xor
+x_
+k9342
+9342k
+variable496
+
+true false        // whitespace
+true	false     // tab
+
+/* not a comment */
+// lone comment
+"Now for a list of all of the tokens and then some"   // you'll never see this
+!=*=+++=---=/=<===>=                                  /// another comment
+! ( ) * / + , - : ; < = > ? [ ] | % & { }
+!()*/+,-:;<=>?[]|%&{}
+bool
+break
+char
+else
+foreach
+if
+in
+int
+record
+string
+return
+static
+while
+false
+true
+trueAsTheSkyIsBlue
+truefalse
+'
+"
+dog
+"
+a*ab_abc#abcd
+-666
++666
+0
+007
+700
+k9 k_9 9k
+
+3.14159265358979
+3.
+.14
+3.0
+0.14
++7
+//
+
+AllWorkAndNoPlayMakesJackADullBoyAllWorkAndNoPlayMakesJackADullBoyAllWorkAndNoPlayMakesJackADullBoy
+redrum

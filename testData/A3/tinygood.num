@@ -1,0 +1,13 @@
+  1 int ant[10];
+  2 int bat;
+  3 
+  4 int dog(bool corgi) {
+  5     char cat;
+  6 
+  7     cat = 'x';
+  8     bat = 666 * (777 - 888);
+  9     ant[7] = ant[8];    
+ 10 
+ 11     return bat;
+ 12 }
+ 13 

@@ -1,0 +1,12 @@
+ERROR(7): Symbol 'aspergillus' is not defined.
+ERROR(7): Symbol 'niger' is not defined.
+ERROR(8): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(9): Cannot use function 'dog' as a variable.
+ERROR(10): Cannot use function 'dog' as a variable.
+ERROR(11): Array 'ant' should be indexed by type int but got type char.
+ERROR(11): Array 'ant' should be indexed by type int but got type char.
+ERROR(12): Cannot use function 'dog' as a variable.
+ERROR(12): Symbol 'cow' is not defined.
+ERROR(LINKER): Procedure main is not defined.
+Number of warnings: 0
+Number of errors: 10
