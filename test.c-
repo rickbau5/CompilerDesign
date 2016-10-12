@@ -1,32 +1,11 @@
-int wallace, gromit;
-char preston;
-bool a, b;
+int other(int x) {
+    
+}
+int ant(int x)
+{
+}
 
-int dog(bool corgi) {
-    char cat;
-    char frog[12];
-
-    cat = 666;
-    cat = dog;
-
-    corgi = a and b;
-    corgi = gromit and b;
-    corgi = a and gromit;
-
-    corgi = a == b;
-    corgi = cat == cat;
-    corgi = wallace == gromit;
-    corgi = a == gromit;
-
-    corgi = a != b;
-    corgi = cat != cat;
-    corgi = a != gromit;
-    corgi = a != gromit;
-
-    gromit = *frog;
-
-    wallace = 14 * 1;
-
-    return cat;
-    return frog;
+int g()
+{
+    return x;
 }
