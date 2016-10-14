@@ -1,11 +1,5 @@
-int other(int x) {
-    
-}
-int ant(int x)
-{
-}
-
-int g()
-{
-    return x;
+int main() {
+    char x;
+    int b;
+    x += b;
 }

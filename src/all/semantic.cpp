@@ -46,166 +46,189 @@ int findNonMatching(const char* typ, Node* a, Node* b) {
 }
 
 const char* computeType(Node* parent, Node* left, Node* right) {
-    if (parent->nodeType == nodes::Operator) {
-        switch (parent->tokenData->tokenClass) { 
-        case AND:
-        case OR: {
-                bool flag = true;
-                if (!typesMatch("bool", left, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "bool", left->returnType);   
-                    numErrors++;
-                    flag = false;
-                } 
-                if (!typesMatch("bool", right, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "bool", right->returnType);   
-                    numErrors++;
-                    flag = false;
-                }
-                if (flag)
-                    return "bool";
+    switch (parent->tokenData->tokenClass) { 
+    case AND:
+    case OR: {
+            bool flag = true;
+            if (!typesMatch("bool", left, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "bool", left->returnType);   
+                numErrors++;
+                flag = false;
+            } 
+            if (!typesMatch("bool", right, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "bool", right->returnType);   
+                numErrors++;
+                flag = false;
             }
-            break;
-        case EQ:
-        case NOTEQ: {
-                bool flag = true;
-                if (!strcmp("void", left->returnType)) {
-                    printf("ERROR(%d): '%s' requires operands of non-void type but lhs is of type void.\n", parent->lineno, parent->tokenString);
-                    numErrors++;
-                    flag = false;
-                }
-                if (!strcmp("void", right->returnType)) {
-                    printf("ERROR(%d): '%s' requires operands of non-void type but rhs is of type void.\n", parent->lineno, parent->tokenString);
-                    numErrors++;
-                    flag = false;
-                }
-                if (flag && (typesMatch("bool", left, right) || typesMatch("char", left, right) || typesMatch("int", left, right))) {
-                    return "bool";
-                }
-            }
-            break;
-        case LESSEQ:
-        case GRTEQ:
-        case LESS:
-        case GRTR:
-            if (!left->isArray && !right->isArray) {
-                bool flag = true;
-                if (!typesMatch("char", left, NULL) && !typesMatch("int", left, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type char or type int but lhs is of type %s.\n", parent->lineno, parent->tokenString, left->returnType);
-                    numErrors++;
-                    flag = false;
-                }
-                if (!typesMatch("char", right, NULL) && !typesMatch("int", right, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type char or type int but rhs is of type %s.\n", parent->lineno, parent->tokenString, right->returnType);
-                    numErrors++;
-                    flag = false;
-                }
-                if (!typesMatch(left, right)) {
-                    printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", parent->lineno, parent->tokenString, left->returnType, right->returnType);
-                    numErrors++;
-                }
-                if (!flag) 
-                    return "bool";
+            return "bool";
+        }
+        break;
+    case NOT: {
+            if (!typesMatch("bool", left, NULL)) {
+                printf("ERROR(%d): Unary 'not' requires an operand of type type bool but was given type %s.\n", parent->lineno, left->returnType);
+                numErrors++;
             } else {
+                return "bool";
+            }
+        }
+        break;
+    case EQ:
+    case NOTEQ: {
+            if (!strcmp("void", left->returnType)) {
+                printf("ERROR(%d): '%s' requires operands of NONVOID but lhs is of type void.\n", parent->lineno, parent->tokenString);
+                numErrors++;
+            }
+            if (!strcmp("void", right->returnType)) {
+                printf("ERROR(%d): '%s' requires operands of NONVOID but rhs is of type void.\n", parent->lineno, parent->tokenString);
+                numErrors++;
+            }
+            if (strcmp(left->returnType, right->returnType)) {
+                printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", parent->lineno, parent->tokenString, left->returnType, right->returnType);
+                numErrors++;
+            }
+            // if (typesMatch("bool", left, right) || typesMatch("char", left, right) || typesMatch("int", left, right)) {
+                return "bool";
+            // }
+        }
+        break;
+    case LESSEQ:
+    case GRTEQ:
+    case LESS:
+    case GRTR:
+        if (!left->isArray && !right->isArray) {
+            bool flag = true;
+            if (!typesMatch("char", left, NULL) && !typesMatch("int", left, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type char or type int but lhs is of type %s.\n", parent->lineno, parent->tokenString, left->returnType);
+                numErrors++;
+                flag = false;
+            }
+            if (!typesMatch("char", right, NULL) && !typesMatch("int", right, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type char or type int but rhs is of type %s.\n", parent->lineno, parent->tokenString, right->returnType);
+                numErrors++;
+                flag = false;
+            }
+            if (!typesMatch(left, right)) {
+                printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", parent->lineno, parent->tokenString, left->returnType, right->returnType);
+                numErrors++;
+            }
+            if (!flag) 
+                return "bool";
+        } else {
+            printf("ERROR(%d): The operation '%s' does not work with arrays.\n", parent->lineno, parent->tokenString);
+            numErrors++;
+        }
+        break;
+
+    case MULOP:
+        if (right == NULL) {
+            bool valid = left->isArray && (
+                    typesMatch("bool", left, NULL) || typesMatch("char", left, NULL) ||
+                    typesMatch("int", left, NULL)
+                    );
+            if (!valid) {
+                printf("ERROR(%d): The operation '%s' only works with arrays.\n", parent->lineno, parent->tokenString);
+                numErrors++;
+                return "unknown";
+            }
+            return "int";
+        } else {
+            bool flag = true;
+            if (!typesMatch("int", left, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
+                numErrors++;
+                flag = false;
+            }
+            if (!typesMatch("int", right, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "int", right->returnType);
+                numErrors++;
+                flag = false;
+            }
+            if (!flag) {
+                return "int";
+            }
+        }
+        break;
+    case LBRACKET:
+        if (!left->isArray) {
+            if (left->tokenData->tokenClass == LBRACKET) {
+                printf("ERROR(%d): Cannot index nonarray.\n", left->lineno);
+            } else {
+                printf("ERROR(%d): Cannot index nonarray '%s'.\n", left->lineno, left->tokenString);
+            }
+            numErrors++;
+            if (!typesMatch("int", right, NULL)) {
+                printf("ERROR(%d): Array '%s' should be indexed by type int but got type %s.\n", parent->lineno, left->tokenString, right->returnType);
+                numErrors++;
+            }
+        } else if (!typesMatch("int", right, NULL)) {
+            printf("ERROR(%d): Array '%s' should be indexed by type int but got type %s.\n", right->lineno, left->tokenString, right->returnType);
+            numErrors++;
+        } 
+
+        if (right->isArray) {
+            printf("ERROR(%d): Array index is the unindexed array '%s'.\n", right->lineno, right->tokenString);
+            numErrors++;
+        }
+
+        return left->returnType;
+        break;
+    case QUEOP: {
+            if (!typesMatch("int", left, NULL)) {
+                printf("ERROR(%d): Unary '%s' requires an operand of type type %s but was given type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
+                numErrors++;
+            } else {
+                return "int";
+            }
+        }
+        break;
+    case SUBOP: {
+            if (right == NULL) {
+                if (!typesMatch("int", left, NULL)) {
+                    printf("ERROR(%d): Unary '-' requires an operand of type type int but was given type %s.\n", parent->lineno, left->returnType);
+                    numErrors++;
+                }
+                return "int";
+            }
+            // else fall through cause it's a binary operator
+        }
+    case ACC:
+    case ADDASS: 
+    case SUBASS:
+    case MULASS:
+    case DIVASS:
+    case ADDOP:
+    case DIVOP:
+    case MODOP: {
+            // printf("L(%d): here\n", parent->lineno);
+            // printf("CT: lhs: %s, rhs: %s\n", left->returnType, right->returnType);
+            bool flag = true;
+            if (right == NULL) {
+                printf("L(%d): Null right\n", left->lineno);
+                prettyPrintTree(parent);
+            }
+            if (!typesMatch("int", left, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
+                numErrors++;
+                flag = false;
+            }
+            if (!typesMatch("int", right, NULL)) {
+                printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "int", right->returnType);
+                numErrors++;
+                flag = false;
+            }
+            // Check if array
+            if (left->isArray || right->isArray) {
                 printf("ERROR(%d): The operation '%s' does not work with arrays.\n", parent->lineno, parent->tokenString);
                 numErrors++;
             }
-            break;
-
-        case MULOP:
-            if (right == NULL) {
-                bool valid = left->isArray && (
-                        typesMatch("bool", left, NULL) || typesMatch("char", left, NULL) ||
-                        typesMatch("int", left, NULL)
-                        );
-                if (valid) {
-                    return "int";
-                }
-                else {
-                    printf("ERROR(%d): The operation '%s' only works with arrays.\n", parent->lineno, parent->tokenString);
-                    numErrors++;
-                    return "unknown";
-                }
-            } else {
-                // TODO: check types here
-                bool flag = true;
-                if (!typesMatch("int", left, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
-                    numErrors++;
-                    flag = false;
-                }
-                if (!typesMatch("int", right, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "int", right->returnType);
-                    numErrors++;
-                    flag = false;
-                }
-                if (!flag) {
-                    return "int";
-                }
-            }
-            break;
-        case LBRACKET:
-            if (!left->isArray) {
-                if (left->tokenData->tokenClass == LBRACKET) {
-                    printf("ERROR(%d): Cannot index nonarray.\n", left->lineno);
-                } else {
-                    printf("ERROR(%d): Cannot index nonarray '%s'.\n", left->lineno, left->tokenString);
-                }
-                numErrors++;
-                if (!typesMatch("int", right, NULL)) {
-                    printf("ERROR(%d): Array '%s' should be indexed by type int but got type %s.\n", parent->lineno, left->tokenString, right->returnType);
-                    numErrors++;
-                }
-            } else if (!typesMatch("int", right, NULL)) {
-                printf("ERROR(%d): Array '%s' should be indexed by type int but got type %s.\n", right->lineno, left->tokenString, right->returnType);
-                numErrors++;
-            } else {
-                if (right->isArray) {
-                    printf("ERROR(%d): Array index is the unindexed array '%s'.\n", right->lineno, right->tokenString);
-                    numErrors++;
-                } else {
-                    return left->returnType;
-                }
-            }
-            break;
-        case QUEOP: {
-                if (!typesMatch("int", left, NULL)) {
-                    printf("ERROR(%d): Unary '%s' requires an operand of type type %s but was given type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
-                    numErrors++;
-                } else {
-                    return "int";
-                }
-            }
-            break;
-        case ADDASS: 
-        case SUBASS:
-        case MULASS:
-        case DIVASS:
-        case ADDOP:
-        case SUBOP:
-        case DIVOP:
-        case MODOP: {
-                bool flag = true;
-                if (!typesMatch("int", left, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
-                    numErrors++;
-                    flag = false;
-                }
-                if (!typesMatch("int", right, NULL)) {
-                    printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "int", right->returnType);
-                    numErrors++;
-                    flag = false;
-                }
-                if (!flag) {
-                    return "int";
-                }
-            }
-            break;
-        default:
-            if (typesMatch("int", left, right)) {
-                return "int";
-            }
-            ;
+            return "int";
         }
+        break;
+    default:
+        if (typesMatch("int", left, right)) {
+            return "int";
+        }
+        ;
     }
 
     return "unknown";
@@ -265,6 +288,10 @@ void typeNode(Node* node) {
             }
             break;
         }
+    case nodes::Record: {
+            printf("SYSTEM ERROR: Unknown declaration node kind: 0\n");
+            break;
+        }
     case nodes::Variable: {
             // Type child, which would be initialization
             typeNode(node->children[0]);
@@ -286,7 +313,7 @@ void typeNode(Node* node) {
                 printf("Null right %s...\n", rght->tokenString);
                 prettyPrintTree(node);
             } else if (!strcmp("void", rght->returnType)) {
-                printf("ERROR(%d): '=' requires operands of non-void type but rhs is of type void.\n", node->lineno);
+                printf("ERROR(%d): '=' requires operands of NONVOID but rhs is of type void.\n", node->lineno);
                 numErrors++;
                 node->returnType = strdup("unknown");
             } else  if (!typesMatch(left, rght)) {
@@ -312,7 +339,6 @@ void typeNode(Node* node) {
             typeNode(right);
             const char* val = computeType(node, left, right);
             node->returnType = strdup(val);
-            // printf("L(%d): Set type of '%s' to '%s'\n", node->lineno, node->tokenString, node->returnType);
             
             break;
         }
@@ -346,9 +372,9 @@ void typeNode(Node* node) {
         } else {
             cloneNode(data, node);
         }
-        for (Node* param = node->children[0]; param != NULL; param = param->sibling) {
-            typeNode(param);
-        }
+        // Don't need to loop through all parameters, just start at first
+        //cause they're siblings so would be handled by normal flow
+        typeNode(node->children[0]);
         break;
     }
     case nodes::ReturnStatement: {

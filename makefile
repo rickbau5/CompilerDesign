@@ -47,8 +47,7 @@ PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
 all: compile
 
 clean:
-	@- rm -rf $(BIN) $(OUT_DIR) $(BUILD_DIR)
-
+	@- rm -rf $(BIN) $(OUT_DIR) $(BUILD_DIR) $(TMP) test.out
 flex:
 	cd $(BUILD_DIR) && flex $(FLEX)
 
