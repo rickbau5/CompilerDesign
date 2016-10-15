@@ -3,9 +3,11 @@
 #include "c-.h"
 #include "scanType.h"
 #include "c-.tab.h"
+#include <string.h>
 #include <stdio.h>
 
 extern int numErrors;
+extern FILE* semanticOut;
 
 void cloneNode(Node* src, Node* dest) {
     dest->returnType = src->returnType;
@@ -107,12 +109,11 @@ const char* computeType(Node* parent, Node* left, Node* right) {
                 numErrors++;
                 flag = false;
             }
-            if (!typesMatch(left, right)) {
+            if (flag && !typesMatch(left, right)) {
                 printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", parent->lineno, parent->tokenString, left->returnType, right->returnType);
                 numErrors++;
             }
-            if (!flag) 
-                return "bool";
+            return "bool";
         } else {
             printf("ERROR(%d): The operation '%s' does not work with arrays.\n", parent->lineno, parent->tokenString);
             numErrors++;
@@ -121,14 +122,13 @@ const char* computeType(Node* parent, Node* left, Node* right) {
 
     case MULOP:
         if (right == NULL) {
-            bool valid = left->isArray && (
+            bool valid = (left->isArray || !strcmp(left->returnType, "unknown")) && (
                     typesMatch("bool", left, NULL) || typesMatch("char", left, NULL) ||
                     typesMatch("int", left, NULL)
                     );
             if (!valid) {
                 printf("ERROR(%d): The operation '%s' only works with arrays.\n", parent->lineno, parent->tokenString);
                 numErrors++;
-                return "unknown";
             }
             return "int";
         } else {
@@ -143,9 +143,7 @@ const char* computeType(Node* parent, Node* left, Node* right) {
                 numErrors++;
                 flag = false;
             }
-            if (!flag) {
-                return "int";
-            }
+            return "int";
         }
         break;
     case LBRACKET:
@@ -176,9 +174,13 @@ const char* computeType(Node* parent, Node* left, Node* right) {
             if (!typesMatch("int", left, NULL)) {
                 printf("ERROR(%d): Unary '%s' requires an operand of type type %s but was given type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
                 numErrors++;
-            } else {
-                return "int";
             }
+            if (left->isArray) {
+                printf("ERROR(%d): The operation '?' does not work with arrays.\n", parent->lineno);
+                numErrors++;
+            }
+
+            return "int";
         }
         break;
     case SUBOP: {
@@ -249,9 +251,14 @@ void typeNode(Node* node) {
 
             // Even if it exists, let's analyze it
             symbolTable.enter(node->tokenString);
-            for (Node *c = node->children[0]; c != NULL; c = c->sibling) {
-                symbolTable.insert(c->tokenString, c);
-            }
+            typeNode(node->children[0]);
+            // for (Node *c = node->children[0]; c != NULL; c = c->sibling) {
+            //     if (!symbolTable.insert(c->tokenString, c)) {
+            //         Node* existing = (Node*)symbolTable.lookup(node->tokenString);
+            //         printf("ERROR(%d): Symbol '%s' is already defined at line %d.\n", c->lineno, c->tokenString, existing->lineno);
+            //         numErrors++;
+            //     }
+            // }
 
             Node* body = node->children[1];
             if (body != NULL && body->nodeType == nodes::Compound) {
@@ -292,6 +299,7 @@ void typeNode(Node* node) {
             printf("SYSTEM ERROR: Unknown declaration node kind: 0\n");
             break;
         }
+    case nodes::Parameter:
     case nodes::Variable: {
             // Type child, which would be initialization
             typeNode(node->children[0]);
@@ -315,7 +323,7 @@ void typeNode(Node* node) {
             } else if (!strcmp("void", rght->returnType)) {
                 printf("ERROR(%d): '=' requires operands of NONVOID but rhs is of type void.\n", node->lineno);
                 numErrors++;
-                node->returnType = strdup("unknown");
+                node->returnType = left->returnType;
             } else  if (!typesMatch(left, rght)) {
                 node->returnType = left->returnType;
                 printf("ERROR(%d): '=' requires operands of the same type but lhs is type %s and rhs is type %s.\n", node->lineno, left->returnType, rght->returnType);
@@ -386,6 +394,7 @@ void typeNode(Node* node) {
                     numErrors++;
                     break;
                 }
+                node->returnType = strdup("void");
             }
         }
     default:
@@ -394,12 +403,13 @@ void typeNode(Node* node) {
     typeNode(node->sibling);
 }
 
-void typeTree(Node* root) {
-
+void analyzeAST(Node* root) {
     typeNode(root);
+
+    // Search for main in global scopes
     bool mainFound = false;
     for (Node* n = root; n != NULL; n = n->sibling) {
-        if (!strcmp(n->tokenString, "main")) {
+        if (n->nodeType == nodes::Function && !strcmp(n->tokenString, "main")) {
             mainFound = true;
             break;
         }

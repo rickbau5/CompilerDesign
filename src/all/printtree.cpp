@@ -1,7 +1,25 @@
 #include "printtree.h"
+#include "semantic.h"
 #include "c-.h"
 #include "scanType.h"
 #include <stdio.h>
+#include <string.h>
+
+// YAY GLOBALS CAUSE C++
+bool types = false;
+
+void prettyPrintTreeWithTypes(Node* root) {
+    if (root == NULL)
+        return;
+
+    types = true;
+    if (!strcmp(root->returnType, "unknown")) {
+        fprintf(out, "%s [undefined type] [line: %d]\n", stringifyNode(root), root->lineno);
+    } else {
+        fprintf(out, "%s [type %s] [line: %d]\n", stringifyNode(root), root->returnType, root->lineno);
+    }
+    _prettyPrint(root, 0);
+}
 
 void prettyPrintTree(Node* root) {
     if (root == NULL)
@@ -17,14 +35,30 @@ void _prettyPrint(Node* node, int level) {
         for(int i = 0; i < node->numChildren; i++) {
             if ((c = node->children[i]) != NULL) {
                 _printLevel(level); 
-                fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
+                if (types) {
+                    if (!strcmp(c->returnType, "unknown")) {
+                        fprintf(out, "!   Child: %d  %s [undefined type] [line: %d]\n", i, stringifyNode(c), c->lineno);
+                    } else {
+                        fprintf(out, "!   Child: %d  %s [type %s] [line: %d]\n", i, stringifyNode(c), c->returnType, c->lineno);
+                    }
+                } else {
+                    fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
+                }
                 _prettyPrint(c, level + 1);
             } 
         }
         if (node->sibling != NULL) {
             Node* sib = node->sibling;
             _printLevel(level);
-            fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+            if (types) {
+                if (!strcmp(sib->returnType, "unknown")) {
+                    fprintf(out, "Sibling: %d  %s [undefined type] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+                } else {
+                    fprintf(out, "Sibling: %d  %s [type %s] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->returnType, sib->lineno);
+                }
+            } else {
+                fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+            }
             _prettyPrint(sib, level);
         }
     } else {
@@ -108,25 +142,6 @@ const char* stringifyNode(Node* node) {
 void _printLevel(int level) {
     for (int i = 0; i < level; i++) {
         fprintf(out, "!   ");
-    }
-}
-
-int countNodes(Node* node) {
-    if (node != NULL) {
-        int sibs = 0;
-        int children = 0;
-
-        if (node->sibling != NULL) {
-            sibs = countNodes(node->sibling);
-        }
-        int idx = 0;
-        Node* t;
-        while ((t = node->children[idx++]) != NULL) {
-            children += countNodes(t);
-        }
-        return 1 + sibs + children;
-    } else {
-        return 0;
     }
 }
 

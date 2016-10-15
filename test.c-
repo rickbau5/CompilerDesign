@@ -1,5 +1,3 @@
-int main() {
-    char x;
-    int b;
-    x += b;
+main(int a; bool b; char c; int a; bool b; char c) {
+
 }

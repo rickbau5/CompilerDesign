@@ -1,7 +1,7 @@
 BIN=c-
 ROOT:=$(shell pwd)
 
-ASSN=2
+ASSN=3
 
 TOK=scanType
 TESTD=testData/A$(ASSN)
@@ -112,6 +112,7 @@ prep-tar: clean tmp
 
 test-tar:
 	cd tmp; \
+		mkdir tmp; \
 		$(UNTAR) $(SUBT) -C tmp; \
 		cd tmp; \
 		make
@@ -122,4 +123,4 @@ wormulon: prep-tar
 submit: prep-tar test-tar
 	curl -F "student=$(ME)" -F "assignment=$(ASS)" -F "submittedfile=@$(FILE)" $(SUBURL) > $(TMP)/$(SUBRESULT) 
 	@open $(TMP)/$(SUBRESULT)
-	echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."
+	@echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."

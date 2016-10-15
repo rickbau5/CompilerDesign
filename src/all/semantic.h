@@ -3,6 +3,6 @@
 
 #include "scanType.h"
 
-void typeTree(Node*);
+void analyzeAST(Node*);
 
 #endif

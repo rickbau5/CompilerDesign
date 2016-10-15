@@ -259,14 +259,15 @@ statement: matched      { $$ = $1; }
 
 matched: IF '(' simpleExpression ')' matched ELSE matched       {
             Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
             addChild(node, $3, 0);
             addChild(node, $5, 1);
             addChild(node, $7, 2);
             $$ = node;
        }
        | WHILE '(' simpleExpression ')' matched {
-
             Node* node = newNode(nodes::WhileStatement, $1);
+            node->returnType = strdup("void");
             addChild(node, $3, 0);
             addChild(node, $5, 1);
             $$ = node;
@@ -276,29 +277,32 @@ matched: IF '(' simpleExpression ')' matched ELSE matched       {
 
 unmatched: IF '(' simpleExpression ')' matched                  {
             Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
             addChild(node, $3, 0);
             addChild(node, $5, 1);
             $$ = node;
          }
          | IF '(' simpleExpression ')' unmatched                {
             Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
             addChild(node, $3, 0);
             addChild(node, $5, 1);
             $$ = node;
          }
          | IF '(' simpleExpression ')' matched ELSE unmatched   { 
             Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
             addChild(node, $3, 0);
             addChild(node, $5, 1);
             addChild(node, $7, 2);
             $$ = node;
          }
          | WHILE '(' simpleExpression ')' unmatched {
-
-              Node* node = newNode(nodes::WhileStatement, $1);
-              addChild(node, $3, 0);
-              addChild(node, $5, 1);
-              $$ = node;
+            Node* node = newNode(nodes::WhileStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $3, 0);
+            addChild(node, $5, 1);
+            $$ = node;
          }
          ;
 
@@ -310,6 +314,7 @@ otherstatements: expressionStmt     { $$ = $1; }
 
 compoundStmt: LBRACE localDeclarations statementList  RBRACE  {
                 Node* node = newNode(nodes::Compound, $1);
+                node->returnType = strdup("void");
                 addChild(node, $2, 0);
                 addChild(node, $3, 1);
                 $$ = node;
@@ -332,14 +337,20 @@ expressionStmt: expression SEMI  { $$ = $1; }
               | SEMI             { $$ = NULL; }  
               ;
 
-returnStmt: RETURN SEMI                  { $$ = newNode(nodes::Return, $1); }
+returnStmt: RETURN SEMI                  {
+                $$ = newNode(nodes::Return, $1);
+                $$->returnType = strdup("void");
+          }
           | RETURN expression SEMI       {
                 Node* node = newNode(nodes::ReturnStatement, $1);
                 addChild(node, $2);
                 $$ = node;
           }
           ;
-breakStmt: BREAK SEMI                    { $$ = newNode(nodes::Break, $1); } 
+breakStmt: BREAK SEMI                    { 
+            $$ = newNode(nodes::Break, $1); 
+            $$->returnType = strdup("void");
+         } 
          ;
 
 expression: mutable ASS expression      {
@@ -527,13 +538,13 @@ constant: NUMCONST  {
 
 int runWith(const char* str) {
     if (str == NULL || !strcmp(str, "")) {
-        printf("Couldn't open the input file: empty string\n");
-        return EXIT_FAILURE;
+        printf("ERROR(ARGLIST): source file \"%s\" could not be opened.\n", str);
+        exit(EXIT_FAILURE);
     }
     FILE* f = fopen(str, "r");
     if (!f) {
-        printf("Couldn't open the input file: %s\n", str);
-        return EXIT_FAILURE;
+        printf("ERROR(ARGLIST): source file \"%s\" could not be opened.\n", str);
+        exit(EXIT_FAILURE);
     }
     return run(f);
 }

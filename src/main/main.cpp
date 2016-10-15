@@ -10,6 +10,7 @@ FILE* out = stdout;
 bool override = false;
 bool hasFile = false;
 bool printTree = false;
+bool printTypedTree = false;
 
 extern int yydebug;
 
@@ -21,7 +22,7 @@ void handleArgs(int argc, char **argv, char *fileHandle) {
 
     while (1) {
         // hunt for a string of options
-        while ((c = ourGetopt(argc, argv, "dp")) != EOF)
+        while ((c = ourGetopt(argc, argv, "dpP")) != EOF)
             switch (c) {
                 case 'd':
                     yydebug = 1;
@@ -29,6 +30,8 @@ void handleArgs(int argc, char **argv, char *fileHandle) {
                 case 'p':
                     printTree = true;
                     break;
+                case 'P':
+                    printTypedTree = true;
                 case '?':
                     ;
             }
@@ -65,7 +68,11 @@ int main (int argc, char **argv) {
     if (printTree) {
         prettyPrintTree(root);
     }
-    typeTree(root);
+
+    analyzeAST(root);
+    if (printTypedTree) {
+        prettyPrintTreeWithTypes(root);
+    }
 
     if (status == EXIT_SUCCESS) {
         int warnings = 0;
