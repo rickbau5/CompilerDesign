@@ -34,7 +34,7 @@ PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
 all: compile
 
 clean:
-	@- rm -rf $(BIN) $(BIN).output $(BIN).tab.h $(INTER) $(TMP) $(BIN).dSYM test.out
+	@- rm -rf $(BIN) $(BIN).output $(BIN).tab.h testing/*.out $(INTER) $(TMP) $(BIN).dSYM test.out
 
 flex:
 	flex $(FFLAGS) $(FLEX)
@@ -56,7 +56,7 @@ test:
 tests: clean common_deps
 	g++ -g $(COMP) $(TESTSRC) -o tests
 	./tests
-	compare.sh testing
+	scripts/compare.sh testing
 
 tmp:
 	- mkdir $(TMP)
