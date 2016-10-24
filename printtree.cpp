@@ -30,7 +30,6 @@ void prettyPrintTree(Node* root) {
 
 void _prettyPrint(Node* node, int level) {
     if (node != NULL) {
-        int i = 0;
         Node* c;
         for(int i = 0; i < node->numChildren; i++) {
             if ((c = node->children[i]) != NULL) {

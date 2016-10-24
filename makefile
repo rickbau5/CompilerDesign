@@ -1,32 +1,14 @@
 BIN=c-
 ROOT:=$(shell pwd)
 
-ASSN=3
-
-TOK=scanType
-TESTD=testData/A$(ASSN)
-TESTF=init
-OUT=out
 TMP=tmp
-
-DIFF=vimdiff 
 
 SUBT=submission.tar
 TAR=tar -cvf
 UNTAR=tar -xvf
 
-SRC=src
-
-SRC_MAIN =$(ROOT)/$(SRC)/main
-SRC_TEST =$(ROOT)/$(SRC)/test
-SRC_ALL  =$(ROOT)/$(SRC)/all
-OUT_DIR  =$(ROOT)/out
-BUILD_DIR=$(ROOT)/build
-TESTS_DIR=$(ROOT)/testing
-
-SCRIPTS_DIR=$(ROOT)/scripts
-
 ME=boss
+ASSN=3
 ASS=CS445 F16 Assignment $(ASSN)
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 HOST=http://ec2-52-89-93-46.us-west-2.compute.amazonaws.com
@@ -34,11 +16,16 @@ SUBURL=$(HOST)/cgi-bin/fileCapture.py
 SUBRESULT=result.html
 EMAIL=open https://outlook.office.com/owa/?realm=vandals.uidaho.edu&path=/mail/inbox
 
+CFLAGS=-O3 -Wall
+DFLAGS=-g -Wall
+
 FLEX=$(BIN).l
+FFLAGS=
 BSON=$(BIN).y
+BFLAGS=-v -t -d
 INTER=$(BIN).tab.c lex.yy.c
 SRCS=printtree.cpp semantic.cpp symbolTable.cpp 
-COMP=$(SRCS) $(INTER) 
+COMP=$(SRCS) -x c++ $(INTER) 
 HEADERS=*.h
 MAINSRC=main.cpp
 TESTSRC=tests.cpp
@@ -47,74 +34,42 @@ PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
 all: compile
 
 clean:
-	@- rm -rf $(BIN) $(OUT_DIR) $(BUILD_DIR) $(TMP) test.out
+	@- rm -rf $(BIN) $(BIN).output $(BIN).tab.h $(INTER) $(TMP) $(BIN).dSYM test.out
+
 flex:
-	cd $(BUILD_DIR) && flex $(FLEX)
+	flex $(FFLAGS) $(FLEX)
 
 bison: 
-	cd $(BUILD_DIR) && bison -v -t -d $(BSON)
+	bison $(BFLAGS) $(BSON)
 
-build_dir:
-	- mkdir build
+common_deps: flex bison
 
-out_dir:
-	- mkdir out
+compile: clean common_deps
+	g++ $(CFLAGS) $(COMP) $(MAINSRC) -o $(BIN)
 
-copy_all: build_dir
-	@cp $(SRC_ALL)/* $(BUILD_DIR)
-
-copy_main: build_dir
-	@cp $(SRC_MAIN)/* $(BUILD_DIR)
-
-copy_test: build_dir
-	@cp $(SRC_TEST)/* $(BUILD_DIR)
-
-common_deps: out_dir copy_all flex bison
-
-compile_deps: common_deps copy_main
-
-compile: clean compile_deps
-	cd $(BUILD_DIR) && g++ $(COMP) $(MAINSRC) -o $(BIN)
-	@mv $(BUILD_DIR)/$(BIN) $(OUT_DIR)/$(BIN)	
-	@cp $(OUT_DIR)/$(BIN) $(ROOT)/$(BIN)
-
-debug: clean compile_deps
-	cd $(BUILD_DIR) && g++ -g $(COMP) $(MAINSRC) -o $(BIN)
-	@mv $(BUILD_DIR)/$(BIN) $(OUT_DIR)/$(BIN)
-	@mv $(BUILD_DIR)/$(BIN).dSYM $(OUT_DIR)/$(BIN).dSYM
+debug: clean common_deps
+	g++ $(DFLAGS) $(COMP) $(MAINSRC) -o $(BIN)
 
 test:
-	@$(OUT_DIR)/$(BIN) $(ROOT)/test.c-
+	@./$(BIN) test.c-
 
-tests: clean common_deps copy_test
-	@cd $(BUILD_DIR) && g++ -g $(COMP) $(TESTSRC) -o tests
-	@mv $(BUILD_DIR)/tests $(OUT_DIR)/tests
-	@cp -r $(TESTS_DIR) $(OUT_DIR) 
-	@cd $(OUT_DIR); \
-		./tests; \
-		$(SCRIPTS_DIR)/compare.sh testing
-
-outdir:
-	- mkdir out
-
-tar:
-	$(TAR) $(SUBT) $(BIN).l $(BIN).y makefile $(TOK).h
-
-untar:
-	$(UNTAR) $(SUBT)
+tests: clean common_deps
+	g++ -g $(COMP) $(TESTSRC) -o tests
+	./tests
+	compare.sh testing
 
 tmp:
 	- mkdir $(TMP)
 
 prep-tar: clean tmp
-	@ cp -r src makefile tmp
-	@ cd tmp && $(TAR) $(SUBT) src makefile 
+	@ cp -r $(PACKAGE) $(TMP)
+	@ cd $(TMP) && $(TAR) $(SUBT) $(PACKAGE) 
 
 test-tar:
-	cd tmp; \
-		mkdir tmp; \
-		$(UNTAR) $(SUBT) -C tmp; \
-		cd tmp; \
+	@cd $(TMP); \
+		mkdir $(TMP); \
+		$(UNTAR) $(SUBT) -C $(TMP); \
+		cd $(TMP); \
 		make
 
 wormulon: prep-tar

@@ -7,8 +7,8 @@
 #include <stdio.h>
 
 extern int numErrors;
-extern FILE* semanticOut;
 
+// Copy info from the source node to the destination node
 void cloneNode(Node* src, Node* dest) {
     dest->returnType = src->returnType;
     dest->isStatic = src->isStatic;
@@ -26,6 +26,10 @@ bool typesMatch(Node* a, Node* b) {
     }
 }
 
+// Check if types:
+//      1) match each other
+//      2) match the specified type
+// Note: "unknown" matches anything
 bool typesMatch(const char* typ, Node* a, Node* b) {
     if (a != NULL && typesMatch(a, b)) {
         if (a->returnType == NULL) {
@@ -37,18 +41,9 @@ bool typesMatch(const char* typ, Node* a, Node* b) {
     }
 }
 
-int findNonMatching(const char* typ, Node* a, Node* b) {
-    if (!typesMatch(typ, a, NULL)) {
-        return 1;
-    }
-    if (!typesMatch(typ, b, NULL)) {
-        return 2;
-    }
-    return 0;
-}
-
 const char* computeType(Node* parent, Node* left, Node* right) {
     switch (parent->tokenData->tokenClass) { 
+    // and or   Requires both to be bool
     case AND:
     case OR: {
             bool flag = true;
@@ -74,6 +69,7 @@ const char* computeType(Node* parent, Node* left, Node* right) {
             }
         }
         break;
+    // == !=    requires same types and nonvoid
     case EQ:
     case NOTEQ: {
             if (!strcmp("void", left->returnType)) {
@@ -88,11 +84,10 @@ const char* computeType(Node* parent, Node* left, Node* right) {
                 printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", parent->lineno, parent->tokenString, left->returnType, right->returnType);
                 numErrors++;
             }
-            // if (typesMatch("bool", left, right) || typesMatch("char", left, right) || typesMatch("int", left, right)) {
-                return "bool";
-            // }
+            return "bool";
         }
         break;
+    // <= >= < >    types int or char, must both be same type
     case LESSEQ:
     case GRTEQ:
     case LESS:
@@ -170,6 +165,7 @@ const char* computeType(Node* parent, Node* left, Node* right) {
 
         return left->returnType;
         break;
+    // ?: unary requires non array, int
     case QUEOP: {
             if (!typesMatch("int", left, NULL)) {
                 printf("ERROR(%d): Unary '%s' requires an operand of type type %s but was given type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
@@ -183,6 +179,8 @@ const char* computeType(Node* parent, Node* left, Node* right) {
             return "int";
         }
         break;
+
+    // . - + / += -= *= /= %
     case SUBOP: {
             if (right == NULL) {
                 if (!typesMatch("int", left, NULL)) {
@@ -230,7 +228,6 @@ const char* computeType(Node* parent, Node* left, Node* right) {
         if (typesMatch("int", left, right)) {
             return "int";
         }
-        ;
     }
 
     return "unknown";
@@ -249,16 +246,9 @@ void typeNode(Node* node) {
                 numErrors++;
             }
 
-            // Even if it exists, let's analyze it
+            // Even if it already exists, let's analyze it
             symbolTable.enter(node->tokenString);
             typeNode(node->children[0]);
-            // for (Node *c = node->children[0]; c != NULL; c = c->sibling) {
-            //     if (!symbolTable.insert(c->tokenString, c)) {
-            //         Node* existing = (Node*)symbolTable.lookup(node->tokenString);
-            //         printf("ERROR(%d): Symbol '%s' is already defined at line %d.\n", c->lineno, c->tokenString, existing->lineno);
-            //         numErrors++;
-            //     }
-            // }
 
             Node* body = node->children[1];
             if (body != NULL && body->nodeType == nodes::Compound) {
@@ -296,12 +286,13 @@ void typeNode(Node* node) {
             break;
         }
     case nodes::Record: {
+            // Do nothing with records for now
             printf("SYSTEM ERROR: Unknown declaration node kind: 0\n");
             break;
         }
     case nodes::Parameter:
     case nodes::Variable: {
-            // Type child, which would be initialization
+            // Type child, which would be initialization for a variable
             typeNode(node->children[0]);
             if (!symbolTable.insert(node->tokenString, node)) {
                 Node* existing = (Node*)symbolTable.lookup(node->tokenString);

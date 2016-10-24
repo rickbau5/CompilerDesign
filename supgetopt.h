@@ -54,7 +54,7 @@ int ourGetopt(int argc, char **argv, char *opts)
 	    sp = 1;		/* to next word */
 	}
 
-	return badopt(argv[0], "illegal option");
+	return badopt(argv[0], strdup("illegal option"));
     }
 
     if (*++cp == ':') {		/* ':' option requires argument */
@@ -64,7 +64,7 @@ int ourGetopt(int argc, char **argv, char *opts)
 
 	if (*optarg == '\0') {	/* in next word */
 	    if (argc <= optind)	/* no more word */
-		return badopt(argv[0], "option requires an argument");
+		return badopt(argv[0], strdup("option requires an argument"));
 
 	    optarg = argv[optind++];	/* to next word */
 	}

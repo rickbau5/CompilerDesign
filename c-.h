@@ -12,8 +12,6 @@
 int run(FILE*);
 int runWith(const char*);
 
-void printErrors();
-
 extern Node* root;
 extern int numErrors;
 extern int lineno;

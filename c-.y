@@ -21,8 +21,6 @@ Node* addSibling(Node*, Node*);
 Node* addChild(Node*, Node*);
 Node* addChild(Node*, Node*, int);
 
-void printErrors();
-
 extern "C" FILE *yyin;
 extern "C" char *yytext;
 
@@ -584,16 +582,6 @@ Node* errorNode(TokenData* data) {
     Node* err = newNode(nodes::Error, data);
     errors[numErrors++] = err;    
     return err;
-}
-
-void printErrors() {
-    printf("Number of errors: %d\n", numErrors);
-    if (numErrors > 0) { 
-        int i = 0;
-        for (Node* err = errors[i]; err != NULL; err = errors[++i]) {
-           printf("Error %d of %d at line %d: %s\n", i + 1, numErrors, err->lineno, err->tokenString); 
-        }
-    }
 }
 
 Node* addSibling(Node* existing, Node* addition) {
