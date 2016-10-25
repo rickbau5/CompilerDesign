@@ -36,6 +36,8 @@ int currNodeId = 0;
 
 SymbolTable symbolTable;
 
+Node* injectIORoutines(Node* root);
+
 %}
 
 %debug
@@ -108,7 +110,7 @@ SymbolTable symbolTable;
 
 %%
 
-program: declarationList        { root = $1; } 
+program: declarationList        { addSibling(root, $1); } 
     ;
 
 declarationList: declarationList declaration    {
@@ -510,6 +512,7 @@ argList: argList ',' expression { $$ = addSibling($1, $3); }
        ;
 constant: NUMCONST  {
             $$ = newNode(nodes::Constant, $1);
+            $$->isConstant = true;
             $$->returnType = strdup("int");
         }
         | CHARCONST {
@@ -517,10 +520,12 @@ constant: NUMCONST  {
             char c[2];
             sprintf(c, "'%c'", $1->cval);
             $$->tokenString = strdup(c);
+            $$->isConstant = true;
             $$->returnType = strdup("char");
         }
         | BOOLCONST {
             $$ = newNode(nodes::Constant, $1);
+            $$->isConstant = true;
             $$->returnType = strdup("bool");
         }
         | INVALID
@@ -548,6 +553,7 @@ int runWith(const char* str) {
 }
 
 int run(FILE* in) {
+    root = injectIORoutines(NULL);
     yyin = in;
     while (!feof(in)) {
         yyparse();
@@ -573,6 +579,7 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
 
     // semantic helpers
     node->changeScope = true;
+    node->isConstant = false;
     node->tokenData = token;
 
     return node;
@@ -654,3 +661,40 @@ void yyerror(const char *s) {
     printf("ERROR(%d): %s: \"%s\"\n", lineno, s, yytext); 
 }
 
+Node* funcWithParamOf(const char *name, const char* ret, const char* param) {
+    Node* function = newNode(nodes::Function, NULL);
+    function->tokenString = strdup(name);
+    function->returnType = strdup(ret);
+    function->lineno = -1;
+    if (param != NULL) {
+        Node* parameter = newNode(nodes::Parameter, NULL);
+        parameter->tokenString = strdup("*dummy*");
+        parameter->returnType = strdup(param);
+        parameter->lineno = -1;
+        addChild(function, parameter);
+    }
+
+    return function;
+}
+
+Node* injectIORoutines(Node* after) {
+    Node *first = funcWithParamOf("input", "int", NULL);
+    addSibling(first, funcWithParamOf("output", "void", "int"));
+    addSibling(first, funcWithParamOf("inputb", "bool", NULL));
+    addSibling(first, funcWithParamOf("outputb", "void", "bool"));
+    addSibling(first, funcWithParamOf("inputc", "char", NULL));
+    addSibling(first, funcWithParamOf("outputc", "void", "void"));
+    addSibling(first, funcWithParamOf("outnl", "void", NULL));
+
+    for (Node *n = first; n != NULL; n = n->sibling) {
+        symbolTable.insert(n->tokenString, n);
+    }
+
+    if (after != NULL) {
+        Node *n;
+        for (n = after; n->sibling != NULL; n = n->sibling) ;
+        n->sibling = first;
+    }        
+
+    return first;
+}

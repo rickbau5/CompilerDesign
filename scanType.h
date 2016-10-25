@@ -71,6 +71,7 @@ typedef struct treeNode {
 
     bool isStatic;
     bool isArray;
+    bool isConstant;
     int arraySize;
     int nodeId;
 

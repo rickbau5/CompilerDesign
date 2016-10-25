@@ -29,39 +29,38 @@ void prettyPrintTree(Node* root) {
 }
 
 void _prettyPrint(Node* node, int level) {
-    if (node != NULL) {
-        Node* c;
-        for(int i = 0; i < node->numChildren; i++) {
-            if ((c = node->children[i]) != NULL) {
-                _printLevel(level); 
-                if (types) {
-                    if (!strcmp(c->returnType, "unknown")) {
-                        fprintf(out, "!   Child: %d  %s [undefined type] [line: %d]\n", i, stringifyNode(c), c->lineno);
-                    } else {
-                        fprintf(out, "!   Child: %d  %s [type %s] [line: %d]\n", i, stringifyNode(c), c->returnType, c->lineno);
-                    }
-                } else {
-                    fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
-                }
-                _prettyPrint(c, level + 1);
-            } 
-        }
-        if (node->sibling != NULL) {
-            Node* sib = node->sibling;
-            _printLevel(level);
+    if (node == NULL) {
+        return;
+    }
+    Node* c;
+    for(int i = 0; i < node->numChildren; i++) {
+        if ((c = node->children[i]) != NULL) {
+            _printLevel(level); 
             if (types) {
-                if (!strcmp(sib->returnType, "unknown")) {
-                    fprintf(out, "Sibling: %d  %s [undefined type] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+                if (!strcmp(c->returnType, "unknown")) {
+                    fprintf(out, "!   Child: %d  %s [undefined type] [line: %d]\n", i, stringifyNode(c), c->lineno);
                 } else {
-                    fprintf(out, "Sibling: %d  %s [type %s] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->returnType, sib->lineno);
+                    fprintf(out, "!   Child: %d  %s [type %s] [line: %d]\n", i, stringifyNode(c), c->returnType, c->lineno);
                 }
             } else {
-                fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+                fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
             }
-            _prettyPrint(sib, level);
+            _prettyPrint(c, level + 1);
+        } 
+    }
+    if (node->sibling != NULL) {
+        Node* sib = node->sibling;
+        _printLevel(level);
+        if (types) {
+            if (sib->returnType != NULL && !strcmp(sib->returnType, "unknown")) {
+                fprintf(out, "Sibling: %d  %s [undefined type] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+            } else {
+                fprintf(out, "Sibling: %d  %s [type %s] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->returnType, sib->lineno);
+            }
+        } else {
+            fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
         }
-    } else {
-        ;
+        _prettyPrint(sib, level);
     }
 }
 

@@ -8,7 +8,7 @@ TAR=tar -cvf
 UNTAR=tar -xvf
 
 ME=boss
-ASSN=3
+ASSN=4
 ASS=CS445 F16 Assignment $(ASSN)
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 HOST=http://ec2-52-89-93-46.us-west-2.compute.amazonaws.com

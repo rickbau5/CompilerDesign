@@ -14,6 +14,7 @@ bool printTypedTree = false;
 
 extern int yydebug;
 extern int numErrors;
+int numWarnings;
 
 void handleArgs(int argc, char **argv, char *fileHandle) {
     extern char *optarg;
@@ -74,7 +75,11 @@ int main (int argc, char **argv) {
             prettyPrintTree(root);
         }
 
-        analyzeAST(root);
+        Node* start = root;
+        for (int i = 0; i < 7; i++) {
+            start = start->sibling;
+        }
+        analyzeAST(start);
         if (printTypedTree) {
             prettyPrintTreeWithTypes(root);
         }
@@ -83,9 +88,8 @@ int main (int argc, char **argv) {
         status = EXIT_FAILURE; 
     }
 
-    int warnings = 0;
-    printf("Number of warnings: %d\n", warnings); 
+    printf("Number of warnings: %d\n", numWarnings); 
     printf("Number of errors: %d\n", numErrors);
 
-    return status;    
+    return EXIT_SUCCESS;    
 }
