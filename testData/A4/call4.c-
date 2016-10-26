@@ -1,0 +1,21 @@
+// C-F13
+check2(int x, y) {
+}
+
+int ski(int x[]; bool x[], x) { x[1296]; }
+
+main() {
+    int x[3];
+
+    check2(
+    1);
+    check2(
+    1, 
+    2);
+    check2(
+    1, 
+    2,  
+    3);
+    check2(ski, ski);
+    ski(x[x=true]);
+}

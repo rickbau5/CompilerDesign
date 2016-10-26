@@ -1,0 +1,27 @@
+// C-F16
+//
+bool a;
+int b[100];
+
+// procedure max
+int max(int x, y)
+{
+    int z, zz;
+    char c;
+
+    if (x>y) z=x;
+        else z=y;
+
+    b[41] = max(b[42*1], 43);
+    ;
+
+    while (666>665) {
+         int in, for;               // syntactically and semantically OK
+
+         aardvark[2][3] = zz.x.x = in;   // semantically this is illegal for many reasons
+         z = zz;
+         break;
+    }
+
+    return;
+}

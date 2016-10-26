@@ -1,0 +1,161 @@
+ERROR(4): Symbol 'y' is not defined.
+ERROR(5): Symbol 'x' is not defined.
+ERROR(6): Symbol 'x' is not defined.
+ERROR(6): Symbol 'y' is not defined.
+ERROR(7): Symbol 'y' is not defined.
+ERROR(7): Symbol 'x' is not defined.
+ERROR(8): Symbol 'x' is not defined.
+ERROR(8): Symbol 'y' is not defined.
+ERROR(9): Symbol 'x' is not defined.
+ERROR(9): Symbol 'array' is not defined.
+ERROR(14): Function 'dog' is not defined.
+ERROR(15): Symbol 'dog' is not defined.
+ERROR(16): Symbol 'dog' is not defined.
+ERROR(16): Symbol 'dog' is not defined.
+ERROR(16): Symbol 'dog' is not defined.
+ERROR(18): Symbol 'mouse' is not defined.
+ERROR(25): Symbol 'mouse' is not defined.
+ERROR(27): Symbol 'mouse' is not defined.
+ERROR(29): Symbol 'mouse' is not defined.
+ERROR(31): Symbol 'mouse' is not defined.
+ERROR(36): Symbol 'mouse' is not defined.
+ERROR(36): Symbol 'mouse' is not defined.
+ERROR(37): Symbol 'mouse' is not defined.
+ERROR(37): Symbol 'mouse' is not defined.
+ERROR(38): Symbol 'mouse' is not defined.
+ERROR(38): Symbol 'mouse' is not defined.
+ERROR(39): Symbol 'mouse' is not defined.
+ERROR(39): Symbol 'mouse' is not defined.
+ERROR(41): Symbol 'mouse' is not defined.
+ERROR(42): Symbol 'mouse' is not defined.
+WARNING(34): Expecting to return type int but function 'dog' has no return statement.
+Func input returns type int [type int] [line: -1]
+Sibling: 0  Func output returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type int [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type bool [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type void [type void] [line: -1]
+Sibling: 5  Func outnl returns type void [type void] [line: -1]
+Sibling: 6  Func main returns type void [type void] [line: 2]
+!   Child: 1  Compound [type void] [line: 3]
+!   !   Child: 1  Op: * [type int] [line: 4]
+!   !   !   Child: 0  Id: y [undefined type] [line: 4]
+!   !   Sibling: 0  Assign: = [undefined type] [line: 5]
+!   !   !   Child: 0  Id: x [undefined type] [line: 5]
+!   !   !   Child: 1  Const: 3 [type int] [line: 5]
+!   !   Sibling: 1  Op: or [type bool] [line: 6]
+!   !   !   Child: 0  Const: false [type bool] [line: 6]
+!   !   !   Child: 1  Op: and [type bool] [line: 6]
+!   !   !   !   Child: 0  Const: true [type bool] [line: 6]
+!   !   !   !   Child: 1  Op: < [type bool] [line: 6]
+!   !   !   !   !   Child: 0  Id: x [undefined type] [line: 6]
+!   !   !   !   !   Child: 1  Op: + [type int] [line: 6]
+!   !   !   !   !   !   Child: 0  Const: 222 [type int] [line: 6]
+!   !   !   !   !   !   Child: 1  Op: * [type int] [line: 6]
+!   !   !   !   !   !   !   Child: 0  Id: y [undefined type] [line: 6]
+!   !   !   !   !   !   !   Child: 1  Const: 444 [type int] [line: 6]
+!   !   Sibling: 2  Op: or [type bool] [line: 7]
+!   !   !   Child: 0  Op: and [type bool] [line: 7]
+!   !   !   !   Child: 0  Op: > [type bool] [line: 7]
+!   !   !   !   !   Child: 0  Op: + [type int] [line: 7]
+!   !   !   !   !   !   Child: 0  Op: * [type int] [line: 7]
+!   !   !   !   !   !   !   Child: 0  Const: 444 [type int] [line: 7]
+!   !   !   !   !   !   !   Child: 1  Id: y [undefined type] [line: 7]
+!   !   !   !   !   !   Child: 1  Const: 222 [type int] [line: 7]
+!   !   !   !   !   Child: 1  Id: x [undefined type] [line: 7]
+!   !   !   !   Child: 1  Const: true [type bool] [line: 7]
+!   !   !   Child: 1  Const: false [type bool] [line: 7]
+!   !   Sibling: 3  Op: and [type bool] [line: 8]
+!   !   !   Child: 0  Op: > [type bool] [line: 8]
+!   !   !   !   Child: 0  Op: * [type int] [line: 8]
+!   !   !   !   !   Child: 0  Const: 444 [type int] [line: 8]
+!   !   !   !   !   Child: 1  Op: + [type int] [line: 8]
+!   !   !   !   !   !   Child: 0  Id: x [undefined type] [line: 8]
+!   !   !   !   !   !   Child: 1  Const: 222 [type int] [line: 8]
+!   !   !   !   Child: 1  Const: 111 [type int] [line: 8]
+!   !   !   Child: 1  Op: or [type bool] [line: 8]
+!   !   !   !   Child: 0  Id: y [undefined type] [line: 8]
+!   !   !   !   Child: 1  Const: false [type bool] [line: 8]
+!   !   Sibling: 4  Assign: = [undefined type] [line: 9]
+!   !   !   Child: 0  Id: x [undefined type] [line: 9]
+!   !   !   Child: 1  Op: or [type bool] [line: 9]
+!   !   !   !   Child: 0  Const: true [type bool] [line: 9]
+!   !   !   !   Child: 1  Op: and [type bool] [line: 9]
+!   !   !   !   !   Child: 0  Op: not [type bool] [line: 9]
+!   !   !   !   !   !   Child: 0  Op: == [type bool] [line: 9]
+!   !   !   !   !   !   !   Child: 0  Op: - [type int] [line: 9]
+!   !   !   !   !   !   !   !   Child: 0  Op: + [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   Child: 0  Op: % [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   Child: 0  Op: / [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   Child: 0  Op: * [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   !   Child: 0  Op: - [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   !   !   Child: 0  Op: ? [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   !   !   !   Child: 0  Op: * [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   !   !   !   !   Child: 0  Id: array [undefined type] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   !   Child: 1  Op: - [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   !   !   Child: 0  Op: - [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   !   !   !   Child: 0  Const: 42 [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   !   Child: 1  Const: 13 [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   !   Child: 1  Const: 5 [type int] [line: 9]
+!   !   !   !   !   !   !   !   !   Child: 1  Const: 31 [type int] [line: 9]
+!   !   !   !   !   !   !   !   Child: 1  Const: 331 [type int] [line: 9]
+!   !   !   !   !   !   !   Child: 1  Const: 12 [type int] [line: 9]
+!   !   !   !   !   Child: 1  Op: < [type bool] [line: 9]
+!   !   !   !   !   !   Child: 0  Const: 7 [type int] [line: 9]
+!   !   !   !   !   !   Child: 1  Const: 9 [type int] [line: 9]
+Sibling: 7  Func cat returns type int [type int] [line: 12]
+!   Child: 1  Compound [type void] [line: 13]
+!   !   Child: 1  Call: dog [undefined type] [line: 14]
+!   !   Sibling: 0  Assign: = [undefined type] [line: 15]
+!   !   !   Child: 0  Id: dog [undefined type] [line: 15]
+!   !   !   Child: 1  Const: 3 [type int] [line: 15]
+!   !   Sibling: 1  Assign: = [undefined type] [line: 16]
+!   !   !   Child: 0  Id: dog [undefined type] [line: 16]
+!   !   !   Child: 1  Op: * [type int] [line: 16]
+!   !   !   !   Child: 0  Id: dog [undefined type] [line: 16]
+!   !   !   !   Child: 1  Id: dog [undefined type] [line: 16]
+!   !   Sibling: 2  Assign: = [undefined type] [line: 18]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 18]
+!   !   !   Child: 1  Const: 7 [type int] [line: 18]
+!   !   Sibling: 3  Compound [type void] [line: 20]
+!   !   !   Child: 0  Var mouse of type int [type int] [line: 21]
+!   !   !   Child: 1  Assign: = [type int] [line: 23]
+!   !   !   !   Child: 0  Id: mouse [type int] [line: 23]
+!   !   !   !   Child: 1  Const: 8 [type int] [line: 23]
+!   !   Sibling: 4  Assign: = [undefined type] [line: 25]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 25]
+!   !   !   Child: 1  Const: 9 [type int] [line: 25]
+!   !   Sibling: 5  Compound [type void] [line: 26]
+!   !   !   Child: 1  Assign: = [undefined type] [line: 27]
+!   !   !   !   Child: 0  Id: mouse [undefined type] [line: 27]
+!   !   !   !   Child: 1  Const: 10 [type int] [line: 27]
+!   !   Sibling: 6  Assign: = [undefined type] [line: 29]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 29]
+!   !   !   Child: 1  Const: 11 [type int] [line: 29]
+!   !   Sibling: 7  Return [type void] [line: 31]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 31]
+Sibling: 8  Func dog returns type int [type int] [line: 34]
+!   Child: 1  Compound [type void] [line: 35]
+!   !   Child: 1  Op: and [type bool] [line: 36]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 36]
+!   !   !   Child: 1  Id: mouse [undefined type] [line: 36]
+!   !   Sibling: 0  Op: > [type bool] [line: 37]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 37]
+!   !   !   Child: 1  Id: mouse [undefined type] [line: 37]
+!   !   Sibling: 1  Op: == [type bool] [line: 38]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 38]
+!   !   !   Child: 1  Id: mouse [undefined type] [line: 38]
+!   !   Sibling: 2  Assign: += [type int] [line: 39]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 39]
+!   !   !   Child: 1  Id: mouse [undefined type] [line: 39]
+!   !   Sibling: 3  If [type void] [line: 41]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 41]
+!   !   !   Child: 1  Const: 666 [type int] [line: 41]
+!   !   Sibling: 4  While [type void] [line: 42]
+!   !   !   Child: 0  Id: mouse [undefined type] [line: 42]
+!   !   !   Child: 1  Const: 666 [type int] [line: 42]
+Number of warnings: 1
+Number of errors: 30

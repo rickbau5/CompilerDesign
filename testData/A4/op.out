@@ -1,0 +1,65 @@
+ERROR(8): '<' requires operands of type char or type int but rhs is of type bool.
+ERROR(9): '<' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(10): '<' requires operands of type char or type int but lhs is of type bool.
+ERROR(11): '<' requires operands of type char or type int but lhs is of type bool.
+ERROR(11): '<' requires operands of type char or type int but rhs is of type bool.
+ERROR(12): '<' requires operands of type char or type int but lhs is of type bool.
+ERROR(13): '<' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(14): '<' requires operands of type char or type int but rhs is of type bool.
+ERROR(17): Symbol 'x' is not defined.
+ERROR(18): Symbol 'x' is not defined.
+ERROR(18): '<' requires operands of type char or type int but rhs is of type bool.
+ERROR(19): Symbol 'x' is not defined.
+Func input returns type int [type int] [line: -1]
+Sibling: 0  Func output returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type int [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type bool [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type void [type void] [line: -1]
+Sibling: 5  Func outnl returns type void [type void] [line: -1]
+Sibling: 6  Func main returns type void [type void] [line: 1]
+!   Child: 1  Compound [type void] [line: 2]
+!   !   Child: 0  Var a of type int [type int] [line: 3]
+!   !   Sibling: 0  Var b of type bool [type bool] [line: 4]
+!   !   Sibling: 1  Var c of type char [type char] [line: 5]
+!   !   Child: 1  Op: < [type bool] [line: 7]
+!   !   !   Child: 0  Id: a [type int] [line: 7]
+!   !   !   Child: 1  Id: a [type int] [line: 7]
+!   !   Sibling: 0  Op: < [type bool] [line: 8]
+!   !   !   Child: 0  Id: a [type int] [line: 8]
+!   !   !   Child: 1  Id: b [type bool] [line: 8]
+!   !   Sibling: 1  Op: < [type bool] [line: 9]
+!   !   !   Child: 0  Id: a [type int] [line: 9]
+!   !   !   Child: 1  Id: c [type char] [line: 9]
+!   !   Sibling: 2  Op: < [type bool] [line: 10]
+!   !   !   Child: 0  Id: b [type bool] [line: 10]
+!   !   !   Child: 1  Id: a [type int] [line: 10]
+!   !   Sibling: 3  Op: < [type bool] [line: 11]
+!   !   !   Child: 0  Id: b [type bool] [line: 11]
+!   !   !   Child: 1  Id: b [type bool] [line: 11]
+!   !   Sibling: 4  Op: < [type bool] [line: 12]
+!   !   !   Child: 0  Id: b [type bool] [line: 12]
+!   !   !   Child: 1  Id: c [type char] [line: 12]
+!   !   Sibling: 5  Op: < [type bool] [line: 13]
+!   !   !   Child: 0  Id: c [type char] [line: 13]
+!   !   !   Child: 1  Id: a [type int] [line: 13]
+!   !   Sibling: 6  Op: < [type bool] [line: 14]
+!   !   !   Child: 0  Id: c [type char] [line: 14]
+!   !   !   Child: 1  Id: b [type bool] [line: 14]
+!   !   Sibling: 7  Op: < [type bool] [line: 15]
+!   !   !   Child: 0  Id: c [type char] [line: 15]
+!   !   !   Child: 1  Id: c [type char] [line: 15]
+!   !   Sibling: 8  Op: < [type bool] [line: 17]
+!   !   !   Child: 0  Id: x [undefined type] [line: 17]
+!   !   !   Child: 1  Id: a [type int] [line: 17]
+!   !   Sibling: 9  Op: < [type bool] [line: 18]
+!   !   !   Child: 0  Id: x [undefined type] [line: 18]
+!   !   !   Child: 1  Id: b [type bool] [line: 18]
+!   !   Sibling: 10  Op: < [type bool] [line: 19]
+!   !   !   Child: 0  Id: x [undefined type] [line: 19]
+!   !   !   Child: 1  Id: c [type char] [line: 19]
+Number of warnings: 0
+Number of errors: 12

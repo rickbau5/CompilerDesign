@@ -1,0 +1,40 @@
+ERROR(5): Function 'cat' at line 5 is expecting to return type char but instead returns type int.
+ERROR(7): Function 'dog' at line 7 is expecting to return type int but return has no return value.
+ERROR(10): Variable 'c' is of type char but is being initialized with an expression of type int.
+ERROR(13): Expecting Boolean test condition in while statement but got type char.
+ERROR(14): Unary '-' requires an operand of type int but was given type char.
+ERROR(15): Unary '--' requires an operand of type int but was given type char.
+ERROR(17): Function 'emu' is not defined.
+ERROR(17): Symbol 'fox' is not defined.
+WARNING(9): Expecting to return type int but function 'main' has no return statement.
+Func input returns type int [type int] [line: -1]
+Sibling: 0  Func output returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type int [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type bool [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type void [type void] [line: -1]
+Sibling: 5  Func outnl returns type void [type void] [line: -1]
+Sibling: 6  Func cat returns type char [type char] [line: 5]
+!   Child: 1  Return [type void] [line: 5]
+!   !   Child: 0  Const: 42 [type int] [line: 5]
+Sibling: 7  Func dog returns type int [type int] [line: 7]
+!   Child: 1  Return [type void] [line: 7]
+Sibling: 8  Func main returns type int [type int] [line: 9]
+!   Child: 1  Compound [type void] [line: 9]
+!   !   Child: 0  Var c of type char [type char] [line: 10]
+!   !   !   Child: 0  Const: 666 [type int] [line: 10]
+!   !   Sibling: 0  Var i of type int [type int] [line: 11]
+!   !   Child: 1  While [type void] [line: 13]
+!   !   !   Child: 0  Const: 'x' [type char] [line: 13]
+!   !   Sibling: 0  Op: - [type int] [line: 14]
+!   !   !   Child: 0  Id: c [type char] [line: 14]
+!   !   Sibling: 1  Assign: -- [type int] [line: 15]
+!   !   !   Child: 0  Id: c [type char] [line: 15]
+!   !   Sibling: 2  Op: + [type int] [line: 17]
+!   !   !   Child: 0  Call: emu [undefined type] [line: 17]
+!   !   !   Child: 1  Id: fox [undefined type] [line: 17]
+Number of warnings: 1
+Number of errors: 8

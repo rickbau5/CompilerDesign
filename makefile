@@ -34,7 +34,7 @@ PACKAGE=$(FLEX) $(BSON) $(SRCS) $(HEADERS) $(MAINSRC) makefile
 all: compile
 
 clean:
-	@- rm -rf $(BIN) $(BIN).output $(BIN).tab.h testing/*.out $(INTER) $(TMP) $(BIN).dSYM test.out
+	@- rm -rf $(BIN) $(BIN).output $(BIN).tab.h tests tests.dSYM testing/*.out $(INTER) $(TMP) $(BIN).dSYM test.out
 
 flex:
 	flex $(FFLAGS) $(FLEX)
