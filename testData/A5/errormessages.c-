@@ -1,0 +1,18 @@
+// C-F16
+// These error messages have updated text
+// Five messages had the word "type" twice in a row in them
+
+char cat() return 42;     // this error message was made a bit more clear
+
+int dog() return;
+
+int main() {
+    char c:666;
+    int i;
+    
+    while ('x');
+    -c;
+    c--;
+
+    emu() + fox;        // message says whether function or id is undefined
+}

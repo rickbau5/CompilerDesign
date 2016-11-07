@@ -1,0 +1,8 @@
+main() {
+    int x[3], y;
+
+    x[x+3];  
+    x[x=3];  
+    x[4][3]=4;   // should be an error
+    x = y;       // should be an error
+}

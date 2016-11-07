@@ -1,0 +1,8 @@
+ERROR(18): Syntax error, unexpected bool.
+ERROR(18): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(21): Syntax error, unexpected '{'.
+ERROR(25): Syntax error, unexpected '{'.
+ERROR(28): Syntax error, unexpected '}'.
+ERROR(32): Syntax error, unexpected ')', expecting ',' or ';'.
+Number of warnings: 0
+Number of errors: 6

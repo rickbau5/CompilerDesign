@@ -1,0 +1,99 @@
+WARNING(1): Expecting to return type char but function 'emu' has no return statement.
+ERROR(8): Expecting type char in parameter 2 of call to 'emu' defined on line 1 but got type int.
+ERROR(8): Expecting type char in parameter 3 of call to 'emu' defined on line 1 but got type bool.
+ERROR(9): Expecting type char in parameter 2 of call to 'emu' defined on line 1 but got type int.
+ERROR(9): Expecting type char in parameter 3 of call to 'emu' defined on line 1 but got type bool.
+ERROR(10): '+' requires operands of type int but lhs is of type char.
+ERROR(10): Expecting type char in parameter 1 of call to 'emu' defined on line 1 but got type int.
+ERROR(10): Symbol 'parrot' is not defined.
+ERROR(10): 'and' requires operands of type bool but rhs is of type int.
+ERROR(10): Expecting type char in parameter 3 of call to 'emu' defined on line 1 but got type bool.
+ERROR(11): '+' requires operands of type int but lhs is of type char.
+ERROR(11): Expecting type char in parameter 1 of call to 'emu' defined on line 1 but got type int.
+ERROR(11): Expecting type char in parameter 2 of call to 'emu' defined on line 1 but got type int.
+ERROR(11): Expecting type char in parameter 3 of call to 'emu' defined on line 1 but got type bool.
+ERROR(11): 'and' requires operands of type bool but rhs is of type int.
+ERROR(11): Expecting type char in parameter 3 of call to 'emu' defined on line 1 but got type bool.
+ERROR(12): Too few parameters passed for function 'emu' defined on line 1.
+ERROR(13): Expecting type char in parameter 2 of call to 'emu' defined on line 1 but got type int.
+ERROR(13): Too few parameters passed for function 'emu' defined on line 1.
+ERROR(14): Expecting type char in parameter 2 of call to 'emu' defined on line 1 but got type int.
+ERROR(14): Expecting type char in parameter 3 of call to 'emu' defined on line 1 but got type bool.
+ERROR(15): Expecting type char in parameter 2 of call to 'emu' defined on line 1 but got type int.
+ERROR(15): Expecting type char in parameter 3 of call to 'emu' defined on line 1 but got type bool.
+ERROR(15): Too many parameters passed for function 'emu' defined on line 1.
+ERROR(15): '+' requires operands of type int but lhs is of type char.
+ERROR(16): Function 'zot' is not defined.
+ERROR(16): '+' requires operands of type int but lhs is of type char.
+ERROR(16): 'and' requires operands of type bool but rhs is of type int.
+Func input returns type int [type int] [line: -1]
+Sibling: 0  Func output returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type int [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type bool [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type void [type void] [line: -1]
+Sibling: 5  Func outnl returns type void [type void] [line: -1]
+Sibling: 6  Func emu returns type char [type char] [line: 1]
+!   Child: 0  Param x of type char [type char] [line: 1]
+!   Sibling: 0  Param y of type char [type char] [line: 1]
+!   Sibling: 1  Param z of type char [type char] [line: 1]
+Sibling: 7  Func main returns type void [type void] [line: 3]
+!   Child: 1  Compound [type void] [line: 3]
+!   !   Child: 0  Var b of type bool [type bool] [line: 4]
+!   !   Sibling: 0  Var c of type char [type char] [line: 5]
+!   !   Sibling: 1  Var i of type int [type int] [line: 6]
+!   !   Child: 1  Call: emu [type char] [line: 8]
+!   !   !   Child: 0  Const: 'z' [type char] [line: 8]
+!   !   !   Sibling: 0  Const: 666 [type int] [line: 8]
+!   !   !   Sibling: 1  Const: true [type bool] [line: 8]
+!   !   Sibling: 0  Call: emu [type char] [line: 9]
+!   !   !   Child: 0  Id: c [type char] [line: 9]
+!   !   !   Sibling: 0  Id: i [type int] [line: 9]
+!   !   !   Sibling: 1  Id: b [type bool] [line: 9]
+!   !   Sibling: 1  Call: emu [type char] [line: 10]
+!   !   !   Child: 0  Op: + [type int] [line: 10]
+!   !   !   !   Child: 0  Id: c [type char] [line: 10]
+!   !   !   !   Child: 1  Id: i [type int] [line: 10]
+!   !   !   Sibling: 0  Id: parrot [undefined type] [line: 10]
+!   !   !   Sibling: 1  Op: and [type bool] [line: 10]
+!   !   !   !   Child: 0  Id: b [type bool] [line: 10]
+!   !   !   !   Child: 1  Id: i [type int] [line: 10]
+!   !   Sibling: 2  Call: emu [type char] [line: 11]
+!   !   !   Child: 0  Op: + [type int] [line: 11]
+!   !   !   !   Child: 0  Id: c [type char] [line: 11]
+!   !   !   !   Child: 1  Id: i [type int] [line: 11]
+!   !   !   Sibling: 0  Call: emu [type char] [line: 11]
+!   !   !   !   Child: 0  Id: c [type char] [line: 11]
+!   !   !   !   Sibling: 0  Id: i [type int] [line: 11]
+!   !   !   !   Sibling: 1  Id: b [type bool] [line: 11]
+!   !   !   Sibling: 1  Op: and [type bool] [line: 11]
+!   !   !   !   Child: 0  Id: b [type bool] [line: 11]
+!   !   !   !   Child: 1  Id: i [type int] [line: 11]
+!   !   Sibling: 3  Call: emu [type char] [line: 12]
+!   !   !   Child: 0  Id: c [type char] [line: 12]
+!   !   Sibling: 4  Call: emu [type char] [line: 13]
+!   !   !   Child: 0  Id: c [type char] [line: 13]
+!   !   !   Sibling: 0  Id: i [type int] [line: 13]
+!   !   Sibling: 5  Call: emu [type char] [line: 14]
+!   !   !   Child: 0  Id: c [type char] [line: 14]
+!   !   !   Sibling: 0  Id: i [type int] [line: 14]
+!   !   !   Sibling: 1  Id: b [type bool] [line: 14]
+!   !   Sibling: 6  Call: emu [type char] [line: 15]
+!   !   !   Child: 0  Id: c [type char] [line: 15]
+!   !   !   Sibling: 0  Id: i [type int] [line: 15]
+!   !   !   Sibling: 1  Id: b [type bool] [line: 15]
+!   !   !   Sibling: 2  Op: + [type int] [line: 15]
+!   !   !   !   Child: 0  Id: c [type char] [line: 15]
+!   !   !   !   Child: 1  Id: i [type int] [line: 15]
+!   !   Sibling: 7  Call: zot [undefined type] [line: 16]
+!   !   !   Child: 0  Op: + [type int] [line: 16]
+!   !   !   !   Child: 0  Id: c [type char] [line: 16]
+!   !   !   !   Child: 1  Id: i [type int] [line: 16]
+!   !   !   Sibling: 0  Op: and [type bool] [line: 16]
+!   !   !   !   Child: 0  Id: b [type bool] [line: 16]
+!   !   !   !   Child: 1  Id: i [type int] [line: 16]
+Number of warnings: 1
+Number of errors: 27

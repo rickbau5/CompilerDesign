@@ -1,0 +1,60 @@
+// C-F16
+// C-F13
+// C-F09
+int g;
+
+  main()
+{
+    {
+	int x;
+	int y;
+
+	x=11;
+	y=12;
+	g=13;
+
+	x=3+4*x+y*7+x*(y+g);
+	x=(3-4/x-y/7-x/(y-g));
+	x=((3%((4))/(x)%(y/(7)%x)/(y%g)));
+    }
+    {
+	bool x, y, z[32];
+
+	x=true;
+	y=false;
+
+	x=true or false and x or y and 7 or x and (y or g);
+	x= not (true) or  not  not x;
+
+	x = x  and  y  and  x;
+	x = x  or  y  or  x;
+
+	x=z[1];
+	z[1]=x;
+	z[1]=z[2];
+	z[1]=z[2]+z[3];
+    }
+    {
+	int z[3];
+
+	x=z[1];
+	z[1]=x;
+	z[1]=z[2];
+	z[1]=z[2]+z[3];
+	x=z[1]+z[2]*z[0]+z[3]*7+x*(z[4]+g);
+    }
+
+    {
+         int a, b, c, d;
+	 a=b=c;
+	 a=b+c+d;
+	 a=b*c*d;
+         g=a+=b-=c+d;
+	 a=(b=3)+(c=4);
+    }    
+    { 
+         int a, b;
+	 bool x, y;
+	 x = x  or  y  and  b*a>a+b;
+    }
+}

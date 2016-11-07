@@ -1,0 +1,166 @@
+// C-F16
+// C-F13
+// Bulls and Cows in C-
+// Author: Wenlong Huang
+// Date: Dec 10, 2010
+
+// Instructions:
+// Bulls and Cows will ask player to input an integer which is
+// for randam number generation. Then the code which is four
+// random numbers (1-9) have been selected and wait for player
+// to guess. After player inputing 4 guesses, the program will
+// tell player how many bulls and how many cows. A bull is
+// the "right digit in the right place". A cow is the "right digit
+// in the wrong place". Player can quit at anytime while guessing
+// by inputing 0, then the correct answer will be shown and will
+// ask for an integer to determine if player want to play next
+// round, if not, just type 0 to quit the game.
+
+// If player can win in 10 turns, he can see a T. Otherwise, a F
+// followed by the correct answer will be shown.
+
+int r[100],j,code[4],guess[4],bull,cow;
+
+// the random number generation algorithm was taken from
+// http://www.iue.tuwien.ac.at/phd/wasshuber/node46.html
+
+int randnum()
+{
+    j++;
+    if(j>=100) j=1;
+    r[j]=(1366*r[j-1]+150889)%714025;
+    return r[j];
+}
+
+// Compare the guesses with code to determine values of
+// bulls and cows
+
+  compare()
+{
+    int i,k;
+
+    k=0;
+    bull=0;
+    cow=0;
+    while(k<4)
+    {
+        if(guess[k]==code[k])
+        {
+            bull++;
+        }
+        else
+        {
+            i=0;
+            while(i<4)
+            {
+                if(guess[k]==code[i])
+                {
+                    cow++;
+                    break;
+                }
+                i++;
+            }
+        }
+        k++;
+    }
+}
+
+int main()
+{
+    int seed;
+    int i,con,limit;
+    bool quit;
+
+    j=0;
+    seed=input();
+    if(seed<0) seed=-seed;
+    r[j]=seed;
+    outnl();
+    while(true)
+    {
+        i=0;
+        limit=0;
+        while(i<4)
+        {
+            code[i]=randnum()%10;
+            if(code[i]!=0)
+            {
+                i++;
+            }
+        }
+
+        // limit the maximun guess time
+        while(limit<10)
+        {
+            quit=false;
+            i=0;
+            while(i<4)
+            {
+                guess[i]=input();
+
+                // only numbers (1-9) valid
+                if(guess[i]<10 and guess[i]>0)
+                {
+                    i++;
+                }
+                else
+                {
+
+                    // give 0 to quit guessing
+                    if(guess[i]==0)
+                    {
+                        quit=true;
+                        break;
+                    }
+                    else
+                    {
+                        outputb(false);
+                    }
+                }
+            }
+            if(quit) break;
+            compare();
+            outnl();
+
+            // guessing result
+            if(bull==4)
+            {
+                quit=false;
+                outputb(true);
+                outnl();
+                break;
+            }
+
+            else
+            {
+                output(bull);
+                output(cow);
+                outnl();
+            }
+            limit++;
+            quit=true;
+        }
+
+        // quit guessing
+        if(quit)
+        {
+            outputb(false);
+            outnl();
+            i=0;
+            while(i<4)
+            {
+                output(code[i]);
+                i++;
+            }
+            outnl();
+        }
+
+        // quit game
+        if(input()==0)
+        {
+            break;
+        }
+        outnl();
+    }
+    return 0;
+}

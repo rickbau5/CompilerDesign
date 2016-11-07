@@ -6,13 +6,15 @@
 #include "symbolTable.h"
 #include "scanType.h"
 #include "printtree.h"
+#include "yyerror.h"
+
+#define YYERROR_VERBOSE
 
 using namespace std;
 
 extern "C" int yylex();
 extern "C" int yyparse();
 
-void yyerror(const char *s);
 const char* prefix();
 
 Node* newNode(nodes::NodeType, TokenData*);
@@ -22,15 +24,12 @@ Node* addChild(Node*, Node*);
 Node* addChild(Node*, Node*, int);
 
 extern "C" FILE *yyin;
-extern "C" char *yytext;
 
 void log(const char *msg) {
     printf("Line %d: %s\n", lineno, msg);
 }
 
 Node* root;
-Node* errors[MAX_ERRORS];
-int numErrors;
 
 int currNodeId = 0;
 
@@ -41,8 +40,6 @@ Node* injectIORoutines(Node* root);
 %}
 
 %debug
-
-%token <tokenData> INVALID
 
 %token <tokenData> TOK
 
@@ -125,12 +122,6 @@ declarationList: declarationList declaration    {
 declaration: varDeclaration     { $$ = $1; }
            | funDeclaration     { $$ = $1; }
            | recDeclaration     { $$ = $1; }
-           | error {
-                yyerrok;
-                yyclearin;
-                $$ = errorNode(NULL); 
-                $$->lineno = lineno;
-           }
            ;
 
 recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
@@ -265,6 +256,13 @@ matched: IF '(' simpleExpression ')' matched ELSE matched       {
             addChild(node, $7, 2);
             $$ = node;
        }
+       | IF error ')' matched ELSE matched {
+            Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $4, 1);
+            addChild(node, $6, 2);
+            $$ = node;
+       }
        | WHILE '(' simpleExpression ')' matched {
             Node* node = newNode(nodes::WhileStatement, $1);
             node->returnType = strdup("void");
@@ -297,6 +295,20 @@ unmatched: IF '(' simpleExpression ')' matched                  {
             addChild(node, $7, 2);
             $$ = node;
          }
+         | IF error                 { 
+            Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
+            $$ = node;
+         }
+         | IF error ')' statement {
+            Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $4, 1);
+            $$ = node;
+
+            yyerrok;
+         }
+
          | WHILE '(' simpleExpression ')' unmatched {
             Node* node = newNode(nodes::WhileStatement, $1);
             node->returnType = strdup("void");
@@ -333,8 +345,8 @@ statementList: statementList statement  {
              |  { $$ = NULL; } 
              ;
 
-expressionStmt: expression SEMI  { $$ = $1; } 
-              | SEMI             { $$ = NULL; }  
+expressionStmt: expression SEMI  { $$ = $1;   yyerrok; } 
+              | SEMI             { $$ = NULL; yyerrok; }
               ;
 
 returnStmt: RETURN SEMI                  {
@@ -358,6 +370,9 @@ expression: mutable ASS expression      {
             addChild(node, $1);
             addChild(node, $3);
             $$ = node;
+          }
+          | error ASS error             {
+            $$ = newNode(nodes::Assignment, $2);
           }
           | mutable ADDASS expression   {
             Node* node = newNode(nodes::AddAssignment, $2);
@@ -528,13 +543,6 @@ constant: NUMCONST  {
             $$->isConstant = true;
             $$->returnType = strdup("bool");
         }
-        | INVALID
-        {
-            yyerrok;
-            yyclearin;
-            yyerror("Match error");
-            $$ = errorNode($1);
-        }
         ;
 
 %%
@@ -554,6 +562,8 @@ int runWith(const char* str) {
 
 int run(FILE* in) {
     root = injectIORoutines(NULL);
+    initErrorProcessing();
+
     yyin = in;
     while (!feof(in)) {
         yyparse();
@@ -587,7 +597,6 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
 
 Node* errorNode(TokenData* data) {
     Node* err = newNode(nodes::Error, data);
-    errors[numErrors++] = err;    
     return err;
 }
 
@@ -635,9 +644,12 @@ Node* addChild(Node* parent, Node* child, int idx) {
     } else if (idx >= MAX_CHILDREN) {
         printf("Trying to add child [%s] to [%s] but %d exceeds max children %d!\n", parent->type, child->type, idx, MAX_CHILDREN);
     } else {
-
         parent->children[idx] = child;
-        parent->numChildren++;
+        if (idx > parent->numChildren) {
+            parent->numChildren = idx + 1;
+        } else {
+            parent->numChildren++;
+        }
         if (child != NULL) {
             if (parent->nodeId == child->nodeId) {
                 printf("Attempting to add node to itself as a child: %s line %d\n", stringifyNode(parent), parent->lineno);
@@ -655,10 +667,6 @@ const char* prefix() {
     static char message[64];
     sprintf(message, "Line %d Token:", lineno);
     return message;
-}
-
-void yyerror(const char *s) {
-    printf("ERROR(%d): %s: \"%s\"\n", lineno, s, yytext); 
 }
 
 Node* funcWithParamOf(const char *name, const char* ret, const char* param) {

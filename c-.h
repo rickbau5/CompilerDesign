@@ -7,16 +7,15 @@
 #include "symbolTable.h"
 #include "scanType.h"
 
-#define MAX_ERRORS 256
-
 int run(FILE*);
 int runWith(const char*);
 
 extern Node* root;
-extern int numErrors;
-extern int numWarnings;
 extern int lineno;
 extern int currNodeId;
 extern SymbolTable symbolTable;
+extern int numErrors;
+extern int numWarnings;
+
 
 #endif

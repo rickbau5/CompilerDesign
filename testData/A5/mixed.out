@@ -1,0 +1,9 @@
+ERROR(13): Syntax error, unexpected bool.
+ERROR(17): Syntax error, unexpected '=', expecting '('.
+ERROR(17): Syntax error, unexpected Boolean constant 'true', expecting identifier.
+ERROR(20): Syntax error, unexpected '}'.
+ERROR(24): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(28): Syntax error, unexpected '=', expecting '('.
+ERROR(28): Syntax error, unexpected Boolean constant 'true', expecting identifier.
+Number of warnings: 0
+Number of errors: 7

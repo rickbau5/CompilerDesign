@@ -556,8 +556,6 @@ void typeNode(Node* node) {
 }
 
 void analyzeAST(Node* root) {
-    numWarnings = 0;
-
     typeNode(root);
 
     // Search for main in global scopes

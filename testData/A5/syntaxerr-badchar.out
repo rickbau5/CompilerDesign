@@ -1,0 +1,31 @@
+ERROR(2): Syntax error, unexpected character constant 'x'.
+WARNING(3): Invalid input character: '''.  Character ignored.
+WARNING(3): Invalid input character: '''.  Character ignored.
+ERROR(4): Syntax error, unexpected '=', expecting '('.
+WARNING(4): Invalid input character: '''.  Character ignored.
+WARNING(5): Invalid input character: '!'.  Character ignored.
+WARNING(5): Invalid input character: '@'.  Character ignored.
+WARNING(5): Invalid input character: '#'.  Character ignored.
+WARNING(5): Invalid input character: '$'.  Character ignored.
+WARNING(5): Invalid input character: '^'.  Character ignored.
+WARNING(5): Invalid input character: '&'.  Character ignored.
+WARNING(5): Invalid input character: '_'.  Character ignored.
+WARNING(5): Invalid input character: '~'.  Character ignored.
+WARNING(5): Invalid input character: '`'.  Character ignored.
+WARNING(5): Invalid input character: '"'.  Character ignored.
+WARNING(5): Invalid input character: '"'.  Character ignored.
+WARNING(5): Invalid input character: '\'.  Character ignored.
+WARNING(5): Invalid input character: '|'.  Character ignored.
+WARNING(6): Invalid input character: '@'.  Character ignored.
+WARNING(6): Invalid input character: '#'.  Character ignored.
+WARNING(6): Invalid input character: '$'.  Character ignored.
+WARNING(6): Invalid input character: '^'.  Character ignored.
+WARNING(6): Invalid input character: '_'.  Character ignored.
+WARNING(6): Invalid input character: '~'.  Character ignored.
+WARNING(6): Invalid input character: '`'.  Character ignored.
+WARNING(6): Invalid input character: '\'.  Character ignored.
+WARNING(7): Invalid input character: '''.  Character ignored.
+WARNING(7): Invalid input character: '&'.  Character ignored.
+WARNING(7): Invalid input character: '''.  Character ignored.
+Number of warnings: 27
+Number of errors: 2
