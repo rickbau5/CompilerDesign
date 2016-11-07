@@ -93,7 +93,7 @@ const char* computeType(Node* parent, Node* left, Node* right) {
                 numErrors++;
             }
             if (!left->isArray != !right->isArray) {
-                printf("ERROR(%d): ‘%s‘ requires that either both or neither operands be arrays.\n", parent->lineno, parent->tokenString);
+                printf("ERROR(%d): '%s' requires that either both or neither operands be arrays.\n", parent->lineno, parent->tokenString);
                 numErrors++;
             }
             return "bool";
@@ -398,7 +398,7 @@ void typeNode(Node* node) {
             node->isArray = left->isArray;
 
             if (!left->isArray != !rght->isArray) {
-                printf("ERROR(%d): ‘%s‘ requires that either both or neither operands be arrays.\n", node->lineno, node->tokenString);
+                printf("ERROR(%d): '%s' requires that either both or neither operands be arrays.\n", node->lineno, node->tokenString);
                 numErrors++;
             }
 

@@ -9,12 +9,8 @@ UNTAR=tar -xvf
 
 ME=boss
 ASSN=4
-ASS=CS445 F16 Assignment $(ASSN)
 FILE=$(ROOT)/$(TMP)/$(SUBT)
-HOST=http://ec2-52-89-93-46.us-west-2.compute.amazonaws.com
-SUBURL=$(HOST)/cgi-bin/fileCapture.py
 SUBRESULT=result.html
-EMAIL=open https://outlook.office.com/owa/?realm=vandals.uidaho.edu&path=/mail/inbox
 
 CFLAGS=-O3 -Wall
 DFLAGS=-g -Wall
@@ -76,6 +72,6 @@ wormulon: prep-tar
 	scp $(TMP)/$(SUBT) boss2849@wormulon.cs.uidaho.edu:/home/boss2849/CS445/$(SUBT)
 
 submit: prep-tar test-tar
-	curl -F "student=$(ME)" -F "assignment=$(ASS)" -F "submittedfile=@$(FILE)" $(SUBURL) > $(TMP)/$(SUBRESULT) 
+	curlsubmit 445 $(ASSN) $(FILE) > $(TMP)/$(SUBRESULT)
 	@open $(TMP)/$(SUBRESULT)
 	@echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."
