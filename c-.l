@@ -98,7 +98,7 @@ L?'"\\"?{C}'        { return setTokenData(CHARCONST); }
 <COMMENT>[^\n]      ;
 <COMMENT>"\n"        { ++lineno; BEGIN(INITIAL); }
 
-.                   { printf("WARNING(%d): Invalid input character: '%c'. Character ignored.\n", lineno, yytext[0]); numWarnings++; }
+.                   { printf("WARNING(%d): Invalid input character: '%c'.  Character ignored.\n", lineno, yytext[0]); numWarnings++; }
 
 %%
 

@@ -122,6 +122,7 @@ declarationList: declarationList declaration    {
 declaration: varDeclaration     { $$ = $1; }
            | funDeclaration     { $$ = $1; }
            | recDeclaration     { $$ = $1; }
+           | error              { $$ = NULL; }
            ;
 
 recDeclaration: RECORD ID LBRACE localDeclarations RBRACE   {
@@ -145,6 +146,18 @@ scopedVarDeclarations: scopedTypeSpecifier varDeclList SEMI  {
                             decl->isStatic = $1->isStatic;
                         }
                         $$ = $2;
+
+                        yyerrok;
+                     }
+                     | error varDeclList SEMI {
+                        for (Node* decl = $2; decl != NULL; decl = decl->sibling) {
+                            decl->returnType = (char*)"unknown";
+                        }
+                        yyerrok;
+                     }
+                     | typeSpecifier error SEMI {
+                        $$ = NULL; 
+                        yyerrok;
                      }
                      ;
 
@@ -155,13 +168,32 @@ varDeclaration: typeSpecifier varDeclList SEMI  {
                     s->returnType = $1->tokenString;
                 }
                 $$ = n;
+
+                yyerrok;
+              }
+              | error varDeclList SEMI {
+                Node* n = $2;
+                for (Node *s = n; s != NULL; s = s->sibling) {
+                    s->nodeType = nodes::Variable;
+                    s->returnType = (char*)"unknwown";
+                }
+                $$ = n;
+              }
+              | typeSpecifier error SEMI {
+                $$ = NULL;
+                yyerrok;
               }
               ;
 
 varDeclList: varDeclList ',' varDeclInitialize   { 
                 $$ = addSibling($1, $3);
+                yyerrok;
+           }
+           | varDeclList ',' error               {
+                $$ = $1;
            }
            | varDeclInitialize                   { $$ = $1; }
+           | error                               { $$ = NULL; }
            ;
 
 varDeclInitialize: varDeclId                        {
@@ -169,6 +201,13 @@ varDeclInitialize: varDeclId                        {
                  }
                  | varDeclId ':' simpleExpression   {
                     $$ = addChild($1, $3);                    
+                 }
+                 | error ':' simpleExpression       {
+                    $$ = NULL;
+                    yyerrok;
+                 }
+                 | varDeclId ':' error              {
+                    $$ = $1;
                  }
                  ;
 
@@ -179,6 +218,11 @@ varDeclId: ID                   { $$ = newNode(nodes::Variable, $1); }
             node->isArray = true;
             $$ = node;
          } 
+         | ID '[' error                  { $$ = newNode(nodes::Variable, $1); }
+         | error ']'                     { 
+            $$ = NULL;
+            yyerrok;
+         }
          ;
 
 scopedTypeSpecifier: STATIC typeSpecifier   { $2->isStatic = true;  $$ = $2; }
@@ -212,6 +256,31 @@ funDeclaration: typeSpecifier ID '(' params ')' statement {
                     addChild(node, $5);
                     $$ = node;
               }
+              | typeSpecifier error         { $$ = NULL; }
+              | typeSpecifier ID '(' error  { 
+                    Node* node = newNode(nodes::Function, $2);
+                    node->returnType = $1->tokenString;
+                    $$ = node;
+              }
+              | typeSpecifier ID '(' params ')' error   {
+                    Node* node = newNode(nodes::Function, $2);
+                    node->returnType = $1->tokenString;
+                    addChild(node, $4);
+                    $$ = node;
+              }
+              | ID '(' error    {
+                    Node* node = newNode(nodes::Function, $1);
+                    node->returnType = "void";
+                    $$ = node;
+              }
+              | ID '(' params ')' error {
+                    Node* node = newNode(nodes::Function, $1);
+                    node->returnType = "void";
+                    addChild(node, $3);
+                    $$ = node;
+              
+                    addChild(node, $3);
+              }
               ;
 
 params: paramList       {
@@ -222,8 +291,13 @@ params: paramList       {
 
 paramList: paramList SEMI paramTypeList      { 
             $$ = addSibling($1, $3);
+            yyerrok;
          }
          | paramTypeList    { $$ = $1; }
+         | paramTypeList SEMI error          {
+            $$ = $1;
+         }
+         | error                             { $$ = NULL; }
          ;
 
 paramTypeList: typeSpecifier paramIdList    {
@@ -232,16 +306,23 @@ paramTypeList: typeSpecifier paramIdList    {
                     s->returnType = $1->tokenString;
                 $$ = $2; 
              }
+             | typeSpecifier error          {
+                $$ = NULL;
+             }
              ;
 
 paramIdList: paramIdList ',' paramId        {
                 $$ = addSibling($1, $3);
+                yyerrok;
            }
-           | paramId        { $$ = $1; }
+           | paramId                        { $$ = $1; }
+           | paramIdList ',' error          { $$ = $1; }
+           | error                          { $$ = NULL; }
            ;
 
 paramId: ID                       { $$ = newNode(nodes::Parameter, $1); }
        | ID LBRACKET RBRACKET     { $$ = newNode(nodes::Parameter, $1); $$->isArray = true; }
+       | error RBRACKET           { $$ = NULL; yyerrok; }
        ;
 
 statement: matched      { $$ = $1; }
@@ -256,12 +337,14 @@ matched: IF '(' simpleExpression ')' matched ELSE matched       {
             addChild(node, $7, 2);
             $$ = node;
        }
+       | IF '(' error                                           { $$ = NULL; }
        | IF error ')' matched ELSE matched {
             Node* node = newNode(nodes::IfStatement, $1);
             node->returnType = strdup("void");
             addChild(node, $4, 1);
             addChild(node, $6, 2);
             $$ = node;
+            yyerrok;
        }
        | WHILE '(' simpleExpression ')' matched {
             Node* node = newNode(nodes::WhileStatement, $1);
@@ -270,6 +353,26 @@ matched: IF '(' simpleExpression ')' matched ELSE matched       {
             addChild(node, $5, 1);
             $$ = node;
        }
+       | WHILE error ')' matched                {
+            Node* node = newNode(nodes::WhileStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $4, 1);
+            $$ = node;
+            yyerrok;
+       }
+       | WHILE '(' error ')' matched            {
+            Node* node = newNode(nodes::WhileStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $5, 1);
+            $$ = node;
+            yyerrok;
+       }
+       | WHILE error                            { 
+            Node* node = newNode(nodes::WhileStatement, $1);
+            node->returnType = strdup("void");
+            $$ = node;
+       }
+       | error              { $$ = NULL; }
        | otherstatements    { $$ = $1; }
        ;
 
@@ -308,13 +411,35 @@ unmatched: IF '(' simpleExpression ')' matched                  {
 
             yyerrok;
          }
+         | IF error ')' matched ELSE unmatched  {
+            Node* node = newNode(nodes::IfStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $4);
+            addChild(node, $6);
+            $$ = node;
 
+            yyerrok;
+         }
          | WHILE '(' simpleExpression ')' unmatched {
             Node* node = newNode(nodes::WhileStatement, $1);
             node->returnType = strdup("void");
             addChild(node, $3, 0);
             addChild(node, $5, 1);
             $$ = node;
+         }
+         | WHILE error ')' unmatched                {
+            Node* node = newNode(nodes::WhileStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $4);
+            $$ = node;
+            yyerrok;
+         }
+         | WHILE '(' error ')' unmatched            {
+            Node* node = newNode(nodes::WhileStatement, $1);
+            node->returnType = strdup("void");
+            addChild(node, $5);
+            $$ = node;
+            yyerrok;
          }
          ;
 
@@ -330,6 +455,21 @@ compoundStmt: LBRACE localDeclarations statementList  RBRACE  {
                 addChild(node, $2, 0);
                 addChild(node, $3, 1);
                 $$ = node;
+                yyerrok;
+            }
+            | LBRACE error statementList RBRACE               {
+                Node* node = newNode(nodes::Compound, $1);
+                node->returnType = "void";
+                addChild(node, $3, 1);
+                $$ = node;
+                yyerrok;
+            }
+            | LBRACE localDeclarations error RBRACE           {
+                Node* node = newNode(nodes::Compound, $1);
+                node->returnType = "void";
+                addChild(node, $2, 1);
+                $$ = node;
+                yyerrok;
             }
             ;
 
@@ -352,16 +492,19 @@ expressionStmt: expression SEMI  { $$ = $1;   yyerrok; }
 returnStmt: RETURN SEMI                  {
                 $$ = newNode(nodes::Return, $1);
                 $$->returnType = strdup("void");
+                yyerrok;
           }
           | RETURN expression SEMI       {
                 Node* node = newNode(nodes::ReturnStatement, $1);
                 addChild(node, $2);
                 $$ = node;
+                yyerrok;
           }
           ;
 breakStmt: BREAK SEMI                    { 
             $$ = newNode(nodes::Break, $1); 
             $$->returnType = strdup("void");
+            yyerrok;
          } 
          ;
 
@@ -372,7 +515,7 @@ expression: mutable ASS expression      {
             $$ = node;
           }
           | error ASS error             {
-            $$ = newNode(nodes::Assignment, $2);
+            $$ = NULL;
           }
           | mutable ADDASS expression   {
             Node* node = newNode(nodes::AddAssignment, $2);
@@ -380,34 +523,50 @@ expression: mutable ASS expression      {
             addChild(node, $3);
             $$ = node;
           } 
+          | error ADDASS error             {
+            $$ = NULL;
+          }
           | mutable SUBASS expression   {
             Node* node = newNode(nodes::SubAssignment, $2);
             addChild(node, $1);
             addChild(node, $3);
             $$ = node;
           }  
+          | error SUBASS error             {
+            $$ = NULL;
+          }
           | mutable MULASS expression   { 
             Node* node = newNode(nodes::MulAssignment, $2);
             addChild(node, $1);
             addChild(node, $3);
             $$ = node;
           } 
+          | error MULASS error             {
+            $$ = NULL;
+          }
           | mutable DIVASS expression   {
             Node* node = newNode(nodes::DivAssignment, $2);
             addChild(node, $1);
             addChild(node, $3);
             $$ = node;
           }
+          | error DIVASS error             {
+            $$ = NULL;
+          }
           | mutable INC                 {
             Node* node = newNode(nodes::IncrementAssignment, $2);
             addChild(node, $1);
             $$ = node;
+            yyerrok;
           } 
+          | error INC                   { $$ = NULL; yyerrok; }
           | mutable DEC                 { 
             Node* node = newNode(nodes::DecrementAssignment, $2);
             addChild(node, $1);
             $$ = node;
+            yyerrok;
           } 
+          | error DEC                   { $$ = NULL; yyerrok; }
           | simpleExpression            { $$ = $1; }
           ;
 
@@ -415,6 +574,11 @@ simpleExpression: simpleExpression OR andExpression {
                     Node* node = newNode(nodes::Operator, $2);
                     addChild(node, $1);
                     addChild(node, $3);
+                    $$ = node;
+                }
+                | simpleExpression OR error         {
+                    Node* node = newNode(nodes::Operator, $2);
+                    addChild(node, $1);
                     $$ = node;
                 }
                 | andExpression                     { $$ = $1; }
@@ -425,6 +589,11 @@ andExpression: andExpression AND unaryRelExpression {
                     addChild(node, $3);
                     $$ = node;
              }
+             | simpleExpression AND error         {
+                 Node* node = newNode(nodes::Operator, $2);
+                 addChild(node, $1);
+                 $$ = node;
+             }
              | unaryRelExpression                   { $$ = $1; }
              ;
 unaryRelExpression: NOT unaryRelExpression          {
@@ -432,6 +601,7 @@ unaryRelExpression: NOT unaryRelExpression          {
                     addChild(node, $2);
                     $$ = node;
                   }
+                  | NOT error                       { $$ = NULL; }
                   | relExpression                   { $$ = $1; }
                   ;
 relExpression: sumExpression relop sumExpression    { 
@@ -439,6 +609,17 @@ relExpression: sumExpression relop sumExpression    {
                 addChild(node, $1);
                 addChild(node, $3);
                 $$ = node;
+             }
+             | sumExpression relop error            { 
+                Node* node = newNode(nodes::Operator, $2);
+                addChild(node, $1);
+                $$ = node;
+             }
+             | error relop sumExpression            {
+                Node*node = newNode(nodes::Operator, $2);
+                addChild(node, $3);
+                $$ = node;
+                yyerrok;
              }
              | sumExpression                        { $$ = $1; }
              ;
@@ -457,6 +638,12 @@ sumExpression: sumExpression sumop term     {
                 addChild(node, $3);
                 $$ = node;
              }
+             | sumExpression sumop error    {
+                Node* node = newNode(nodes::Operator, $2);
+                addChild(node, $1);
+                $$ = node;
+                yyerrok;
+             }
              | term                         { $$ = $1; }
              ;
 
@@ -468,6 +655,11 @@ term: term mulop unaryExpression    {
         Node* node = newNode(nodes::Operator, $2);
         addChild(node, $1);
         addChild(node, $3);
+        $$ = node;
+    }
+    | term mulop error              {
+        Node* node = newNode(nodes::Operator, $2);
+        addChild(node, $1);
         $$ = node;
     }
     | unaryExpression               { $$ = $1; }
@@ -483,6 +675,7 @@ unaryExpression: unaryop unaryExpression    {
                     addChild(node, $2);
                     $$ = node;
                }
+               | unaryop error              { $$ = NULL; }
                | factor                     { $$ = $1; }
                ;
 unaryop: SUBOP
@@ -508,7 +701,9 @@ mutable: ID                     {
             $$ = node;
        }
        ;
-immutable: '(' expression ')'   { $$ = $2; }
+immutable: '(' expression ')'   { $$ = $2; yyerrok; }
+         | '(' error            { $$ = NULL; }
+         | error ')'            { $$ = NULL; yyerrok; }
          | call                 { $$ = $1; }
          | constant             { $$ = $1; }
          ;
@@ -517,12 +712,14 @@ call: ID '(' args ')'           {
         $$ = newNode(nodes::FunctionCall, $1);
         addChild($$, $3);
     } 
+    | error '('                 { $$ = NULL; yyerrok; }
     ;
 
 args: argList                   { $$ = $1; }
     |                           { $$ = NULL; }
     ;
-argList: argList ',' expression { $$ = addSibling($1, $3); }
+argList: argList ',' expression { $$ = addSibling($1, $3); yyerrok; }
+       | argList ',' error      { $$ = $1; }
        | expression             { $$ = $1; }
        ;
 constant: NUMCONST  {

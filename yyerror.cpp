@@ -105,6 +105,16 @@ void initErrorProcessing() {
     niceTokenNameMap["ASS"] = (char *)"'='";
     niceTokenNameMap["SEMI"] = (char *)"';'";
     niceTokenNameMap["RBRACE"] = (char *)"'}'";
+    niceTokenNameMap["LBRACE"] = (char *)"'{'";
+    niceTokenNameMap["LBRACKET"] = (char *)"'['";
+    niceTokenNameMap["RBRACKET"] = (char *)"']'";
+    niceTokenNameMap["ADDOP"] = (char *)"'+'";
+    niceTokenNameMap["SUBOP"] = (char *)"'-'";
+    niceTokenNameMap["MULOP"] = (char *)"'*'";
+    niceTokenNameMap["DIVOP"] = (char *)"'/'";
+    niceTokenNameMap["MODOP"] = (char *)"'%'";
+
+
 
     niceTokenNameMap["$end"] = (char *)"end of input";
 }
