@@ -8,7 +8,7 @@ TAR=tar -cvf
 UNTAR=tar -xvf
 
 ME=boss
-ASSN=4
+ASSN=5
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 SUBRESULT=result.html
 
@@ -20,7 +20,7 @@ FFLAGS=
 BSON=$(BIN).y
 BFLAGS=-v -t -d
 INTER=$(BIN).tab.c lex.yy.c
-SRCS=printtree.cpp semantic.cpp symbolTable.cpp 
+SRCS=printtree.cpp semantic.cpp symbolTable.cpp yyerror.cpp
 COMP=$(SRCS) -x c++ $(INTER) 
 HEADERS=*.h
 MAINSRC=main.cpp

@@ -1,0 +1,9 @@
+ERROR(74): Syntax error, unexpected int.
+ERROR(83): Syntax error, unexpected '=', expecting '('.
+ERROR(112): Syntax error, unexpected '=', expecting '('.
+ERROR(120): Syntax error, unexpected identifier 'JuliaVals'.
+ERROR(124): Syntax error, unexpected '=', expecting '('.
+ERROR(132): Syntax error, unexpected identifier 'JuliaVals'.
+ERROR(132): Syntax error, unexpected ')', expecting ',' or ';'.
+Number of warnings: 0
+Number of errors: 7

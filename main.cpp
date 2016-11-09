@@ -13,8 +13,8 @@ bool printTree = false;
 bool printTypedTree = false;
 
 extern int yydebug;
-extern int numErrors;
-int numWarnings;
+int numErrors = 0;
+int numWarnings = 0;
 
 void handleArgs(int argc, char **argv, char *fileHandle) {
     extern char *optarg;

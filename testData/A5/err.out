@@ -1,0 +1,41 @@
+ERROR(4): The operation '+' does not work with arrays.
+ERROR(5): '=' requires that either both or neither operands be arrays.
+ERROR(5): Array index is an unindexed array.
+ERROR(6): Cannot index nonarray.
+ERROR(7): '=' requires that either both or neither operands be arrays.
+Func input returns type int [type int] [line: -1]
+Sibling: 0  Func output returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type int [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type bool [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [type void] [line: -1]
+!   Child: 0  Param *dummy* of type void [type void] [line: -1]
+Sibling: 5  Func outnl returns type void [type void] [line: -1]
+Sibling: 6  Func main returns type void [type void] [line: 1]
+!   Child: 1  Compound [type void] [line: 1]
+!   !   Child: 0  Var x is array of type int [type int] [line: 2]
+!   !   Sibling: 0  Var y of type int [type int] [line: 2]
+!   !   Child: 1  Op: [ [type int] [line: 4]
+!   !   !   Child: 0  Id: x [type int] [line: 4]
+!   !   !   Child: 1  Op: + [type int] [line: 4]
+!   !   !   !   Child: 0  Id: x [type int] [line: 4]
+!   !   !   !   Child: 1  Const: 3 [type int] [line: 4]
+!   !   Sibling: 0  Op: [ [type int] [line: 5]
+!   !   !   Child: 0  Id: x [type int] [line: 5]
+!   !   !   Child: 1  Assign: = [type int] [line: 5]
+!   !   !   !   Child: 0  Id: x [type int] [line: 5]
+!   !   !   !   Child: 1  Const: 3 [type int] [line: 5]
+!   !   Sibling: 1  Assign: = [type int] [line: 6]
+!   !   !   Child: 0  Op: [ [type int] [line: 6]
+!   !   !   !   Child: 0  Op: [ [type int] [line: 6]
+!   !   !   !   !   Child: 0  Id: x [type int] [line: 6]
+!   !   !   !   !   Child: 1  Const: 4 [type int] [line: 6]
+!   !   !   !   Child: 1  Const: 3 [type int] [line: 6]
+!   !   !   Child: 1  Const: 4 [type int] [line: 6]
+!   !   Sibling: 2  Assign: = [type int] [line: 7]
+!   !   !   Child: 0  Id: x [type int] [line: 7]
+!   !   !   Child: 1  Id: y [type int] [line: 7]
+Number of warnings: 0
+Number of errors: 5

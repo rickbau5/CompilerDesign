@@ -1,0 +1,27 @@
+// C-F16
+int g;
+
+main()
+{
+    int x;
+    
+    g = 0;
+    gx = 0;
+    x = 0;
+    xx = 0;
+}
+
+main()
+{
+    int g;
+    int x;
+    {
+        int x;
+        int main;
+        int g;
+    }
+}
+
+cat(int x; char x) dog();
+
+int g;

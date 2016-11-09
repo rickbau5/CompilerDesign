@@ -1,0 +1,19 @@
+ERROR(52): Syntax error, unexpected bool.
+ERROR(52): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(59): Syntax error, unexpected '=', expecting '('.
+ERROR(60): Syntax error, unexpected '=', expecting ',' or ';'.
+ERROR(62): Syntax error, unexpected '=', expecting ',' or ';'.
+ERROR(67): Syntax error, unexpected ']', expecting numeric constant.
+ERROR(67): Syntax error, unexpected ']', expecting numeric constant.
+ERROR(70): Syntax error, unexpected '+', expecting ',' or ';'.
+ERROR(71): Syntax error, unexpected '}'.
+ERROR(80): Syntax error, unexpected numeric constant '42'.
+ERROR(80): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(83): Syntax error, unexpected return.
+ERROR(83): Syntax error, unexpected '>=', expecting ',' or ';'.
+ERROR(83): Syntax error, unexpected '*', expecting ',' or ';'.
+ERROR(86): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(88): Syntax error, unexpected int.
+ERROR(88): Syntax error, unexpected ')', expecting ',' or ';'.
+Number of warnings: 0
+Number of errors: 17

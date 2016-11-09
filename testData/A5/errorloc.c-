@@ -1,0 +1,62 @@
+// C-F16
+char
+dog
+(
+int
+z
+)
+return
+true;
+
+main()
+{
+        int x[2];
+        int
+        y
+        :
+        true
+        ;
+        
+        y
+        =
+        true
+        ;
+        if
+        (
+        34
+        )
+        ;
+        while
+        (
+        34
+        )
+        ;
+        ;
+        return
+        x
+        ;
+        x
+        =
+        5
+        *
+        true
+        ;
+        break;
+        ;
+        *
+        y
+        ;
+        ?
+        'x'
+        ;
+        emu
+        (
+        )
+        ;
+        42
+        +
+        dog
+        (
+        )
+        ;
+}

@@ -1,0 +1,38 @@
+ERROR(49): Syntax error, unexpected bool.
+ERROR(51): Syntax error, unexpected '=', expecting ',' or ';'.
+ERROR(55): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(58): Syntax error, unexpected '}'.
+ERROR(61): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(66): Syntax error, unexpected '=', expecting '('.
+ERROR(68): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(69): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(80): Syntax error, unexpected '+', expecting ',' or ';'.
+ERROR(90): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(92): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(96): Syntax error, unexpected '+', expecting ',' or ';'.
+ERROR(102): Syntax error, unexpected '=', expecting '('.
+ERROR(104): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(105): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(108): Syntax error, unexpected '+', expecting ',' or ';'.
+ERROR(110): Syntax error, unexpected numeric constant '0', expecting identifier.
+ERROR(124): Syntax error, unexpected '=', expecting '('.
+ERROR(131): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(135): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(148): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(149): Syntax error, unexpected identifier 'i'.
+ERROR(164): Syntax error, unexpected '=', expecting '('.
+ERROR(170): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(171): Syntax error, unexpected identifier 'i'.
+ERROR(172): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(172): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(174): Syntax error, unexpected identifier 'i'.
+ERROR(174): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(189): Syntax error, unexpected '=', expecting '('.
+ERROR(193): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(206): Syntax error, unexpected '=', expecting '('.
+ERROR(213): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(214): Syntax error, unexpected identifier 'i'.
+ERROR(227): Syntax error, unexpected if.
+ERROR(233): Syntax error, unexpected '}'.
+Number of warnings: 0
+Number of errors: 36
