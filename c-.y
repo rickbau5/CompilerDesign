@@ -294,7 +294,7 @@ paramList: paramList SEMI paramTypeList      {
             yyerrok;
          }
          | paramTypeList    { $$ = $1; }
-         | paramTypeList SEMI error          {
+         | paramList SEMI error          {
             $$ = $1;
          }
          | error                             { $$ = NULL; }
