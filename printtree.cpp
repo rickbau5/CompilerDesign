@@ -36,30 +36,38 @@ void _prettyPrint(Node* node, int level) {
     for(int i = 0; i < node->numChildren; i++) {
         if ((c = node->children[i]) != NULL) {
             _printLevel(level); 
+            fprintf(out, "!   Child: %d  %s ", i, stringifyNode(c));
             if (types) {
                 if (!strcmp(c->returnType, "unknown")) {
-                    fprintf(out, "!   Child: %d  %s [undefined type] [line: %d]\n", i, stringifyNode(c), c->lineno);
+                    fprintf(out, "[undefined type] ");
+                    //fprintf(out, "!   Child: %d  %s [undefined type] [line: %d]\n", i, stringifyNode(c), c->lineno);
                 } else {
-                    fprintf(out, "!   Child: %d  %s [type %s] [line: %d]\n", i, stringifyNode(c), c->returnType, c->lineno);
+                    // fprintf(out, "!   Child: %d  %s [type %s] [line: %d]\n", i, stringifyNode(c), c->returnType, c->lineno);
+                    fprintf(out, "[type %s] ", c->returnType);
                 }
             } else {
-                fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
+                // fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
             }
+            fprintf(out, "[line: %d]\n", c->lineno);
             _prettyPrint(c, level + 1);
         } 
     }
     if (node->sibling != NULL) {
         Node* sib = node->sibling;
         _printLevel(level);
+        fprintf(out, "Silbing: %d  %s ", sib->siblingIndex, stringifyNode(sib));
         if (types) {
             if (sib->returnType != NULL && !strcmp(sib->returnType, "unknown")) {
-                fprintf(out, "Sibling: %d  %s [undefined type] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+                fprintf(out, "[undefined type] ");
+                // fprintf(out, "Sibling: %d  %s [undefined type] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
             } else {
-                fprintf(out, "Sibling: %d  %s [type %s] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->returnType, sib->lineno);
+                fprintf(out, "[type %s] ", sib->returnType);
+                // fprintf(out, "Sibling: %d  %s [type %s] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->returnType, sib->lineno);
             }
         } else {
-            fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+            //fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
         }
+        fprintf(out, "[line: %d]\n", sib->lineno);
         _prettyPrint(sib, level);
     }
 }
