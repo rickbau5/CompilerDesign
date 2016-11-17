@@ -86,7 +86,7 @@ const char* stringifyNode(Node* node) {
            sprintf(nodeString, "%s of type %s length %d", toString(node->nodeType), node->type, node->numChildren);
            return nodeString;
         case nodes::Parameter:
-           sprintf(nodeString, "%s %s ", toString(node->nodeType), node->tokenString);
+           sprintf(nodeString, "%s %s%s ", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "");
            return nodeString;
         case nodes::Variable:
            sprintf(nodeString, "%s %s%s ", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "");

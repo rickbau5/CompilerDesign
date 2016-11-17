@@ -15,6 +15,7 @@ bool printTypedTree = false;
 extern int yydebug;
 int numErrors = 0;
 int numWarnings = 0;
+int globalPointer = 0;
 
 void handleArgs(int argc, char **argv, char *fileHandle) {
     extern char *optarg;
@@ -88,6 +89,7 @@ int main (int argc, char **argv) {
         status = EXIT_FAILURE; 
     }
 
+    printf("Offset for end of global space: %d\n", globalPointer);
     printf("Number of warnings: %d\n", numWarnings); 
     printf("Number of errors: %d\n", numErrors);
 

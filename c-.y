@@ -342,7 +342,7 @@ paramId: ID                       {
        | ID LBRACKET RBRACKET     {
             $$ = newNode(nodes::Parameter, $1); $$->isArray = true;
             $$->ref = (char*)"Param";
-            $$->memSize = -666;
+            $$->memSize = 1;
        }
        | error RBRACKET           { $$ = NULL; yyerrok; }
        ;

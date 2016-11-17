@@ -8,7 +8,7 @@ TAR=tar -cvf
 UNTAR=tar -xvf
 
 ME=boss
-ASSN=5
+ASSN=6
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 SUBRESULT=result.html
 

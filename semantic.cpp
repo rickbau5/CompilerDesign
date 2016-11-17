@@ -8,6 +8,7 @@
 
 extern int numErrors;
 extern int numWarnings;
+extern int globalPointer;
 
 // Copy info from the source node to the destination node
 void cloneNode(Node* src, Node* dest) {
@@ -366,17 +367,29 @@ void typeNode(Node* node) {
         }
     case nodes::Parameter:
     case nodes::Variable: {
-            if (activeFunction != NULL) {
-                activeFunction->memSize--;
-            }
-            node->loc = -localFramePointer;
-            localFramePointer++;
             // Type child, which would be initialization for a variable
             typeNode(node->children[0]);
             if (!symbolTable.insert(node->tokenString, node)) {
                 Node* existing = (Node*)symbolTable.lookup(node->tokenString);
                 printf("ERROR(%d): Symbol '%s' is already defined at line %d.\n", node->lineno, node->tokenString, existing->lineno);
+                node->ref = (char*)"Local";
                 numErrors++;
+            } else {
+                if (!strcmp(node->ref, "Global")) {
+                    node->loc = globalPointer;
+                    globalPointer -= node->memSize;
+                } else {
+                    if (node->nodeType == nodes::Variable && node->isArray)
+                        localFramePointer++;
+                    node->loc = -localFramePointer;
+                    if (node->nodeType == nodes::Variable && node->isArray)
+                        localFramePointer += node->memSize -1;
+                    else
+                        localFramePointer += node->memSize;
+                }
+                if (activeFunction != NULL) {
+                    activeFunction->memSize -= node->memSize;
+                }
             }
             if (!typesMatch(node, node->children[0])) {
                 printf("ERROR(%d): Variable '%s' is of type %s but is being initialized with an expression of type %s.\n", node->lineno, node->tokenString, node->returnType, node->children[0]->returnType);
@@ -445,25 +458,33 @@ void typeNode(Node* node) {
                 if (data->nodeType == nodes::Function) {
                     printf("ERROR(%d): Cannot use function '%s' as a variable.\n", node->lineno, node->tokenString);
                     node->returnType = strdup("unknown");
-                    node->ref = (char*)"Local";
+                    node->ref = (char*)"Global";
+                    node->memSize = data->memSize;
                     numErrors++;
+                    // Modify the size of the call node based on the params it's missing.
+                    //int numParams = 0;
+                    //for (Node* param = data->children[0]; param != NULL; param = param->sibling) {
+                    //    numParams++;
+                    //}
+                    //node->memSize = data->memSize + numParams;
                 } else {
                     cloneNode(data, node);
                 }
             } else {
                 printf("ERROR(%d): Symbol '%s' is not defined.\n", node->lineno, node->tokenString);
                 node->returnType = strdup("unknown");
+                node->memSize = 1;
                 numErrors++;
             }
 
             // hasInfo only true if non function ID that exists, set defaults if false.
             if (!node->hasInfo) {
                 node->hasInfo = true;
-                node->memSize = 1;
             }
             break;
         }
     case nodes::FunctionCall: {
+        int callSize = 0;
         Node* data = (Node*)symbolTable.lookup(node->tokenString);
         if (data == NULL) {
             printf("ERROR(%d): Function '%s' is not defined.\n", node->lineno, node->tokenString);
@@ -475,6 +496,11 @@ void typeNode(Node* node) {
             numErrors++;
         } else {
             cloneNode(data, node);
+        }
+
+        if (!node->hasInfo) {
+            node->hasInfo = true;
+            node->memSize = 1;
         }
         // Don't need to loop through all parameters, just start at first
         //cause they're siblings so would be handled by normal flow
@@ -521,6 +547,9 @@ void typeNode(Node* node) {
                 fArg = fArg != NULL ? fArg->sibling : NULL;
                 cArg = cArg != NULL ? cArg->sibling : NULL;
             }
+
+            node->ref = (char*)"None";
+
             if (cArg != NULL) {
                 typeNode(cArg);
             }
