@@ -144,6 +144,7 @@ scopedVarDeclarations: scopedTypeSpecifier varDeclList SEMI  {
                         for (Node* decl = $2; decl != NULL; decl = decl->sibling) {
                             decl->returnType = $1->tokenString;
                             decl->isStatic = $1->isStatic;
+                            decl->ref = (char*)"Local";
                         }
                         $$ = $2;
 
@@ -152,6 +153,7 @@ scopedVarDeclarations: scopedTypeSpecifier varDeclList SEMI  {
                      | error varDeclList SEMI {
                         for (Node* decl = $2; decl != NULL; decl = decl->sibling) {
                             decl->returnType = (char*)"unknown";
+                            decl->ref = (char*)"Local";
                         }
                         yyerrok;
                      }
@@ -166,6 +168,7 @@ varDeclaration: typeSpecifier varDeclList SEMI  {
                 for (Node *s = n; s != NULL; s = s->sibling) {
                     s->nodeType = nodes::Variable;
                     s->returnType = $1->tokenString;
+                    s->ref = (char*)"Global";
                 }
                 $$ = n;
 
@@ -176,6 +179,7 @@ varDeclaration: typeSpecifier varDeclList SEMI  {
                 for (Node *s = n; s != NULL; s = s->sibling) {
                     s->nodeType = nodes::Variable;
                     s->returnType = (char*)"unknwown";
+                    s->ref = (char*)"Global";
                 }
                 $$ = n;
               }
@@ -211,11 +215,15 @@ varDeclInitialize: varDeclId                        {
                  }
                  ;
 
-varDeclId: ID                   { $$ = newNode(nodes::Variable, $1); }
-         | ID LBRACKET NUMCONST RBRACKET { 
+varDeclId: ID                                       {
+            $$ = newNode(nodes::Variable, $1);
+            $$->memSize = 1;
+         }
+         | ID LBRACKET NUMCONST RBRACKET            { 
             Node* node = newNode(nodes::Variable, $1);
             node->arraySize = atoi($3->tokenString);
             node->isArray = true;
+            node->memSize = 1 + node->arraySize;
             $$ = node;
          } 
          | ID '[' error                  { $$ = newNode(nodes::Variable, $1); }
@@ -245,6 +253,9 @@ returnTypeSpecifier: INT
 funDeclaration: typeSpecifier ID '(' params ')' statement { 
                     Node* node = newNode(nodes::Function, $2);
                     node->returnType = $1->tokenString;
+                    node->ref = (char*)"Global";
+                    node->hasInfo = true;
+                    node->memSize = -2;
                     addChild(node, $4);
                     addChild(node, $6);
                     $$ = node;
@@ -252,6 +263,9 @@ funDeclaration: typeSpecifier ID '(' params ')' statement {
               | ID '(' params ')' statement {
                     Node* node = newNode(nodes::Function, $1);
                     node->returnType = "void";
+                    node->ref = (char*)"Global";
+                    node->hasInfo = true;
+                    node->memSize = -2;
                     addChild(node, $3);
                     addChild(node, $5);
                     $$ = node;
@@ -320,8 +334,16 @@ paramIdList: paramIdList ',' paramId        {
            | error                          { $$ = NULL; }
            ;
 
-paramId: ID                       { $$ = newNode(nodes::Parameter, $1); }
-       | ID LBRACKET RBRACKET     { $$ = newNode(nodes::Parameter, $1); $$->isArray = true; }
+paramId: ID                       {
+            $$ = newNode(nodes::Parameter, $1);
+            $$->ref = (char*)"Param";
+            $$->memSize = 1;
+       }
+       | ID LBRACKET RBRACKET     {
+            $$ = newNode(nodes::Parameter, $1); $$->isArray = true;
+            $$->ref = (char*)"Param";
+            $$->memSize = -666;
+       }
        | error RBRACKET           { $$ = NULL; yyerrok; }
        ;
 
@@ -789,6 +811,11 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     node->isConstant = false;
     node->tokenData = token;
 
+    node->memSize = 0;
+    node->loc = 0;
+    node->ref = (char*)"None";
+    node->hasInfo = type == nodes::Function || type == nodes::Variable || type == nodes::Parameter;
+
     return node;
 }
 
@@ -871,10 +898,21 @@ Node* funcWithParamOf(const char *name, const char* ret, const char* param) {
     function->tokenString = strdup(name);
     function->returnType = strdup(ret);
     function->lineno = -1;
+
+    function->hasInfo = true;
+    function->memSize = -2;
+    function->loc = 0;
+    function->ref = strdup("Global");
+
     if (param != NULL) {
         Node* parameter = newNode(nodes::Parameter, NULL);
         parameter->tokenString = strdup("*dummy*");
         parameter->returnType = strdup(param);
+        parameter->hasInfo = true;
+        parameter->ref = strdup("Param");
+        parameter->memSize = 1;
+        function->memSize--;
+        parameter->loc = function->memSize + 1;
         parameter->lineno = -1;
         addChild(function, parameter);
     }
@@ -888,7 +926,7 @@ Node* injectIORoutines(Node* after) {
     addSibling(first, funcWithParamOf("inputb", "bool", NULL));
     addSibling(first, funcWithParamOf("outputb", "void", "bool"));
     addSibling(first, funcWithParamOf("inputc", "char", NULL));
-    addSibling(first, funcWithParamOf("outputc", "void", "void"));
+    addSibling(first, funcWithParamOf("outputc", "void", "char"));
     addSibling(first, funcWithParamOf("outnl", "void", NULL));
 
     for (Node *n = first; n != NULL; n = n->sibling) {

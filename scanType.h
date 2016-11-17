@@ -75,6 +75,11 @@ typedef struct treeNode {
     int arraySize;
     int nodeId;
 
+    bool hasInfo;
+    char* ref;
+    int memSize;
+    int loc;
+
     bool changeScope;
 } Node;
 

@@ -14,7 +14,12 @@ void cloneNode(Node* src, Node* dest) {
     dest->returnType = src->returnType;
     dest->isStatic = src->isStatic;
     dest->isArray = src->isArray;
-    dest->arraySize= src->arraySize;
+    dest->arraySize = src->arraySize;
+
+    dest->hasInfo = src->hasInfo;
+    dest->memSize = src->memSize;
+    dest->loc = src->loc;
+    dest->ref = src->ref;
 }
 
 bool typesMatch(Node* a, Node* b) {
@@ -266,6 +271,8 @@ Node* activeFunction = NULL;
 int whileDepth = 0;
 bool hasReturn = false;
 
+int localFramePointer = 0;
+
 void typeNode(Node* node) {
     if (node == NULL)
         return;
@@ -282,6 +289,7 @@ void typeNode(Node* node) {
             // Even if it already exists, let's analyze it
             symbolTable.enter(node->tokenString);
             activeFunction = node;
+            localFramePointer = 2;
             typeNode(node->children[0]);
 
             Node* body = node->children[1];
@@ -358,6 +366,11 @@ void typeNode(Node* node) {
         }
     case nodes::Parameter:
     case nodes::Variable: {
+            if (activeFunction != NULL) {
+                activeFunction->memSize--;
+            }
+            node->loc = -localFramePointer;
+            localFramePointer++;
             // Type child, which would be initialization for a variable
             typeNode(node->children[0]);
             if (!symbolTable.insert(node->tokenString, node)) {
@@ -432,6 +445,7 @@ void typeNode(Node* node) {
                 if (data->nodeType == nodes::Function) {
                     printf("ERROR(%d): Cannot use function '%s' as a variable.\n", node->lineno, node->tokenString);
                     node->returnType = strdup("unknown");
+                    node->ref = (char*)"Local";
                     numErrors++;
                 } else {
                     cloneNode(data, node);
@@ -440,6 +454,12 @@ void typeNode(Node* node) {
                 printf("ERROR(%d): Symbol '%s' is not defined.\n", node->lineno, node->tokenString);
                 node->returnType = strdup("unknown");
                 numErrors++;
+            }
+
+            // hasInfo only true if non function ID that exists, set defaults if false.
+            if (!node->hasInfo) {
+                node->hasInfo = true;
+                node->memSize = 1;
             }
             break;
         }
@@ -501,13 +521,9 @@ void typeNode(Node* node) {
                 fArg = fArg != NULL ? fArg->sibling : NULL;
                 cArg = cArg != NULL ? cArg->sibling : NULL;
             }
-            if (cArg != NULL)
+            if (cArg != NULL) {
                 typeNode(cArg);
-
-//             if (lengthMismatch) {
-//                 printf("ERROR(%d): Too %s parameters passed for function '%s' defined on line %d.\n", node->lineno, callArgNum > funcParamNum ? "many" : "few", data->tokenString, data->lineno);
-//                 numErrors++;
-//             }
+            }
         } else {
             typeNode(node->children[0]);
         }
@@ -525,8 +541,6 @@ void typeNode(Node* node) {
                 } else if (!typesMatch(activeFunction, child)) {
                     printf("ERROR(%d): Function '%s' at line %d is expecting to return type %s but instead returns type %s.\n", node->lineno, activeFunction->tokenString, activeFunction->lineno, activeFunction->returnType, child->returnType); 
                     numErrors++;
-                    // node->returnType = activeFunction->returnType;
-                    //node->returnType = strdup("void");
                 } else {
                     node->returnType = child->returnType;
                 }
@@ -535,10 +549,7 @@ void typeNode(Node* node) {
                     printf("ERROR(%d): Cannot return an array.\n", node->lineno);
                     numErrors++;
                     node->returnType = strdup("void");
-                    //break;
                 }
-                // node->returnType = strdup("void");
-                // node->returnType = child->returnType;
             } else  {
                 if (strcmp(activeFunction->returnType, "void") != 0) {
                     printf("ERROR(%d): Function '%s' at line %d is expecting to return type %s but return has no return value.\n", node->lineno, activeFunction->tokenString, activeFunction->lineno, activeFunction->returnType);

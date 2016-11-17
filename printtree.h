@@ -15,7 +15,7 @@ const char* toString(nodes::NodeType);
 void _printLevel(int);
 void _prettyPrint(Node*, int);
 void prettyPrintTree(Node*);
-void prettyPrintTreeWithTypes(Node*);
+void prettyPrintTreeWithInfo(Node*);
 int countNodes(Node*);
 const char* stringifyNode(Node*);
 const char* toString(nodes::NodeType);

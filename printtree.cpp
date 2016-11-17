@@ -5,19 +5,34 @@
 #include <stdio.h>
 #include <string.h>
 
-// YAY GLOBALS CAUSE C++
-bool types = false;
+void formatInfo(Node* node) {
+    if (node == NULL)
+        return;
+    // Memory info
+    if (node->hasInfo) {
+        fprintf(out, "[ref: %s, size: %d, loc: %d] ", node->ref, node->memSize, node->loc);
+    }
 
-void prettyPrintTreeWithTypes(Node* root) {
+    // Type info
+    if (!strcmp(node->returnType, "unknown")) {
+        fprintf(out, "[undefined type] ");
+    } else {
+        fprintf(out, "[type %s] ", node->returnType);
+    }
+}
+
+// YAY GLOBALS CAUSE C++
+bool info = false;
+
+void prettyPrintTreeWithInfo(Node* root) {
     if (root == NULL)
         return;
 
-    types = true;
-    if (!strcmp(root->returnType, "unknown")) {
-        fprintf(out, "%s [undefined type] [line: %d]\n", stringifyNode(root), root->lineno);
-    } else {
-        fprintf(out, "%s [type %s] [line: %d]\n", stringifyNode(root), root->returnType, root->lineno);
-    }
+    info = true;
+    fprintf(out, "%s ", stringifyNode(root));   
+    formatInfo(root);
+
+    fprintf(out, "[line: %d]\n", root->lineno);
     _prettyPrint(root, 0);
 }
 
@@ -37,16 +52,8 @@ void _prettyPrint(Node* node, int level) {
         if ((c = node->children[i]) != NULL) {
             _printLevel(level); 
             fprintf(out, "!   Child: %d  %s ", i, stringifyNode(c));
-            if (types) {
-                if (!strcmp(c->returnType, "unknown")) {
-                    fprintf(out, "[undefined type] ");
-                    //fprintf(out, "!   Child: %d  %s [undefined type] [line: %d]\n", i, stringifyNode(c), c->lineno);
-                } else {
-                    // fprintf(out, "!   Child: %d  %s [type %s] [line: %d]\n", i, stringifyNode(c), c->returnType, c->lineno);
-                    fprintf(out, "[type %s] ", c->returnType);
-                }
-            } else {
-                // fprintf(out, "!   Child: %d  %s [line: %d]\n", i, stringifyNode(c), c->lineno);
+            if (info) {
+                formatInfo(c);
             }
             fprintf(out, "[line: %d]\n", c->lineno);
             _prettyPrint(c, level + 1);
@@ -55,17 +62,9 @@ void _prettyPrint(Node* node, int level) {
     if (node->sibling != NULL) {
         Node* sib = node->sibling;
         _printLevel(level);
-        fprintf(out, "Silbing: %d  %s ", sib->siblingIndex, stringifyNode(sib));
-        if (types) {
-            if (sib->returnType != NULL && !strcmp(sib->returnType, "unknown")) {
-                fprintf(out, "[undefined type] ");
-                // fprintf(out, "Sibling: %d  %s [undefined type] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
-            } else {
-                fprintf(out, "[type %s] ", sib->returnType);
-                // fprintf(out, "Sibling: %d  %s [type %s] [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->returnType, sib->lineno);
-            }
-        } else {
-            //fprintf(out, "Sibling: %d  %s [line: %d]\n", sib->siblingIndex, stringifyNode(sib), sib->lineno);
+        fprintf(out, "Sibling: %d  %s ", sib->siblingIndex, stringifyNode(sib));
+        if (info) {
+            formatInfo(sib);
         }
         fprintf(out, "[line: %d]\n", sib->lineno);
         _prettyPrint(sib, level);
@@ -87,10 +86,10 @@ const char* stringifyNode(Node* node) {
            sprintf(nodeString, "%s of type %s length %d", toString(node->nodeType), node->type, node->numChildren);
            return nodeString;
         case nodes::Parameter:
-           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->returnType);
+           sprintf(nodeString, "%s %s ", toString(node->nodeType), node->tokenString);
            return nodeString;
         case nodes::Variable:
-           sprintf(nodeString, "%s %s%s of type %s", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "", node->returnType);
+           sprintf(nodeString, "%s %s%s ", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "");
            return nodeString;
         case nodes::Compound:
            return "Compound";
@@ -99,7 +98,7 @@ const char* stringifyNode(Node* node) {
         case nodes::WhileStatement:
            return "While";
         case nodes::Identifier:
-           sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);
+           sprintf(nodeString, "%s: %s%s ", toString(node->nodeType), node->tokenString, node->isArray ? " is array" : "");
            return nodeString;
         case nodes::Operator:
            sprintf(nodeString, "%s: %s", toString(node->nodeType), node->tokenString);

@@ -12,7 +12,7 @@ ASSN=5
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 SUBRESULT=result.html
 
-CFLAGS=-O3 -Wall
+CFLAGS=-Wall
 DFLAGS=-g -Wall
 
 FLEX=$(BIN).l

@@ -81,7 +81,7 @@ int main (int argc, char **argv) {
         }
         analyzeAST(start);
         if (printTypedTree) {
-            prettyPrintTreeWithTypes(root);
+            prettyPrintTreeWithInfo(root);
         }
         status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
     } else {
