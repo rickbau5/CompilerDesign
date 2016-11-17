@@ -1,0 +1,25 @@
+// C-F13
+int dog(int pig) return pig;
+
+  main(int a)
+if (true) {
+    int z;
+    z = 111;
+    { 
+        int x; 
+
+        x = 222;
+        x = 666+dog(x);
+        output(x); outnl();
+    }        
+    { 
+        int y; 
+
+        y = 333;
+        y = 666+dog(y);
+        output(y); outnl();
+    }        
+    
+    z = 666+dog(z);
+    output(z); outnl();
+}

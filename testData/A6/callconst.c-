@@ -1,0 +1,22 @@
+scalar(int a; bool b; char c)
+{
+    output(a);
+    outputb(b);
+    outputc(c);
+    outnl();
+}
+
+
+array(int a[]; bool b[]; char c[])
+{
+    output(a[1]);
+    outputb(b[2]);
+    outputc(c[3]);
+    outnl();
+}
+
+
+main()
+{
+    scalar(111, true, 'x');
+}

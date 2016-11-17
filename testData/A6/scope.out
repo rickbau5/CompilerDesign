@@ -1,0 +1,107 @@
+ERROR(7): Function 'bat' is not defined.
+ERROR(8): 'or' requires operands of type bool but lhs is of type int.
+ERROR(8): 'or' requires operands of type bool but rhs is of type int.
+ERROR(14): Symbol 'b' is not defined.
+ERROR(24): Symbol 'b' is not defined.
+ERROR(25): Symbol 'c' is not defined.
+ERROR(29): Symbol 'b' is not defined.
+ERROR(30): Symbol 'c' is not defined.
+WARNING(3): Expecting to return type int but function 'ant' has no return statement.
+ERROR(40): Symbol 'x' is not defined.
+ERROR(44): Symbol 'p' is not defined.
+ERROR(45): Symbol 'q' is not defined.
+ERROR(45): Symbol 'r' is not defined.
+ERROR(46): Symbol 's' is not defined.
+ERROR(46): Too many parameters passed for function 'ant' defined on line 3.
+ERROR(46): Symbol 't' is not defined.
+ERROR(47): Symbol 'u' is not defined.
+ERROR(47): Function 'cow' is not defined.
+ERROR(47): Symbol 'v' is not defined.
+ERROR(48): Symbol 'abraxsis' is not defined.
+ERROR(49): Symbol 'a' is not defined.
+WARNING(36): Expecting to return type int but function 'bat' has no return statement.
+ERROR(54): Symbol 'g' is already defined at line 2.
+ERROR(56): Symbol 'g' is already defined at line 2.
+ERROR(58): Symbol 'x' is not defined.
+ERROR(61): Symbol 'g' is already defined at line 2.
+ERROR(62): Symbol 'ant' is already defined at line 3.
+ERROR(LINKER): Procedure main is not defined.
+Func input returns type int [ref: Global, size: -2, loc: 0] [type int] [line: -1]
+Sibling: 0  Func output returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [ref: Global, size: -2, loc: 0] [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [ref: Global, size: -2, loc: 0] [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type char] [line: -1]
+Sibling: 5  Func outnl returns type void [ref: Global, size: -2, loc: 0] [type void] [line: -1]
+Sibling: 6  Var g  [ref: Global, size: 1, loc: 0] [type int] [line: 2]
+Sibling: 7  Func ant returns type int [ref: Global, size: -5, loc: 0] [type int] [line: 3]
+!   Child: 0  Param x  [ref: Param, size: 1, loc: -2] [type int] [line: 3]
+!   Child: 1  Compound [type void] [line: 4]
+!   !   Child: 0  Var a  [ref: Local, size: 1, loc: -3] [type int] [line: 5]
+!   !   Child: 1  Call: bat [ref: None, size: 1, loc: 0] [undefined type] [line: 7]
+!   !   !   Child: 0  Const: 3 [type int] [line: 7]
+!   !   Sibling: 0  Op: or [type bool] [line: 8]
+!   !   !   Child: 0  Id: a  [ref: Local, size: 1, loc: -3] [type int] [line: 8]
+!   !   !   Child: 1  Id: a  [ref: Local, size: 1, loc: -3] [type int] [line: 8]
+!   !   Sibling: 1  Id: x  [ref: Param, size: 1, loc: -2] [type int] [line: 9]
+!   !   Sibling: 2  Id: g  [ref: Global, size: 1, loc: 0] [type int] [line: 10]
+!   !   Sibling: 3  Compound [type void] [line: 11]
+!   !   !   Child: 0  Var c  [ref: Local, size: 1, loc: -4] [type int] [line: 12]
+!   !   !   Child: 1  Id: a  [ref: Local, size: 1, loc: -3] [type int] [line: 13]
+!   !   !   Sibling: 0  Id: b  [ref: None, size: 1, loc: 0] [undefined type] [line: 14]
+!   !   !   Sibling: 1  Id: c  [ref: Local, size: 1, loc: -4] [type int] [line: 15]
+!   !   !   Sibling: 2  Id: g  [ref: Global, size: 1, loc: 0] [type int] [line: 16]
+!   !   !   Sibling: 3  Id: x  [ref: Param, size: 1, loc: -2] [type int] [line: 17]
+!   !   !   Sibling: 4  Compound [type void] [line: 18]
+!   !   !   !   Child: 1  Id: c  [ref: Local, size: 1, loc: -4] [type int] [line: 19]
+!   !   !   !   Sibling: 0  Id: a  [ref: Local, size: 1, loc: -3] [type int] [line: 20]
+!   !   Sibling: 4  Id: a  [ref: Local, size: 1, loc: -3] [type int] [line: 23]
+!   !   Sibling: 5  Id: b  [ref: None, size: 1, loc: 0] [undefined type] [line: 24]
+!   !   Sibling: 6  Id: c  [ref: None, size: 1, loc: 0] [undefined type] [line: 25]
+!   !   Sibling: 7  Id: x  [ref: Param, size: 1, loc: -2] [type int] [line: 26]
+!   !   Sibling: 8  Compound [type void] [line: 27]
+!   !   !   Child: 1  Id: a  [ref: Local, size: 1, loc: -3] [type int] [line: 28]
+!   !   !   Sibling: 0  Id: b  [ref: None, size: 1, loc: 0] [undefined type] [line: 29]
+!   !   !   Sibling: 1  Id: c  [ref: None, size: 1, loc: 0] [undefined type] [line: 30]
+!   !   !   Sibling: 2  Id: x  [ref: Param, size: 1, loc: -2] [type int] [line: 31]
+!   !   Sibling: 9  Id: x  [ref: Param, size: 1, loc: -2] [type int] [line: 33]
+Sibling: 8  Func bat returns type int [ref: Global, size: -5, loc: 0] [type int] [line: 36]
+!   Child: 0  Param y  [ref: Param, size: 1, loc: -2] [type int] [line: 36]
+!   Child: 1  Compound [type void] [line: 37]
+!   !   Child: 0  Var z  [ref: Local, size: 1, loc: -3] [type int] [line: 38]
+!   !   Sibling: 0  Var bat  [ref: Local, size: 1, loc: -4] [type int] [line: 39]
+!   !   Child: 1  Id: x  [ref: None, size: 1, loc: 0] [undefined type] [line: 40]
+!   !   Sibling: 0  Call: ant [ref: None, size: -5, loc: 0] [type int] [line: 41]
+!   !   !   Child: 0  Id: y  [ref: Param, size: 1, loc: -2] [type int] [line: 41]
+!   !   Sibling: 1  Call: ant [ref: None, size: -5, loc: 0] [type int] [line: 42]
+!   !   !   Child: 0  Id: g  [ref: Global, size: 1, loc: 0] [type int] [line: 42]
+!   !   Sibling: 2  Call: ant [ref: None, size: -5, loc: 0] [type int] [line: 43]
+!   !   !   Child: 0  Id: z  [ref: Local, size: 1, loc: -3] [type int] [line: 43]
+!   !   Sibling: 3  Id: p  [ref: None, size: 1, loc: 0] [undefined type] [line: 44]
+!   !   Sibling: 4  Op: + [type int] [line: 45]
+!   !   !   Child: 0  Id: q  [ref: None, size: 1, loc: 0] [undefined type] [line: 45]
+!   !   !   Child: 1  Id: r  [ref: None, size: 1, loc: 0] [undefined type] [line: 45]
+!   !   Sibling: 5  Call: ant [ref: None, size: -5, loc: 0] [type int] [line: 46]
+!   !   !   Child: 0  Id: s  [ref: None, size: 1, loc: 0] [undefined type] [line: 46]
+!   !   !   Sibling: 0  Id: t  [ref: None, size: 1, loc: 0] [undefined type] [line: 46]
+!   !   Sibling: 6  Assign: = [undefined type] [line: 47]
+!   !   !   Child: 0  Id: u  [ref: None, size: 1, loc: 0] [undefined type] [line: 47]
+!   !   !   Child: 1  Call: cow [ref: None, size: 1, loc: 0] [undefined type] [line: 47]
+!   !   !   !   Child: 0  Id: v  [ref: None, size: 1, loc: 0] [undefined type] [line: 47]
+!   !   Sibling: 7  Id: abraxsis  [ref: None, size: 1, loc: 0] [undefined type] [line: 48]
+!   !   Sibling: 8  Id: a  [ref: None, size: 1, loc: 0] [undefined type] [line: 49]
+!   !   Sibling: 9  Id: z  [ref: Local, size: 1, loc: -3] [type int] [line: 50]
+!   !   Sibling: 10  Id: g  [ref: Global, size: 1, loc: 0] [type int] [line: 51]
+Sibling: 9  Var g  [ref: Local, size: 1, loc: 0] [type int] [line: 54]
+Sibling: 10  Func g returns type int [ref: Global, size: -2, loc: 0] [type int] [line: 56]
+!   Child: 1  Compound [type void] [line: 57]
+!   !   Child: 1  Return [type void] [line: 58]
+!   !   !   Child: 0  Id: x  [ref: None, size: 1, loc: 0] [undefined type] [line: 58]
+Sibling: 11  Func g returns type void [ref: Global, size: -2, loc: 0] [type void] [line: 61]
+Sibling: 12  Func ant returns type void [ref: Global, size: -2, loc: 0] [type void] [line: 62]
+Offset for end of global space: -1
+Number of warnings: 2
+Number of errors: 26

@@ -1,0 +1,82 @@
+ERROR(5): Symbol 'x' is already defined at line 5.
+ERROR(6): Symbol 'x' is already defined at line 5.
+ERROR(6): Symbol 'x' is already defined at line 5.
+ERROR(7): Symbol 'x' is already defined at line 5.
+ERROR(7): Symbol 'x' is already defined at line 5.
+ERROR(9): Symbol 'y' is already defined at line 9.
+ERROR(12): Symbol 'main' is already defined at line 11.
+ERROR(13): Symbol 'main' is already defined at line 11.
+ERROR(18): Symbol 'main' is already defined at line 3.
+ERROR(18): Symbol 'a' is already defined at line 18.
+ERROR(18): Symbol 'b' is already defined at line 18.
+ERROR(18): Symbol 'c' is already defined at line 18.
+ERROR(19): Symbol 'a' is already defined at line 18.
+ERROR(19): Symbol 'b' is already defined at line 18.
+ERROR(19): Symbol 'c' is already defined at line 18.
+ERROR(24): Symbol 'a' is already defined at line 23.
+ERROR(24): Symbol 'b' is already defined at line 23.
+ERROR(24): Symbol 'c' is already defined at line 23.
+ERROR(33): Symbol 'cat' is already defined at line 32.
+ERROR(36): Symbol 'cat' is already defined at line 32.
+ERROR(36): Symbol 'g' is already defined at line 1.
+Func input returns type int [ref: Global, size: -2, loc: 0] [type int] [line: -1]
+Sibling: 0  Func output returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [ref: Global, size: -2, loc: 0] [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [ref: Global, size: -2, loc: 0] [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type char] [line: -1]
+Sibling: 5  Func outnl returns type void [ref: Global, size: -2, loc: 0] [type void] [line: -1]
+Sibling: 6  Var g  [ref: Global, size: 1, loc: 0] [type int] [line: 1]
+Sibling: 7  Func main returns type void [ref: Global, size: -6, loc: 0] [type void] [line: 3]
+!   Child: 1  Compound [type void] [line: 4]
+!   !   Child: 0  Var x  [ref: Local, size: 1, loc: -2] [type int] [line: 5]
+!   !   Sibling: 0  Var x  [ref: Local, size: 1, loc: 0] [type int] [line: 5]
+!   !   Sibling: 1  Var x  [ref: Local, size: 1, loc: 0] [type bool] [line: 6]
+!   !   Sibling: 2  Var x  [ref: Local, size: 1, loc: 0] [type bool] [line: 6]
+!   !   Sibling: 3  Var x  [ref: Local, size: 1, loc: 0] [type char] [line: 7]
+!   !   Sibling: 4  Var x  [ref: Local, size: 1, loc: 0] [type char] [line: 7]
+!   !   Sibling: 5  Var y  [ref: Local, size: 1, loc: -3] [type int] [line: 9]
+!   !   Sibling: 6  Var y is array  [ref: Local, size: 11, loc: -1] [type int] [line: 9]
+!   !   Sibling: 7  Var main  [ref: Local, size: 1, loc: -4] [type int] [line: 11]
+!   !   Sibling: 8  Var main  [ref: Local, size: 1, loc: 0] [type bool] [line: 12]
+!   !   Sibling: 9  Var main  [ref: Local, size: 1, loc: 0] [type char] [line: 13]
+!   !   Sibling: 10  Var g  [ref: Local, size: 1, loc: -5] [type int] [line: 15]
+Sibling: 8  Func main returns type void [ref: Global, size: -15, loc: 0] [type void] [line: 18]
+!   Child: 0  Param a  [ref: Param, size: 1, loc: -2] [type int] [line: 18]
+!   Sibling: 0  Param b  [ref: Param, size: 1, loc: -3] [type bool] [line: 18]
+!   Sibling: 1  Param c  [ref: Param, size: 1, loc: -4] [type char] [line: 18]
+!   Sibling: 2  Param a  [ref: Param, size: 1, loc: 0] [type int] [line: 18]
+!   Sibling: 3  Param b  [ref: Param, size: 1, loc: 0] [type bool] [line: 18]
+!   Sibling: 4  Param c  [ref: Param, size: 1, loc: 0] [type char] [line: 18]
+!   Child: 1  Compound [type void] [line: 18]
+!   !   Child: 0  Var a  [ref: Local, size: 1, loc: 0] [type int] [line: 19]
+!   !   Sibling: 0  Var b  [ref: Local, size: 1, loc: 0] [type bool] [line: 19]
+!   !   Sibling: 1  Var c  [ref: Local, size: 1, loc: 0] [type char] [line: 19]
+!   !   Sibling: 2  Var g  [ref: Local, size: 1, loc: -5] [type int] [line: 20]
+!   !   Child: 1  Compound [type void] [line: 21]
+!   !   !   Child: 0  Var g  [ref: Local, size: 1, loc: -6] [type int] [line: 22]
+!   !   !   Sibling: 0  Var a  [ref: Local, size: 1, loc: -7] [type int] [line: 23]
+!   !   !   Sibling: 1  Var b  [ref: Local, size: 1, loc: -8] [type bool] [line: 23]
+!   !   !   Sibling: 2  Var c  [ref: Local, size: 1, loc: -9] [type char] [line: 23]
+!   !   !   Sibling: 3  Var a  [ref: Local, size: 1, loc: 0] [type int] [line: 24]
+!   !   !   Sibling: 4  Var b  [ref: Local, size: 1, loc: 0] [type bool] [line: 24]
+!   !   !   Sibling: 5  Var c  [ref: Local, size: 1, loc: 0] [type char] [line: 24]
+!   !   !   Child: 1  Compound [type void] [line: 25]
+!   !   !   !   Child: 0  Var a  [ref: Local, size: 1, loc: -10] [type int] [line: 26]
+!   !   !   !   Sibling: 0  Var b  [ref: Local, size: 1, loc: -11] [type bool] [line: 26]
+!   !   !   !   Sibling: 1  Var c  [ref: Local, size: 1, loc: -12] [type char] [line: 26]
+!   !   !   !   Sibling: 2  Var main  [ref: Local, size: 1, loc: -13] [type int] [line: 27]
+!   !   !   !   Sibling: 3  Var g  [ref: Local, size: 1, loc: -14] [type int] [line: 27]
+Sibling: 9  Func cat returns type void [ref: Global, size: -4, loc: 0] [type void] [line: 32]
+!   Child: 0  Param cat  [ref: Param, size: 1, loc: -2] [type int] [line: 32]
+!   Sibling: 0  Param g  [ref: Param, size: 1, loc: -3] [type int] [line: 32]
+!   Child: 1  Compound [type void] [line: 32]
+!   !   Child: 0  Var cat  [ref: Local, size: 1, loc: 0] [type int] [line: 33]
+Sibling: 10  Var cat  [ref: Local, size: 1, loc: 0] [type int] [line: 36]
+Sibling: 11  Var g  [ref: Local, size: 1, loc: 0] [type int] [line: 36]
+Offset for end of global space: -1
+Number of warnings: 0
+Number of errors: 21

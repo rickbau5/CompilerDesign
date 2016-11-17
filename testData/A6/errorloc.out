@@ -1,0 +1,60 @@
+ERROR(8): Function 'dog' at line 3 is expecting to return type char but instead returns type bool.
+ERROR(15): Variable 'y' is of type int but is being initialized with an expression of type bool.
+ERROR(21): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(24): Expecting Boolean test condition in if statement but got type int.
+ERROR(29): Expecting Boolean test condition in while statement but got type int.
+ERROR(35): Function 'main' at line 11 is expecting no return value, but return has return value.
+ERROR(35): Cannot return an array.
+ERROR(41): '*' requires operands of type int but rhs is of type bool.
+ERROR(39): '=' requires that either both or neither operands be arrays.
+ERROR(44): Cannot have a break statement outside of loop.
+ERROR(46): The operation '*' only works with arrays.
+ERROR(49): Unary '?' requires an operand of type int but was given type char.
+ERROR(52): Function 'emu' is not defined.
+ERROR(58): Too few parameters passed for function 'dog' defined on line 3.
+ERROR(57): '+' requires operands of type int but rhs is of type char.
+Func input returns type int [ref: Global, size: -2, loc: 0] [type int] [line: -1]
+Sibling: 0  Func output returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [ref: Global, size: -2, loc: 0] [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [ref: Global, size: -2, loc: 0] [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type char] [line: -1]
+Sibling: 5  Func outnl returns type void [ref: Global, size: -2, loc: 0] [type void] [line: -1]
+Sibling: 6  Func dog returns type char [ref: Global, size: -3, loc: 0] [type char] [line: 3]
+!   Child: 0  Param z  [ref: Param, size: 1, loc: -2] [type int] [line: 6]
+!   Child: 1  Return [type void] [line: 8]
+!   !   Child: 0  Const: true [type bool] [line: 9]
+Sibling: 7  Func main returns type void [ref: Global, size: -6, loc: 0] [type void] [line: 11]
+!   Child: 1  Compound [type void] [line: 12]
+!   !   Child: 0  Var x is array  [ref: Local, size: 3, loc: -3] [type int] [line: 13]
+!   !   Sibling: 0  Var y  [ref: Local, size: 1, loc: -5] [type int] [line: 15]
+!   !   !   Child: 0  Const: true [type bool] [line: 17]
+!   !   Child: 1  Assign: = [type int] [line: 21]
+!   !   !   Child: 0  Id: y  [ref: Local, size: 1, loc: -5] [type int] [line: 20]
+!   !   !   Child: 1  Const: true [type bool] [line: 22]
+!   !   Sibling: 0  If [type void] [line: 24]
+!   !   !   Child: 0  Const: 34 [type int] [line: 26]
+!   !   Sibling: 1  While [type void] [line: 29]
+!   !   !   Child: 0  Const: 34 [type int] [line: 31]
+!   !   Sibling: 2  Return [type void] [line: 35]
+!   !   !   Child: 0  Id: x is array  [ref: Local, size: 3, loc: -3] [type int] [line: 36]
+!   !   Sibling: 3  Assign: = [type int] [line: 39]
+!   !   !   Child: 0  Id: x is array  [ref: Local, size: 3, loc: -3] [type int] [line: 38]
+!   !   !   Child: 1  Op: * [type int] [line: 41]
+!   !   !   !   Child: 0  Const: 5 [type int] [line: 40]
+!   !   !   !   Child: 1  Const: true [type bool] [line: 42]
+!   !   Sibling: 4  Break [type void] [line: 44]
+!   !   Sibling: 5  Op: * [type int] [line: 46]
+!   !   !   Child: 0  Id: y  [ref: Local, size: 1, loc: -5] [type int] [line: 47]
+!   !   Sibling: 6  Op: ? [type int] [line: 49]
+!   !   !   Child: 0  Const: 'x' [type char] [line: 50]
+!   !   Sibling: 7  Call: emu [ref: None, size: 1, loc: 0] [undefined type] [line: 52]
+!   !   Sibling: 8  Op: + [type int] [line: 57]
+!   !   !   Child: 0  Const: 42 [type int] [line: 56]
+!   !   !   Child: 1  Call: dog [ref: None, size: -3, loc: 0] [type char] [line: 58]
+Offset for end of global space: 0
+Number of warnings: 0
+Number of errors: 15

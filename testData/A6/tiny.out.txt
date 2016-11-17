@@ -1,0 +1,41 @@
+ERROR(7): Symbol 'aspergillus' is not defined.
+ERROR(7): Symbol 'fungus' is not defined.
+ERROR(8): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(9): Cannot use function 'dog' as a variable.
+ERROR(10): Cannot use function 'dog' as a variable.
+ERROR(13): Function 'dog' at line 4 is expecting to return type int but instead returns type char.
+ERROR(LINKER): Procedure main is not defined.
+Func input returns type int [ref: Global, size: -2, loc: 0] [type int] [line: -1]
+Sibling: 0  Func output returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type int] [line: -1]
+Sibling: 1  Func inputb returns type bool [ref: Global, size: -2, loc: 0] [type bool] [line: -1]
+Sibling: 2  Func outputb returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type bool] [line: -1]
+Sibling: 3  Func inputc returns type char [ref: Global, size: -2, loc: 0] [type char] [line: -1]
+Sibling: 4  Func outputc returns type void [ref: Global, size: -3, loc: 0] [type void] [line: -1]
+!   Child: 0  Param *dummy*  [ref: Param, size: 1, loc: -2] [type char] [line: -1]
+Sibling: 5  Func outnl returns type void [ref: Global, size: -2, loc: 0] [type void] [line: -1]
+Sibling: 6  Var walace  [ref: Global, size: 1, loc: 0] [type int] [line: 1]
+Sibling: 7  Var gromit  [ref: Global, size: 1, loc: -1] [type int] [line: 1]
+Sibling: 8  Var preston  [ref: Global, size: 1, loc: -2] [type char] [line: 2]
+Sibling: 9  Func dog returns type int [ref: Global, size: -4, loc: 0] [type int] [line: 4]
+!   Child: 0  Param corgi  [ref: Param, size: 1, loc: -2] [type bool] [line: 4]
+!   Child: 1  Compound [type void] [line: 4]
+!   !   Child: 0  Var cat  [ref: Local, size: 1, loc: -3] [type char] [line: 5]
+!   !   Child: 1  Assign: = [undefined type] [line: 7]
+!   !   !   Child: 0  Id: aspergillus  [ref: None, size: 1, loc: 0] [undefined type] [line: 7]
+!   !   !   Child: 1  Id: fungus  [ref: None, size: 1, loc: 0] [undefined type] [line: 7]
+!   !   Sibling: 0  Assign: = [type char] [line: 8]
+!   !   !   Child: 0  Id: cat  [ref: Local, size: 1, loc: -3] [type char] [line: 8]
+!   !   !   Child: 1  Const: 666 [type int] [line: 8]
+!   !   Sibling: 1  Assign: = [type char] [line: 9]
+!   !   !   Child: 0  Id: cat  [ref: Local, size: 1, loc: -3] [type char] [line: 9]
+!   !   !   Child: 1  Id: dog  [ref: Local, size: -3, loc: 0] [undefined type] [line: 9]
+!   !   Sibling: 2  Assign: = [undefined type] [line: 10]
+!   !   !   Child: 0  Id: dog  [ref: Local, size: -3, loc: 0] [undefined type] [line: 10]
+!   !   !   Child: 1  Id: cat  [ref: Local, size: 1, loc: -3] [type char] [line: 10]
+!   !   Sibling: 3  Return [type void] [line: 13]
+!   !   !   Child: 0  Id: cat  [ref: Local, size: 1, loc: -3] [type char] [line: 13]
+Offset for end of global space: -3
+Number of warnings: 0
+Number of errors: 7

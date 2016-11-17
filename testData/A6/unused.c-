@@ -1,0 +1,23 @@
+int g, h;
+
+cat();
+
+dog();
+
+int main(int u, z)
+{
+   int v, w;
+   {
+      int x, y;
+      x=666;
+      v=777;
+   }
+   h = 888;
+   cat();
+}
+
+int elk() {
+    dog = 3;
+    klingon;
+    klingon = romulon;
+    }

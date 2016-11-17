@@ -1,0 +1,10 @@
+int min(int x, y) if (x>y) return y; else return x;
+int f(int n) if (n<=2) return 1; else return f(n-1)+f(n-2);
+int g(int n) return f(min(10, 666*f(n)-777*f(n+1)));
+
+main()
+{
+   output(f(2)+f(3)); outnl();
+   output(g(2)); outnl();
+   if (false) main();
+}

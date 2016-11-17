@@ -1,0 +1,40 @@
+ERROR(1): Syntax error, unexpected identifier 'be', expecting '('.
+ERROR(1): Syntax error, unexpected identifier 'is', expecting ',' or ';'.
+WARNING(2): Invalid input character: '''.  Character ignored.
+ERROR(2): Syntax error, unexpected identifier 'tis', expecting ',' or ';'.
+ERROR(4): Syntax error, unexpected identifier 'to', expecting ',' or ';'.
+ERROR(5): Syntax error, unexpected identifier 'by', expecting ',' or ';'.
+ERROR(5): Syntax error, unexpected identifier 'sleep', expecting ',' or ';'.
+WARNING(8): Invalid input character: '''.  Character ignored.
+ERROR(8): Syntax error, unexpected identifier 'a', expecting ',' or ';'.
+WARNING(9): Invalid input character: '''.  Character ignored.
+ERROR(9): Syntax error, unexpected identifier 'sleep', expecting ',' or ';'.
+ERROR(10): Syntax error, unexpected identifier 'to', expecting ',' or ';'.
+WARNING(10): Invalid input character: '''.  Character ignored.
+ERROR(10): Syntax error, unexpected identifier 's', expecting ',' or ';'.
+ERROR(13): Syntax error, unexpected identifier 'give', expecting ',' or ';'.
+WARNING(13): Invalid input character: '''.  Character ignored.
+ERROR(13): Syntax error, unexpected identifier 's', expecting ',' or ';'.
+ERROR(16): Syntax error, unexpected identifier 'oppressor', expecting ',' or ';'.
+WARNING(16): Invalid input character: '''.  Character ignored.
+ERROR(16): Syntax error, unexpected identifier 'proud', expecting ',' or ';'.
+WARNING(16): Invalid input character: '''.  Character ignored.
+ERROR(17): Syntax error, unexpected identifier 'pangs', expecting ',' or ';'.
+ERROR(17): Syntax error, unexpected identifier 'law', expecting ',' or ';'.
+WARNING(17): Invalid input character: '''.  Character ignored.
+ERROR(18): Syntax error, unexpected identifier 'insolence', expecting ',' or ';'.
+ERROR(20): Syntax error, unexpected identifier 'he', expecting ',' or ';'.
+ERROR(22): Syntax error, unexpected identifier 'grunt', expecting ',' or ';'.
+ERROR(23): Syntax error, unexpected identifier 'that', expecting ',' or ';'.
+ERROR(24): Syntax error, unexpected identifier 'undiscover', expecting ',' or ';'.
+WARNING(24): Invalid input character: '''.  Character ignored.
+ERROR(25): Syntax error, unexpected identifier 'the', expecting ',' or ';'.
+WARNING(30): Invalid input character: '''.  Character ignored.
+ERROR(31): Syntax error, unexpected identifier 'enterprises', expecting ',' or ';'.
+ERROR(33): Syntax error, unexpected identifier 'lose', expecting ',' or ';'.
+WARNING(33): Invalid input character: '!'.  Character ignored.
+WARNING(34): Invalid input character: '!'.  Character ignored.
+ERROR(34): Syntax error, unexpected identifier 'thy', expecting ',' or ';'.
+WARNING(35): Invalid input character: '''.  Character ignored.
+Number of warnings: 13
+Number of errors: 25

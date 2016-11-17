@@ -1,0 +1,30 @@
+// C-F13
+  main()
+{
+    int z;
+    z = 111;
+    { 
+        int x[100]; 
+
+        z=0;
+        while(z<100) {
+        x[z]=1;
+        z++;
+        }
+
+    }        
+    { 
+        int y[100]; 
+
+        z=0;
+        while(z<100) {
+ y[z]=1;
+        z++;
+        }
+
+        output(y[1]); outnl();
+        y[1] = 333;
+        output(y[1]); outnl();
+    }        
+    output(z); outnl();
+}

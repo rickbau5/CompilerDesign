@@ -1,0 +1,24 @@
+// C-F15
+  main()
+{
+    true or false;
+
+    true false;
+
+    or ;
+    true or ;
+    or false;
+    * or *;
+    zz;
+
+    true and false;
+    and ;
+    true and ;
+    and false;
+    * and *;
+
+    true and false or true;
+    and or; 
+    or and; 
+
+}
