@@ -144,7 +144,10 @@ scopedVarDeclarations: scopedTypeSpecifier varDeclList SEMI  {
                         for (Node* decl = $2; decl != NULL; decl = decl->sibling) {
                             decl->returnType = $1->tokenString;
                             decl->isStatic = $1->isStatic;
-                            decl->ref = (char*)"Local";
+                            if (decl->isStatic)
+                                decl->ref = (char*)"Static";
+                            else
+                                decl->ref = (char*)"Local";
                         }
                         $$ = $2;
 

@@ -372,12 +372,20 @@ void typeNode(Node* node) {
             if (!symbolTable.insert(node->tokenString, node)) {
                 Node* existing = (Node*)symbolTable.lookup(node->tokenString);
                 printf("ERROR(%d): Symbol '%s' is already defined at line %d.\n", node->lineno, node->tokenString, existing->lineno);
-                node->ref = (char*)"Local";
+                if (node->nodeType == nodes::Parameter)
+                    node->ref = (char*)"Param";
+                else
+                    node->ref = (char*)"Local";
                 numErrors++;
             } else {
-                if (!strcmp(node->ref, "Global")) {
+                if (!strcmp(node->ref, "Global") || node->isStatic) {
+                    if (node->nodeType == nodes::Variable && node->isArray)
+                        globalPointer--;
                     node->loc = globalPointer;
-                    globalPointer -= node->memSize;
+                    if (node->nodeType == nodes::Variable && node->isArray)
+                        globalPointer -= node->memSize - 1;
+                    else
+                        globalPointer -= node->memSize;
                 } else {
                     if (node->nodeType == nodes::Variable && node->isArray)
                         localFramePointer++;
@@ -387,7 +395,7 @@ void typeNode(Node* node) {
                     else
                         localFramePointer += node->memSize;
                 }
-                if (activeFunction != NULL) {
+                if (activeFunction != NULL && !node->isStatic) {
                     activeFunction->memSize -= node->memSize;
                 }
             }

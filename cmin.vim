@@ -11,7 +11,7 @@ syn match Operator 'and'
 syn match Operator 'or' 
 syn match Operator 'not'
 
-syn keyword Keyword break return
+syn keyword Keyword break return static
 syn keyword Type bool char int
 syn keyword Repeat while
 syn keyword Conditional if else
