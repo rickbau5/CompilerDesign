@@ -85,11 +85,11 @@ int main (int argc, char **argv) {
             prettyPrintTreeWithInfo(root);
         }
         status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+        printf("Offset for end of global space: %d\n", globalPointer);
     } else {
         status = EXIT_FAILURE; 
     }
 
-    printf("Offset for end of global space: %d\n", globalPointer);
     printf("Number of warnings: %d\n", numWarnings); 
     printf("Number of errors: %d\n", numErrors);
 
