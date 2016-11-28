@@ -466,15 +466,24 @@ void typeNode(Node* node) {
                 if (data->nodeType == nodes::Function) {
                     printf("ERROR(%d): Cannot use function '%s' as a variable.\n", node->lineno, node->tokenString);
                     node->returnType = strdup("unknown");
-                    node->ref = (char*)"Global";
-                    node->memSize = data->memSize;
+                    if (activeFunction == data) {
+                        node->ref = (char*)"Local";
+                        int size = 2;
+                        for (Node* param = data->children[0]; param != NULL; param = param->sibling) {
+                           size++; 
+                        }
+                        node->memSize = -size;
+                    } else {
+                        node->ref = (char*)"Global";
+                        node->memSize = data->memSize;
+                    }
                     numErrors++;
                     // Modify the size of the call node based on the params it's missing.
-                    //int numParams = 0;
-                    //for (Node* param = data->children[0]; param != NULL; param = param->sibling) {
-                    //    numParams++;
-                    //}
-                    //node->memSize = data->memSize + numParams;
+                    // int numParams = 0;
+                    // for (Node* param = data->children[0]; param != NULL; param = param->sibling) {
+                    //     numParams++;
+                    // }
+                    // node->memSize = data->memSize + numParams;
                 } else {
                     cloneNode(data, node);
                 }
