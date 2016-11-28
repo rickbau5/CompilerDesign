@@ -16,7 +16,6 @@ CFLAGS=-Wall
 DFLAGS=-g -Wall
 
 FLEX=$(BIN).l
-FFLAGS=
 BSON=$(BIN).y
 BFLAGS=-v -t -d
 INTER=$(BIN).tab.c lex.yy.c
@@ -33,7 +32,7 @@ clean:
 	@- rm -rf $(BIN) $(BIN).output $(BIN).tab.h tests tests.dSYM testing/*.out $(INTER) $(TMP) $(BIN).dSYM test.out
 
 flex:
-	flex $(FFLAGS) $(FLEX)
+	flex $(FLEX)
 
 bison: 
 	bison $(BFLAGS) $(BSON)
