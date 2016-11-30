@@ -372,10 +372,15 @@ void typeNode(Node* node) {
             if (!symbolTable.insert(node->tokenString, node)) {
                 Node* existing = (Node*)symbolTable.lookup(node->tokenString);
                 printf("ERROR(%d): Symbol '%s' is already defined at line %d.\n", node->lineno, node->tokenString, existing->lineno);
-                if (node->nodeType == nodes::Parameter)
+                if (node->nodeType == nodes::Parameter) {
                     node->ref = (char*)"Param";
-                else
+                } else {
                     node->ref = (char*)"Local";
+                    if (node->isArray) {
+                        node->loc = -1;
+                    }
+                }
+
                 numErrors++;
             } else {
                 if (!strcmp(node->ref, "Global") || node->isStatic) {
@@ -501,7 +506,6 @@ void typeNode(Node* node) {
             break;
         }
     case nodes::FunctionCall: {
-        int callSize = 0;
         Node* data = (Node*)symbolTable.lookup(node->tokenString);
         if (data == NULL) {
             printf("ERROR(%d): Function '%s' is not defined.\n", node->lineno, node->tokenString);
@@ -572,6 +576,10 @@ void typeNode(Node* node) {
             }
         } else {
             typeNode(node->children[0]);
+        }
+        for (Node* param = node->children[0]; param != NULL; param = param->sibling) {
+            if (param->isArray)
+                    node->memSize++;
         }
         break;
     }
