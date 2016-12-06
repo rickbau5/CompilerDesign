@@ -38,7 +38,13 @@ void emitComment(char *c)
     fprintf(code, "* %s\n", c);
 }
 
+void emitCommentRight(char* c, char* cc) {
+    fprintf(code, "*                       %s %s\n", c, cc);
+}
 
+void emitCommentRight(char* c) {
+    emitCommentRight(c, "");
+}
 
 // emitRO emits a REGISTER-ONLY TM instruction
 // op = the opcode

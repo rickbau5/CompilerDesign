@@ -3,6 +3,6 @@
 
 #include "scanType.h"
 
-void codeGen(Node*);
+void codeGen(Node*, int);
 
 #endif

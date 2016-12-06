@@ -64,14 +64,13 @@ int main (int argc, char **argv) {
     char fileHandle[100];
     handleArgs(argc, argv, fileHandle);
    
-    int status;
     if (override) {
-        status = runWith("test.c-");
+        runWith("test.c-");
     } else {
         if (hasFile) {
-            status = runWith(fileHandle);
+            runWith(fileHandle);
         } else {
-            status = run(stdin);
+            run(stdin);
         }
     }
 
@@ -96,13 +95,13 @@ int main (int argc, char **argv) {
         getFileName(fileHandle, name);
         code = fopen(name, "w");
 
-        codeGen(root);
+        codeGen(root, globalPointer);
 
-        status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+        //status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
         printf("Offset for end of global space: %d\n", globalPointer);
         printf("Source: %s.c-  Object: %s.tm\n", name, name);
     } else {
-        status = EXIT_FAILURE; 
+        //status = EXIT_FAILURE; 
     }
 
     printf("Number of warnings: %d\n", numWarnings); 
@@ -114,7 +113,6 @@ int main (int argc, char **argv) {
 void getFileName(char* path, char* name) {
     printf("%s\n", path);
     bool flag = false;
-    int lngth;
     int ext = 0;
     int i;
     for (i = strlen(path); i > 0 ; i--) {
@@ -128,11 +126,10 @@ void getFileName(char* path, char* name) {
         } else if (path[i] != '/'){
             name[i] = path[i];
         } else if (path[i] == '/' || i == 1) {
-            lngth = strlen(path) - i - ext - 1;
             break;
         }
     }
     int end = strlen(path) - ext - 1;
     int start = i + 1;
-    memmove(&name[0], &name[i+1], (end - i + 1) * sizeof(char));
+    memmove(&name[0], &name[start], (end - i + 1) * sizeof(char));
 }

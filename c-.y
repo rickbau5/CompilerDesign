@@ -750,6 +750,7 @@ argList: argList ',' expression { $$ = addSibling($1, $3); yyerrok; }
 constant: NUMCONST  {
             $$ = newNode(nodes::Constant, $1);
             $$->isConstant = true;
+            $$->intValue = atoi($1->tokenString);
             $$->returnType = strdup("int");
         }
         | CHARCONST {
@@ -763,6 +764,7 @@ constant: NUMCONST  {
         | BOOLCONST {
             $$ = newNode(nodes::Constant, $1);
             $$->isConstant = true;
+            $$->boolValue = strcmp($1->tokenString, "true") == 0 ? "true" : "false";
             $$->returnType = strdup("bool");
         }
         ;
@@ -919,6 +921,8 @@ Node* funcWithParamOf(const char *name, const char* ret, const char* param) {
         parameter->lineno = -1;
         addChild(function, parameter);
     }
+
+    function->isIONode = true;
 
     return function;
 }

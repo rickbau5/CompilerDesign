@@ -81,6 +81,11 @@ typedef struct treeNode {
     int loc;
 
     bool changeScope;
+
+    bool boolValue;
+    int  intValue;
+
+    bool isIONode;
 } Node;
 
 #endif

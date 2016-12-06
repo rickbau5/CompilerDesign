@@ -35,6 +35,8 @@ void emitBackup(int loc);
 
 void emitComment(char *c);
 void emitComment(char *c, char *cc);
+void emitCommentRight(char *c, char *cc);
+void emitCommentRight(char *c);
 
 void emitGoto(int d, int s, char *c);
 void emitGoto(int d, int s, char *c, char *cc);

@@ -12,7 +12,7 @@ ASSN=6
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 SUBRESULT=result.html
 
-CFLAGS=-Wall
+CFLAGS=-Wno-write-strings
 DFLAGS=-g -Wall
 
 FLEX=$(BIN).l
