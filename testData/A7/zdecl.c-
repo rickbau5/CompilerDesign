@@ -1,0 +1,8 @@
+int g[22];           // init array size
+int h:333+444;       // init variable
+
+main()
+{
+    int a[33];      // init array size
+    int b:111+222;  // init variable
+}

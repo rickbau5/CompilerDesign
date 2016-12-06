@@ -143,16 +143,13 @@ const char* computeType(Node* parent, Node* left, Node* right) {
             }
             return "int";
         } else {
-            bool flag = true;
             if (!typesMatch("int", left, NULL)) {
                 printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
                 numErrors++;
-                flag = false;
             }
             if (!typesMatch("int", right, NULL)) {
                 printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "int", right->returnType);
                 numErrors++;
-                flag = false;
             }
             if (left->isArray || right->isArray) {
                 printf("ERROR(%d): The operation '%s' does not work with arrays.\n", parent->lineno, parent->tokenString);
@@ -230,7 +227,6 @@ const char* computeType(Node* parent, Node* left, Node* right) {
     case ADDOP:
     case DIVOP:
     case MODOP: {
-            bool flag = true;
             if (right == NULL) {
                 printf("L(%d): Null right\n", left->lineno);
                 prettyPrintTree(parent);
@@ -238,12 +234,10 @@ const char* computeType(Node* parent, Node* left, Node* right) {
             if (!typesMatch("int", left, NULL)) {
                 printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", parent->lineno, parent->tokenString, "int", left->returnType);
                 numErrors++;
-                flag = false;
             }
             if (!typesMatch("int", right, NULL)) {
                 printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", parent->lineno, parent->tokenString, "int", right->returnType);
                 numErrors++;
-                flag = false;
             }
             // Check if array
             if (left->isArray || right->isArray) {

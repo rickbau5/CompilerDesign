@@ -1,0 +1,34 @@
+int ant(int a)
+    return 666*a;
+
+
+int bat(int b) {
+    return 666*b;
+}
+
+
+int cow(int c) {
+    int stuff;
+    
+    return 666*c;
+}
+
+
+int dog(int d) {
+    int stuff;
+
+    {
+        int moreStuff;
+
+        return 666*d;
+    }
+}
+
+
+main()
+{
+    ant(111);
+    bat(222);
+    cow(333);
+    dog(444);
+}

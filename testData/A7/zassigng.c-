@@ -1,0 +1,21 @@
+int x, y, a[10];
+
+main() {
+
+   x = 666;      // x on lhs
+   y = x;        // x on rhs
+   output(y);
+
+   a[4+5] = 777;   // a[] on lhs
+   y = a[4+5];     // a[] on rhs
+   output(y);
+
+//   output(x);
+//   output(a[3]);
+//   outnl();
+//   outputc('h');
+//   outputc('i');
+//   outnl();
+//   outputb(true);      
+//   outnl();
+   }

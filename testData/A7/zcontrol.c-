@@ -1,0 +1,38 @@
+main() {
+    bool x, y;
+
+    x = true;
+    y = false;
+
+    if (x) 111;
+
+    if (y) 222;
+    else 333;
+
+    if (x) if (y) 444;
+        else 555;
+
+    while (x) 666;
+
+    while (y) {
+        777;
+        break;
+        888;
+        break;
+        999;
+    }
+
+    while (x) {
+        111;
+        break;
+        while (y) {
+            222;
+            break;
+            333;
+        }
+        break;
+        444;
+    }
+
+}
+

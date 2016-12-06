@@ -1,7 +1,9 @@
 #include <string.h>
+
 #include "c-.h"
 #include "printtree.h"
 #include "semantic.h"
+#include "codegen.h"
 #include "stdlib.h"
 #include "supgetopt.h"
 
@@ -16,6 +18,8 @@ extern int yydebug;
 int numErrors = 0;
 int numWarnings = 0;
 int globalPointer = 0;
+
+FILE* code;
 
 void handleArgs(int argc, char **argv, char *fileHandle) {
     extern char *optarg;
@@ -51,6 +55,9 @@ void handleArgs(int argc, char **argv, char *fileHandle) {
     }
 }
 
+void getFileName(char*, char*);
+
+
 int main (int argc, char **argv) {
     printf(""); // WTF
 
@@ -84,28 +91,16 @@ int main (int argc, char **argv) {
         if (printTypedTree) {
             prettyPrintTreeWithInfo(root);
         }
+        
+        char name[strlen(fileHandle)];
+        getFileName(fileHandle, name);
+        code = fopen(name, "w");
+
+        codeGen(root);
+
         status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
         printf("Offset for end of global space: %d\n", globalPointer);
-        char fileName[strlen(fileHandle)];
-        bool flag = false;
-        int lngth;
-        int ext = 0;
-        for (int i = strlen(fileHandle); i > 0 ; i--) {
-            if (!flag) {
-                if (fileHandle[i] == '.') {
-                    flag = true;
-                    fileName[i] = '\0';
-                } else {
-                    ext++;
-                }
-            } else if (fileHandle[i] != '/'){
-                fileName[i] = fileHandle[i];
-            } else if (fileHandle[i] == '/' || i == 1) {
-                lngth = strlen(fileHandle) - i - ext - 1;
-                break;
-            }
-        }
-        printf("Source: %s.c-  Object: %s.tm\n", &(fileName[strlen(fileHandle) - lngth - ext]), &(fileName[strlen(fileHandle) - lngth - ext]));
+        printf("Source: %s.c-  Object: %s.tm\n", name, name);
     } else {
         status = EXIT_FAILURE; 
     }
@@ -114,4 +109,30 @@ int main (int argc, char **argv) {
     printf("Number of errors: %d\n", numErrors);
 
     return EXIT_SUCCESS;    
+}
+
+void getFileName(char* path, char* name) {
+    printf("%s\n", path);
+    bool flag = false;
+    int lngth;
+    int ext = 0;
+    int i;
+    for (i = strlen(path); i > 0 ; i--) {
+        if (!flag) {
+            if (path[i] == '.') {
+                flag = true;
+                name[i] = '\0';
+            } else {
+                ext++;
+            }
+        } else if (path[i] != '/'){
+            name[i] = path[i];
+        } else if (path[i] == '/' || i == 1) {
+            lngth = strlen(path) - i - ext - 1;
+            break;
+        }
+    }
+    int end = strlen(path) - ext - 1;
+    int start = i + 1;
+    memmove(&name[0], &name[i+1], (end - i + 1) * sizeof(char));
 }

@@ -1,0 +1,20 @@
+int fib(int x) {
+  if (x<=2) return 1;
+  else return fib(x-1) + fib(x-2);
+}
+
+int dog(int x) {
+  return fib(x);
+}
+
+main()
+{
+        output(fib(1));
+        output(fib(2));
+        output(fib(3));
+        output(fib(4));
+        output(fib(5));
+        output(fib(6));
+        output(fib(7));
+        outnl();
+}

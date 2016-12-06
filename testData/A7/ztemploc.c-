@@ -1,0 +1,29 @@
+int g;
+
+main()
+{
+    int h;     // h is at -2
+    111+222;   // tmp = -3
+    main();    // ghost frame at -3
+    {
+        int i;     // i is at -3
+        333+444;   // tmp = -4
+        main();    // ghost frame at -4
+        {
+            int j;    // j is at -4
+            555+666;  // tmp = -5
+            main();   // ghost frame at -5
+        }
+        777+888;      // tmp = -4
+        main();       // ghost frame at -4
+        {
+            int k;    // tmp = (-4 if shared, -5 if not)
+            999+111;  // tmp = (-5 if shared, -6 if not)
+            main();   // ghost frame at (-5 if shared, -6 if not)
+        }
+        222+333;      // tmp = -4
+        main();       // ghost frame at -4
+    }
+    444+555;          // tmp = -3
+    main();           // ghost frame at -3
+}

@@ -1,0 +1,17 @@
+int cat(int x, y) {     // size of frame is fixed at 4
+        333*444;        // compare with main
+
+        x++;
+        return -x;
+}
+
+main()                   // size of frame is fixed at 2
+{
+        333*444;           // note the use of R3 and R4 and stack
+        333*444 + 555*666;
+        333*444 + 555*666 + 777*888;
+        111 < 222 + 333*444;
+
+        cat(111, 222);         // function call setup
+        666 + cat(111, 222);   // temp first on stack then funcall
+}
