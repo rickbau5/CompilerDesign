@@ -347,12 +347,16 @@ void typeNode(Node* node) {
                 printf("ERROR(%d): Cannot have a break statement outside of loop.\n", node->lineno);
                 numErrors++;
             }
+            break;
         }
     case nodes::Compound: {
             if (node->changeScope) {
                 symbolTable.enter("cmpd");
-            }
+            } 
+
             typeNode(node->children[0]);
+            node->memSize = -localFramePointer;
+            node->hasInfo = true;
             typeNode(node->children[1]);
 
             if (node->changeScope) {
@@ -523,6 +527,9 @@ void typeNode(Node* node) {
             node->hasInfo = true;
             node->memSize = 1;
         }
+
+        // Override call node info printing for now
+        node->hasInfo = false;
         // Don't need to loop through all parameters, just start at first
         //cause they're siblings so would be handled by normal flow
 

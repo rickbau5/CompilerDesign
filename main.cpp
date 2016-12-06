@@ -86,6 +86,26 @@ int main (int argc, char **argv) {
         }
         status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
         printf("Offset for end of global space: %d\n", globalPointer);
+        char fileName[strlen(fileHandle)];
+        bool flag = false;
+        int lngth;
+        int ext = 0;
+        for (int i = strlen(fileHandle); i > 0 ; i--) {
+            if (!flag) {
+                if (fileHandle[i] == '.') {
+                    flag = true;
+                    fileName[i] = '\0';
+                } else {
+                    ext++;
+                }
+            } else if (fileHandle[i] != '/'){
+                fileName[i] = fileHandle[i];
+            } else if (fileHandle[i] == '/' || i == 1) {
+                lngth = strlen(fileHandle) - i - ext - 1;
+                break;
+            }
+        }
+        printf("Source: %s.c-  Object: %s.tm\n", &(fileName[strlen(fileHandle) - lngth - ext]), &(fileName[strlen(fileHandle) - lngth - ext]));
     } else {
         status = EXIT_FAILURE; 
     }
