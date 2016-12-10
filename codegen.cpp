@@ -12,7 +12,12 @@ void doCodeGeneration(Node*);
 int framePointer;
 
 void generateExpression(Node* expr) {
-    emitComment("EXPRESSION");
+    if (expr == NULL) // Unary operators
+        return;
+
+    emitComment("EXPRESSION", (char*) expr->tokenString);
+    Node* left = expr->children[0];
+    Node* right = expr->children[1];
 
     bool handled = false;
     switch (expr->nodeType) {
@@ -37,14 +42,45 @@ void generateExpression(Node* expr) {
                 handled = true;
             }
             break;
+        case nodes::Operator: {
+                generateExpression(left);
+                generateExpression(right);
+
+                char opString[3];
+                switch (expr->tokenData->tokenClass) {
+                    case ADDOP:
+                        sprintf(opString, "%s", "ADD");
+                        break;
+                    case MULOP:
+                        sprintf(opString, "%s", "MUL");
+                        break;
+                    case DIVOP:
+                        sprintf(opString, "%s", "DIV");
+                        break;
+                    case SUBOP:
+                        sprintf(opString, "%s", "SUB");
+                        break;
+                    default:
+                        sprintf(opString, "%s", expr->tokenString);
+                        break;
+                }
+
+                handled = true;
+                emitRM("ST", 3, framePointer, 1, "Save left side");
+                emitRM(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
+            }
+            break;
+
+        case nodes::Constant:
+            emitRM("LDC", 3, expr->tokenData->ival, 6, "Load integer constant");
+            handled = true;
+            break;
         default:
             break;
     }
     if (!handled) {
         switch (expr->tokenData->tokenClass) {
             case ASS: {
-                    Node* left = expr->children[0];
-                    Node* right = expr->children[1];
                     if (left->nodeType == nodes::Identifier) {
                         if (right->nodeType == nodes::Constant) {
                             emitRM("LDC", 3, right->intValue, 6, "Load integer constant");
@@ -53,12 +89,20 @@ void generateExpression(Node* expr) {
                             emitRM("LD", 3, right->loc, 1, "Load variable", (char*) right->tokenString);
                             emitRM("ST", 3, left->loc, 1, "Store variable", (char*) left->tokenString);
                         }
+                    } else {
+                        generateExpression(left);
+                        generateExpression(right);
                     }
                 }
                 break;
-            case ADDOP:
-                
-                break;
+            case LBRACKET: {
+                    generateExpression(left);
+                    generateExpression(right);
+
+                    emitRM("LD", 3, 0, 3, "Load array element");
+                     
+                    break;
+                }
             default:
                 emitComment("Unimplemented expr", (char*) expr->tokenString);
                 break;
@@ -129,7 +173,10 @@ void doCodeGeneration(Node* node) {
 
         case nodes::Parameter: {
                 emitRM("LD", 3, -2, 1, "Load parameter");
-                break;
+            }
+            break;
+        case nodes::Expression: {
+                emitComment("Expression:", (char*) node->tokenString);
             }
             break;
         case nodes::FunctionCall:
