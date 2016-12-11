@@ -39,7 +39,11 @@ void emitComment(char *c)
 }
 
 void emitCommentRight(char* c, char* cc) {
-    fprintf(code, "*                       %s %s\n", c, cc);
+    fprintf(code, "*                       %s", c);
+    if (strcmp(cc, "")) {
+        fprintf(code, " %s", cc);
+    }
+    fprintf(code, "\n");
 }
 
 void emitCommentRight(char* c) {

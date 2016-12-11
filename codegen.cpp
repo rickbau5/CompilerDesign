@@ -10,12 +10,12 @@
 void doCodeGeneration(Node*);
 
 int framePointer;
+bool onRight;
 
 void generateExpression(Node* expr) {
     if (expr == NULL) // Unary operators
         return;
 
-    emitComment("EXPRESSION", (char*) expr->tokenString);
     Node* left = expr->children[0];
     Node* right = expr->children[1];
 
@@ -43,10 +43,8 @@ void generateExpression(Node* expr) {
             }
             break;
         case nodes::Operator: {
-                generateExpression(left);
-                generateExpression(right);
-
                 char opString[3];
+                bool save = true;
                 switch (expr->tokenData->tokenClass) {
                     case ADDOP:
                         sprintf(opString, "%s", "ADD");
@@ -60,14 +58,23 @@ void generateExpression(Node* expr) {
                     case SUBOP:
                         sprintf(opString, "%s", "SUB");
                         break;
+
+                    case LBRACKET:
+                        goto exit;
                     default:
                         sprintf(opString, "%s", expr->tokenString);
+                        save = false;
                         break;
                 }
 
+                generateExpression(left);
+                if (save) {
+                    emitRM("ST", 3, framePointer, 1, "Save left side");
+                }
+                generateExpression(right);
+                emitRM("LD", 4, framePointer, 1, "Load left into ac1");
                 handled = true;
-                emitRM("ST", 3, framePointer, 1, "Save left side");
-                emitRM(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
+                emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
             }
             break;
 
@@ -78,6 +85,7 @@ void generateExpression(Node* expr) {
         default:
             break;
     }
+    exit: ;
     if (!handled) {
         switch (expr->tokenData->tokenClass) {
             case ASS: {
@@ -88,18 +96,42 @@ void generateExpression(Node* expr) {
                         } else if (right->nodeType == nodes::Identifier) {
                             emitRM("LD", 3, right->loc, 1, "Load variable", (char*) right->tokenString);
                             emitRM("ST", 3, left->loc, 1, "Store variable", (char*) left->tokenString);
+                        } else {
+                            onRight = true;
+                            generateExpression(right);
+                            onRight = false;
+
+                            if (right->tokenData->tokenClass == LBRACKET) {
+                                emitRM("LD", 4, framePointer, 1, "Load left into ac1 ");
+                                emitRO("SUB", 3, 4, 3, "compute location from index ");
+                                emitRM("LD", 3, 0, 3, "Load array element");
+                                emitRM("ST", 3, left->loc, 1, "Store variable", (char*) left->tokenString);
+                            }
                         }
                     } else {
                         generateExpression(left);
                         generateExpression(right);
+
+                        if (left->tokenData->tokenClass == LBRACKET) {
+                            emitRM("LD", 4, -15, 1, "Restore index");
+                            emitRM("LDA", 5, left->children[0]->loc, 1, "Load address of base of array", (char*) left->children[0]->tokenString);
+                            emitRO("SUB", 5, 5, 4, "Compute offset of value");
+                        }
+                        emitRM("ST", 3, 0, 5, "Store variable", (char*)left->children[0]->tokenString);
                     }
                 }
                 break;
             case LBRACKET: {
-                    generateExpression(left);
+                    if (onRight) {
+                        emitRM("LDA", 3, left->loc, 1, "Load address of base of array");
+                        emitRM("ST", 3, framePointer, 1, "Save left side");
+                        --framePointer;
+                    }
                     generateExpression(right);
-
-                    emitRM("LD", 3, 0, 3, "Load array element");
+                    if (!onRight)
+                        emitRM("ST", 3, -15, 1, "Save index");
+                    else 
+                        framePointer++;
                      
                     break;
                 }
@@ -153,6 +185,9 @@ void doCodeGeneration(Node* node) {
                 emitRM("LD", 1, 0, 1, "Adjust fp");
                 emitRM("LDA", 7, 0, 3, "Return");
                 emitComment("END FUNCTION", (char*) node->tokenString);
+                if (!strcmp("main", node->tokenString)) {
+                    backPatchAJumpToHere(0, "Jump to init [backpatch]");
+                }
                 emitComment("");
             }
             break;
@@ -161,13 +196,14 @@ void doCodeGeneration(Node* node) {
                 emitComment("COMPOUND");
                 for (Node* n = node->children[0]; n != NULL; n = n->sibling) {
                     if (n->isArray) {
-                        emitRM("LDC", 3, n->arraySize, 6, "load size of array ", (char*) n->tokenString);
+                        emitRM("LDC", 3, n->arraySize, 6, "load size of array", (char*) n->tokenString);
                         emitRM("ST", 3, -4, 1, "save size of array", (char*) n->tokenString);
                     }
                 }
                 emitComment("Compound Body");
                 doCodeGeneration(node->children[1]);
                 framePointer = before;
+                emitComment("END COMPOUND");
             }
             break;
 
@@ -175,12 +211,9 @@ void doCodeGeneration(Node* node) {
                 emitRM("LD", 3, -2, 1, "Load parameter");
             }
             break;
-        case nodes::Expression: {
-                emitComment("Expression:", (char*) node->tokenString);
-            }
-            break;
         case nodes::FunctionCall:
         case nodes::Assignment:
+            emitComment("EXPRESSION");
             generateExpression(node);
             
             break;
@@ -203,7 +236,7 @@ void genInit(int endOfGlobal) {
 
     Node* mainFunc = (Node*)symbolTable.lookup("main");
     emitRM("LDA", 3, 1, 7, "Return address in ac");
-    emitRM("LDA", 7, mainFunc->loc, 7, "Jump to main");
+    emitGotoAbs(-(mainFunc->loc + 1), "Jump to main");
     emitRO("HALT", 0, 0, 0, "DONE!");
 
     emitComment("END INIT");
