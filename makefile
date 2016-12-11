@@ -71,6 +71,6 @@ wormulon: prep-tar
 	scp $(TMP)/$(SUBT) boss2849@wormulon.cs.uidaho.edu:/home/boss2849/CS445/$(SUBT)
 
 submit: prep-tar test-tar
-	curlsubmit 445 $(ASSN) $(FILE) > $(TMP)/$(SUBRESULT)
+	curlsubmit 445 "$(ASSN)" $(FILE) > $(TMP)/$(SUBRESULT)
 	-@open $(TMP)/$(SUBRESULT)
 	@echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."

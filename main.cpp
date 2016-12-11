@@ -93,7 +93,9 @@ int main (int argc, char **argv) {
         
         char name[strlen(fileHandle)];
         getFileName(fileHandle, name);
-        code = fopen(name, "w");
+        char outputPath[strlen(fileHandle) + 3];
+        sprintf(outputPath, "%s.tm", name);
+        code = fopen(outputPath, "w");
 
         codeGen(root, globalPointer);
 
