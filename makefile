@@ -8,7 +8,7 @@ TAR=tar -cvf
 UNTAR=tar -xvf
 
 ME=boss
-ASSN=6
+ASSN=7 small
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 SUBRESULT=result.html
 
@@ -72,5 +72,5 @@ wormulon: prep-tar
 
 submit: prep-tar test-tar
 	curlsubmit 445 $(ASSN) $(FILE) > $(TMP)/$(SUBRESULT)
-	@open $(TMP)/$(SUBRESULT)
+	-@open $(TMP)/$(SUBRESULT)
 	@echo "Result timestamp is: `cat $(TMP)/$(SUBRESULT) | grep -o '"[0-9]\+"'`."
