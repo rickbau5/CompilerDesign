@@ -113,7 +113,6 @@ int main (int argc, char **argv) {
 }
 
 void getFileName(char* path, char* name) {
-    printf("%s\n", path);
     bool flag = false;
     int ext = 0;
     int i;

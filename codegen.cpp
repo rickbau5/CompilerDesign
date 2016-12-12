@@ -57,6 +57,16 @@ void _storeArraySize(Node* node) {
     }
 }
 
+void _loadConstant(Node* node) {
+    if (!strcmp(node->returnType, "bool")) {
+        emitRM(LDC, 3, node->tokenData->bval ? 1 : 0, 6, "Load Boolean constant");
+    } else if (!strcmp(node->returnType, "int")) {
+        emitRM(LDC, 3, node->tokenData->ival, 6, "Load integer constant");
+    } else {
+        emitRM(LDC, 3, node->tokenData->cval, 6, "Load character constant");
+    }
+}
+
 void generateExpression(Node* expr) {
     if (expr == NULL) // Unary operators
         return;
@@ -156,7 +166,7 @@ void generateExpression(Node* expr) {
                     emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
                     handled = true;
                 } else {
-                    _loadVariable(expr);
+                    _loadVariable(expr->children[0]);
                     switch (expr->tokenData->tokenClass) {
                         case SUBOP:
                             emitRM(LDC, 4, 0, 6, "Load 0");
@@ -172,13 +182,7 @@ void generateExpression(Node* expr) {
             break;
 
         case nodes::Constant:
-            if (!strcmp(expr->returnType, "bool")) {
-                emitRM(LDC, 3, expr->tokenData->bval ? 1 : 0, 6, "Load Boolean constant");
-            } else if (!strcmp(expr->returnType, "int")) {
-                emitRM(LDC, 3, expr->tokenData->ival, 6, "Load integer constant");
-            } else {
-                emitRM(LDC, 3, expr->tokenData->cval, 6, "Load character constant");
-            }
+            _loadConstant(expr);
             handled = true;
             break;
         case nodes::Identifier:
@@ -206,7 +210,7 @@ void generateExpression(Node* expr) {
             case ASS: {
                     if (left->nodeType == nodes::Identifier) {
                         if (right->nodeType == nodes::Constant) {
-                            emitRM(LDC, 3, right->intValue, 6, "Load integer constant");
+                            _loadConstant(right);
                             _storeVariable(left);
                         } else if (right->nodeType == nodes::Identifier) {
                             _loadVariable(right);
@@ -273,6 +277,9 @@ void generateExpression(Node* expr) {
 
 void pimpIO();
 
+bool inLoop = false;
+int recentLoopStart;
+
 void doCodeGeneration(Node* node) {
     if (node == NULL)
         return;
@@ -313,27 +320,61 @@ void doCodeGeneration(Node* node) {
         case nodes::IfStatement: {
                 int skip;
                 int size;
+                bool hasElse = node->children[2] != NULL;
 
                 emitComment("IF");
-                generateExpression(node->children[0]);
+                doCodeGeneration(node->children[0]);
                 skip = emitSkip(1);
                 emitComment("THEN");
-                generateExpression(node->children[1]);
+                doCodeGeneration(node->children[1]);
                 size = emitSkip(0) - skip;
                 emitBackup(skip);
-                emitRM(JZR, 3, size, 7, "Jump around the THEN if false [backpatch]");
+                if (!hasElse)
+                    size--;
+                emitRM(JZR, 3, size , 7, "Jump around the THEN if false [backpatch]");
                 emitSkip(size);
                 int here = emitSkip(0);
 
-                emitComment("ELSE");
-                generateExpression(node->children[2]);
-                int endif = emitSkip(0);
-                emitBackup(here - 1);
-                
-                emitRM(LDA, 7, endif - here, 7, "Jump around the ELSE [backpatch]");
-                emitBackup(endif);
+                if (hasElse) {
+                    emitComment("ELSE");
+                    doCodeGeneration(node->children[2]);
+                    int endif = emitSkip(0);
+                    emitBackup(here - 1);
+                    
+                    emitRM(LDA, 7, endif - here, 7, "Jump around the ELSE [backpatch]");
+                    emitBackup(endif);
+                }
 
                 emitComment("ENDIF");
+            }
+            break;
+
+        case nodes::WhileStatement: {
+                int skip;
+                int start;
+                int outerLoopStart = recentLoopStart;
+                bool me = false;
+                emitComment("WHILE");
+                start = emitSkip(0);
+                recentLoopStart = start;
+                doCodeGeneration(node->children[0]);
+                emitRM("JNZ", 3, 1, 7, "Jump to while part");
+                skip = emitSkip(1);
+                emitComment("DO");
+                doCodeGeneration(node->children[1]);
+                int end = emitSkip(0);
+                emitRM(LDA, 7, -(end -  start + 1), 7, "go to beginning of loop");
+                emitBackup(skip);
+                emitRM(LDA, 7, end - emitSkip(0), 7, "Jump past loop [backpatch]");
+                emitBackup(end + 1);
+                recentLoopStart = outerLoopStart;
+                emitComment("ENDWHILE");
+            }
+            break;
+
+        case nodes::Break: {
+                emitComment("BREAK");
+                emitRM(LDA, 7, -(emitSkip(0) - recentLoopStart - 1), 7, "break"); 
             }
             break;
 
@@ -341,13 +382,19 @@ void doCodeGeneration(Node* node) {
                 emitRM(LD, 3, -2, 1, "Load parameter");
             }
             break;
+        case nodes::Identifier:
+            _loadVariable(node);
+            break;
         case nodes::IncrementAssignment:
         case nodes::Operator:
         case nodes::FunctionCall:
+        case nodes::Variable:
+        case nodes::Constant:
         case nodes::Assignment:
             emitComment("EXPRESSION");
             generateExpression(node);
             break;
+
 
         case nodes::ReturnStatement:
         case nodes::Return:
