@@ -12,7 +12,7 @@ ASSN=7 small
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 SUBRESULT=result.html
 
-CFLAGS=-Wno-write-strings
+CFLAGS=-Wno-write-strings -std=c++11
 DFLAGS=-g -Wall
 
 FLEX=$(BIN).l

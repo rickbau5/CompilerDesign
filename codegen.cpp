@@ -21,9 +21,40 @@ bool onRight;
 
 int tmpStack = 0;
 
+bool _isGlobal(Node* node) {
+    return !strcmp(node->ref, "Global");
+}
+
+bool _isParam(Node* node) {
+    return !strcmp(node->ref, "Param");
+}
+
+int _varRegister(Node* node) {
+    return _isGlobal(node) ? 0 : 1;
+}
+
 void _storeVariable(Node* node) {
-    int s = !strcmp(node->ref, "Global") ? 0 : 1;
-    emitRM(ST, 3, node->loc, s, "Store variable", (char*) node->tokenString);
+    emitRM(ST, 3, node->loc, _varRegister(node), "Store variable", (char*) node->tokenString);
+}
+
+void _loadBaseArray(Node* node, int reg) {
+    char* instruction = (char*)(_isParam(node) ? LD : LDA);
+    emitRM(instruction, reg, node->loc, _varRegister(node), "Load address of base of array", (char*) node->tokenString);
+}
+
+void _loadVariable(Node* node) {
+    if (node->isArray) {
+        _loadBaseArray(node, 3);
+    } else {
+        emitRM(LD, 3, node->loc, _varRegister(node), "Load variable", (char*) node->tokenString);
+    }
+}
+
+void _storeArraySize(Node* node) {
+    if (node->isArray) {
+        emitRM(LDC, 3, node->arraySize, 6, "load size of array", (char*) node->tokenString);
+        emitRM(ST, 3, node->loc + 1, _varRegister(node), "save size of array", (char*) node->tokenString);
+    }
 }
 
 void generateExpression(Node* expr) {
@@ -37,14 +68,14 @@ void generateExpression(Node* expr) {
     switch (expr->nodeType) {
         case nodes::FunctionCall: {
                 Node* function = (Node*)symbolTable.lookup(expr->tokenString);
-                emitCommentRight("Begin call to", (char*) expr->tokenString);
+                emitCommentRight("Begin call to ", (char*) expr->tokenString);
 
                 emitRM(ST, 1, framePointer - tmpStack, 1, "Store old fp in ghost frame");
                 framePointer -= 2; // Advance framepointer
                 int index = 1;
                 for (Node* n = expr->children[0]; n != NULL; n = n->sibling) {
                     if (n->nodeType == nodes::Variable) {
-                        emitRM(LD, 3, n->loc, 1, "Load variable", (char*) n->tokenString);
+                        _loadVariable(n);
                         emitRM(ST, 3, framePointer - tmpStack, 1, "Store parameter");
                     } else {
                         char tmp[10];
@@ -125,7 +156,7 @@ void generateExpression(Node* expr) {
                     emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
                     handled = true;
                 } else {
-                    emitRM(LD, 3, left->loc, 1, "Load variable", (char*)left->tokenString);
+                    _loadVariable(expr);
                     switch (expr->tokenData->tokenClass) {
                         case SUBOP:
                             emitRM(LDC, 4, 0, 6, "Load 0");
@@ -143,17 +174,16 @@ void generateExpression(Node* expr) {
         case nodes::Constant:
             if (!strcmp(expr->returnType, "bool")) {
                 emitRM(LDC, 3, expr->tokenData->bval ? 1 : 0, 6, "Load Boolean constant");
-            
-            } else if (!strcmp(expr->returnType, "integer")) {
+            } else if (!strcmp(expr->returnType, "int")) {
                 emitRM(LDC, 3, expr->tokenData->ival, 6, "Load integer constant");
             } else {
-                emitRM(LDC, 3, expr->tokenData->cval, 6, "Load character constant"); 
+                emitRM(LDC, 3, expr->tokenData->cval, 6, "Load character constant");
             }
             handled = true;
             break;
         case nodes::Identifier:
         case nodes::Variable:
-            emitRM(LD, 3, expr->loc, 1, "Load variable", (char*)expr->tokenString);
+            _loadVariable(expr);
             handled = true;
             break;
 
@@ -179,7 +209,7 @@ void generateExpression(Node* expr) {
                             emitRM(LDC, 3, right->intValue, 6, "Load integer constant");
                             _storeVariable(left);
                         } else if (right->nodeType == nodes::Identifier) {
-                            emitRM(LD, 3, right->loc, 1, "Load variable", (char*) right->tokenString);
+                            _loadVariable(right);
                             _storeVariable(left);
                         } else {
                             onRight = true;
@@ -196,25 +226,26 @@ void generateExpression(Node* expr) {
                     } else {
                         generateExpression(left);
                         generateExpression(right);
+                        Node* leftChild = left->children[0];
 
                         if (left->tokenData->tokenClass == LBRACKET) {
-                            emitRM(LD, 4, -15, 1, "Restore index");
-                            emitRM(LDA, 5, left->children[0]->loc, 1, "Load address of base of array", (char*) left->children[0]->tokenString);
+                            emitRM(LD, 4, framePointer, 1, "Restore index");
+                            _loadBaseArray(leftChild, 5);
                             emitRO(SUB, 5, 5, 4, "Compute offset of value");
                         }
-                        emitRM(ST, 3, 0, 5, "Store variable", (char*)left->children[0]->tokenString);
+                        emitRM(ST, 3, 0, 5, "Store variable", (char*)leftChild->tokenString);
                     }
                 }
                 break;
             case LBRACKET: {
                     if (onRight) {
-                        emitRM(LDA, 3, left->loc, 1, "Load address of base of array");
+                        _loadBaseArray(left, 3);
                         emitRM(ST, 3, framePointer, 1, "Save left side");
                         --framePointer;
                     }
                     generateExpression(right);
                     if (!onRight)
-                        emitRM(ST, 3, -15, 1, "Save index");
+                        emitRM(ST, 3, framePointer, 1, "Save index");
                     else 
                         framePointer++;
                      
@@ -270,10 +301,7 @@ void doCodeGeneration(Node* node) {
                 int before = framePointer;
                 emitComment("COMPOUND");
                 for (Node* n = node->children[0]; n != NULL; n = n->sibling) {
-                    if (n->isArray) {
-                        emitRM(LDC, 3, n->arraySize, 6, "load size of array", (char*) n->tokenString);
-                        emitRM(ST, 3, -4, 1, "save size of array", (char*) n->tokenString);
-                    }
+                    _storeArraySize(n);
                 }
                 emitComment("Compound Body");
                 doCodeGeneration(node->children[1]);
@@ -333,6 +361,25 @@ void doCodeGeneration(Node* node) {
     doCodeGeneration(node->sibling);
 }
 
+void initGlobals() {
+    auto globalFunction = [](std::string name, void* data) {
+        Node* node = (Node*)data;
+        switch(node->nodeType) {
+            case nodes::Function:
+                // emitComment("Nothing to do for function", (char*) name.c_str());
+                break;
+            case nodes::Variable:
+                _storeArraySize(node);
+                break;
+            default:
+                emitComment("No behavior defined for", (char*) name.c_str());
+                break;
+        }
+    };
+
+    symbolTable.applyToAllGlobal(globalFunction);
+}
+
 void genInit(int endOfGlobal) {
     emitComment("INIT");
 
@@ -341,6 +388,7 @@ void genInit(int endOfGlobal) {
     emitRM(ST, 1, 0, 1, "store old fp (point to self)");
 
     emitComment("INIT GLOBALS AND STATICS");
+    initGlobals();
     emitComment("END INIT GLOBALS AND STATICS");
 
     Node* mainFunc = (Node*)symbolTable.lookup("main");
