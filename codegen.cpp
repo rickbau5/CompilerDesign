@@ -12,6 +12,7 @@
 #define LDA "LDA"
 #define LDC "LDC"
 #define SUB "SUB"
+#define JZR "JZR"
 
 void doCodeGeneration(Node*);
 
@@ -19,6 +20,11 @@ int framePointer;
 bool onRight;
 
 int tmpStack = 0;
+
+void _storeVariable(Node* node) {
+    int s = !strcmp(node->ref, "Global") ? 0 : 1;
+    emitRM(ST, 3, node->loc, s, "Store variable", (char*) node->tokenString);
+}
 
 void generateExpression(Node* expr) {
     if (expr == NULL) // Unary operators
@@ -135,12 +141,30 @@ void generateExpression(Node* expr) {
             break;
 
         case nodes::Constant:
-            emitRM(LDC, 3, expr->tokenData->ival, 6, "Load integer constant");
+            if (!strcmp(expr->returnType, "bool")) {
+                emitRM(LDC, 3, expr->tokenData->bval ? 1 : 0, 6, "Load Boolean constant");
+            
+            } else if (!strcmp(expr->returnType, "integer")) {
+                emitRM(LDC, 3, expr->tokenData->ival, 6, "Load integer constant");
+            } else {
+                emitRM(LDC, 3, expr->tokenData->cval, 6, "Load character constant"); 
+            }
             handled = true;
             break;
         case nodes::Identifier:
         case nodes::Variable:
             emitRM(LD, 3, expr->loc, 1, "Load variable", (char*)expr->tokenString);
+            handled = true;
+            break;
+
+        case nodes::ReturnStatement:
+        case nodes::Return:
+            emitComment("RETURN");
+            generateExpression(expr->children[0]);
+            emitRM(LDA, 2, 0, 3, "Copy result to rt register");
+            emitRM(LD, 3, -1, 1, "Load return address");
+            emitRM(LD, 1, 0, 1, "Adjust fp");
+            emitRM(LDA, 7, 0, 3, "Return");
             handled = true;
             break;
         default:
@@ -153,10 +177,10 @@ void generateExpression(Node* expr) {
                     if (left->nodeType == nodes::Identifier) {
                         if (right->nodeType == nodes::Constant) {
                             emitRM(LDC, 3, right->intValue, 6, "Load integer constant");
-                            emitRM(ST, 3, left->loc, 1, "Store variable", (char*) left->tokenString);
+                            _storeVariable(left);
                         } else if (right->nodeType == nodes::Identifier) {
                             emitRM(LD, 3, right->loc, 1, "Load variable", (char*) right->tokenString);
-                            emitRM(ST, 3, left->loc, 1, "Store variable", (char*) left->tokenString);
+                            _storeVariable(left);
                         } else {
                             onRight = true;
                             generateExpression(right);
@@ -166,7 +190,7 @@ void generateExpression(Node* expr) {
                                 emitRM(LD, 4, framePointer, 1, "Load left into ac1");
                                 emitRO(SUB, 3, 4, 3, "compute location from index");
                                 emitRM(LD, 3, 0, 3, "Load array element");
-                                emitRM(ST, 3, left->loc, 1, "Store variable", (char*) left->tokenString);
+                                _storeVariable(left);
                             }
                         }
                     } else {
@@ -199,13 +223,14 @@ void generateExpression(Node* expr) {
             case INC: {
                     emitRM(LD, 3, left->loc, 1, "load lhs variable", (char*) left->tokenString);
                     emitRM(LDA, 3, 1, 3, "increment value of", (char*) left->tokenString);
-                    emitRM(ST, 3, left->loc, 1, "Store variable", (char*) left->tokenString);
+                    _storeVariable(left);
+                   
                     break;
                 }
             case DEC: {
                     emitRM(LD, 3, left->loc, 1, "load lhs variable", (char*) left->tokenString);
                     emitRM(LDA, 3, -1, 3, "decrement value of", (char*) left->tokenString);
-                    emitRM(ST, 3, left->loc, 1, "Store variable", (char*) left->tokenString);
+                    _storeVariable(left);
                     break;
                 }
             default:
@@ -258,12 +283,28 @@ void doCodeGeneration(Node* node) {
             break;
 
         case nodes::IfStatement: {
+                int skip;
+                int size;
+
                 emitComment("IF");
                 generateExpression(node->children[0]);
+                skip = emitSkip(1);
                 emitComment("THEN");
-                generateExpression(node->children[0]);
+                generateExpression(node->children[1]);
+                size = emitSkip(0) - skip;
+                emitBackup(skip);
+                emitRM(JZR, 3, size, 7, "Jump around the THEN if false [backpatch]");
+                emitSkip(size);
+                int here = emitSkip(0);
+
                 emitComment("ELSE");
-                generateExpression(node->children[0]);
+                generateExpression(node->children[2]);
+                int endif = emitSkip(0);
+                emitBackup(here - 1);
+                
+                emitRM(LDA, 7, endif - here, 7, "Jump around the ELSE [backpatch]");
+                emitBackup(endif);
+
                 emitComment("ENDIF");
             }
             break;
@@ -281,14 +322,8 @@ void doCodeGeneration(Node* node) {
             break;
 
         case nodes::ReturnStatement:
-            emitComment("RETURN");
-            generateExpression(node->children[0]);
-            emitRM(LDA, 2, 0, 3, "Copy result to rt register");
-
         case nodes::Return:
-            emitRM(LD, 3, -1, 1, "Load return address");
-            emitRM(LD, 1, 0, 1, "Adjust fp");
-            emitRM(LDA, 7, 0, 3, "Return");
+            generateExpression(node);
 
             break;
         default:
