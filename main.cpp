@@ -57,7 +57,6 @@ void handleArgs(int argc, char **argv, char *fileHandle) {
 
 void getFileName(char*, char*);
 
-
 int main (int argc, char **argv) {
     printf(""); // WTF
 
@@ -92,6 +91,7 @@ int main (int argc, char **argv) {
         }
         
         char name[strlen(fileHandle)];
+        char pathTo[strlen(fileHandle)];
         getFileName(fileHandle, name);
         char outputPath[strlen(fileHandle) + 3];
         sprintf(outputPath, "%s.tm", name);
@@ -114,9 +114,10 @@ int main (int argc, char **argv) {
 
 void getFileName(char* path, char* name) {
     bool flag = false;
+    bool slash = false;
     int ext = 0;
     int i;
-    for (i = strlen(path); i > 0 ; i--) {
+    for (i = strlen(path); i >= 0 ; i--) {
         if (!flag) {
             if (path[i] == '.') {
                 flag = true;
@@ -126,11 +127,15 @@ void getFileName(char* path, char* name) {
             }
         } else if (path[i] != '/'){
             name[i] = path[i];
-        } else if (path[i] == '/' || i == 1) {
+        } else if (path[i] == '/') {
+            slash = true;
             break;
         }
     }
+    i++;
+    std::cout << std::endl;
     int end = strlen(path) - ext - 1;
-    int start = i + 1;
+    int start = i;
     memmove(&name[0], &name[start], (end - i + 1) * sizeof(char));
+    name[(end-i+1)] = '\0';
 }

@@ -16,14 +16,22 @@
 #define LDC "LDC"
 #define SUB "SUB"
 #define JZR "JZR"
+#define ADD "ADD"
+#define DIV "DIV"
+#define MUL "MUL"
 
 void doCodeGeneration(Node*);
+void generateExpression(Node*);
 
 bool onRight;
 
 int tOffset = 0;
 int fOffset = 0;
 int framePointer = 0;
+
+int _offset() {
+    return framePointer + tOffset;
+}
 
 void _pfp() {
     emitCommentNumber("framePointer =", framePointer);
@@ -86,8 +94,36 @@ void _initializeVariable(Node* node) {
     emitRM(ST, 3, node->loc, _varRegister(node), "Store variable", (char*)node->tokenString);
 }
 
-int _offset() {
-    return framePointer + tOffset;
+void _computeArrayElement() {
+    emitRM(LD, 4, _offset(), 1, "Load left into ac1");
+    emitRO(SUB, 3, 4, 3, "compute location from index");
+    emitRM(LD, 3, 0, 3, "Load array element");
+}
+
+void _computeArrayOffset(Node* node) {
+    emitRM(LD, 4, framePointer, 1, "Restore index");
+    _loadBaseArray(node, 5);
+    emitRO(SUB, 5, 5, 4, "Compute offset of value");
+}
+
+void _assignmentMutator(Node* node, char* op) {
+    bool flag = onRight;
+    if (flag)
+        onRight = false;
+    generateExpression(node->children[0]);
+    generateExpression(node->children[1]);
+    if (flag)
+        onRight = true;
+    char* name;
+    if (node->children[0]->tokenData->tokenClass == LBRACKET) {
+        _computeArrayOffset(node->children[0]->children[0]);
+        name = (char*) node->children[0]->children[0]->tokenString;
+    } else {
+        name = (char*) node->children[0]->tokenString;
+    }
+    emitRM(LD, 4, 0, 5, "load lhs variable", name);
+    emitRO(op, 3, 4, 3, "op", (char*) node->tokenString);
+    emitRM(ST, 3, 0, 5, "Store variable", name);
 }
 
 void generateExpression(Node* expr) {
@@ -111,7 +147,9 @@ void generateExpression(Node* expr) {
                     char tmp[10];
                     sprintf(tmp, "%d", index);
                     emitCommentRight("Load param", tmp);
+                    onRight = true;
                     generateExpression(n);
+                    onRight = false;
                     emitRM(ST, 3, _offset() - (index - 1), 1, "Store parameter");
                     index++;
                 }
@@ -136,13 +174,13 @@ void generateExpression(Node* expr) {
                     bool save = true;
                     switch (expr->tokenData->tokenClass) {
                         case ADDOP:
-                            sprintf(opString, "%s", "ADD");
+                            sprintf(opString, "%s", ADD);
                             break;
                         case MULOP:
-                            sprintf(opString, "%s", "MUL");
+                            sprintf(opString, "%s", MUL);
                             break;
                         case DIVOP:
-                            sprintf(opString, "%s", "DIV");
+                            sprintf(opString, "%s", DIV);
                             break;
                         case SUBOP:
                             sprintf(opString, "%s", SUB);
@@ -165,6 +203,12 @@ void generateExpression(Node* expr) {
                         case NOTEQ:
                             sprintf(opString, "%s", "TNE");
                             break;
+                        case OR:
+                            sprintf(opString, "%s", "OR");
+                            break;
+                        case AND:
+                            sprintf(opString, "%s", "AND");
+                            break;
 
                         case LBRACKET:
                             goto exit;
@@ -176,12 +220,14 @@ void generateExpression(Node* expr) {
 
                     generateExpression(left);
                     if (save) {
-                        emitRM(ST, 3, framePointer + tOffset, 1, "Save left side");
+                        emitRM(ST, 3, _offset(), 1, "Save left side");
                     }
                     --tOffset;
+                    onRight = true;
                     generateExpression(right);
+                    onRight = false;
                     ++tOffset;
-                    emitRM(LD, 4, framePointer + tOffset, 1, "Load left into ac1");
+                    emitRM(LD, 4, _offset(), 1, "Load left into ac1");
                     emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
                     handled = true;
                 } else {
@@ -190,6 +236,9 @@ void generateExpression(Node* expr) {
                         case SUBOP:
                             emitRM(LDC, 4, 0, 6, "Load 0");
                             emitRO(SUB, 3, 4, 3, "Op unary", (char*) expr->tokenString);
+                            break;
+                        case MULOP:
+                            emitRM(LD, 3, 1, 3, "Load array size");
                             break;
                         default:
                             emitComment("Unknown unary op:", (char*)expr->tokenString);
@@ -213,12 +262,35 @@ void generateExpression(Node* expr) {
         case nodes::ReturnStatement:
         case nodes::Return:
             emitComment("RETURN");
+            onRight = true;
             generateExpression(expr->children[0]);
+            onRight = false;
             emitRM(LDA, 2, 0, 3, "Copy result to rt register");
             emitRM(LD, 3, -1, 1, "Load return address");
             emitRM(LD, 1, 0, 1, "Adjust fp");
             emitRM(LDA, 7, 0, 3, "Return");
             handled = true;
+            break;
+
+        case nodes::AddAssignment: {
+                _assignmentMutator(expr, ADD);
+                handled = true;
+            }
+            break;
+        case nodes::SubAssignment: {
+                _assignmentMutator(expr, SUB);
+                handled = true;
+            }
+            break;
+        case nodes::MulAssignment: {
+                _assignmentMutator(expr, MUL);
+                handled = true;
+            }
+            break;
+        case nodes::DivAssignment: {
+                _assignmentMutator(expr, DIV);
+                handled = true;
+            }
             break;
         default:
             break;
@@ -232,29 +304,29 @@ void generateExpression(Node* expr) {
                             _loadConstant(right);
                             _storeVariable(left);
                         } else if (right->nodeType == nodes::Identifier) {
-                            _loadVariable(right);
+                            onRight = true;
+                            generateExpression(right);
+                            onRight = false;
                             _storeVariable(left);
                         } else {
                             onRight = true;
                             generateExpression(right);
                             onRight = false;
-
-                            if (right->tokenData->tokenClass == LBRACKET) {
-                                emitRM(LD, 4, _offset(), 1, "Load left into ac1");
-                                emitRO(SUB, 3, 4, 3, "compute location from index");
-                                emitRM(LD, 3, 0, 3, "Load array element");
-                                _storeVariable(left);
-                            }
+                            _storeVariable(left);
                         }
                     } else {
                         generateExpression(left);
+                        onRight = true;
+                        if (left->tokenData->tokenClass == LBRACKET)
+                            tOffset--;
                         generateExpression(right);
+                        if (left->tokenData->tokenClass == LBRACKET)
+                            tOffset++;
+                        onRight = false;
                         Node* leftChild = left->children[0];
 
                         if (left->tokenData->tokenClass == LBRACKET) {
-                            emitRM(LD, 4, framePointer, 1, "Restore index");
-                            _loadBaseArray(leftChild, 5);
-                            emitRO(SUB, 5, 5, 4, "Compute offset of value");
+                            _computeArrayOffset(leftChild);
                         }
                         emitRM(ST, 3, 0, 5, "Store variable", (char*)leftChild->tokenString);
                     }
@@ -264,14 +336,16 @@ void generateExpression(Node* expr) {
             case LBRACKET: {
                     if (onRight) {
                         _loadBaseArray(left, 3);
-                        emitRM(ST, 3, framePointer, 1, "Save left side");
-                        --framePointer;
+                        emitRM(ST, 3, _offset(), 1, "Save left side");
+                        --tOffset;
                     }
                     generateExpression(right);
                     if (!onRight)
-                        emitRM(ST, 3, framePointer, 1, "Save index");
-                    else 
-                        framePointer++;
+                        emitRM(ST, 3, _offset(), 1, "Save index");
+                    else {
+                        tOffset++;
+                        _computeArrayElement();
+                    }
                      
                     break;
                 }
@@ -431,15 +505,13 @@ void doCodeGeneration(Node* node) {
         case nodes::FunctionCall:
         case nodes::Constant:
         case nodes::Assignment:
+        case nodes::AddAssignment:
             emitComment("EXPRESSION");
             generateExpression(node);
             break;
-
-
         case nodes::ReturnStatement:
         case nodes::Return:
             generateExpression(node);
-
             break;
         default:
             emitComment("Unimplemented", (char*) node->tokenString);
@@ -453,7 +525,7 @@ void initGlobals() {
 
     std::vector<void*> globals = symbolTable.getAllGlobal();
 
-    for (auto it = globals.begin(); it != globals.end(); it++) {
+    for (std::vector<void*>::iterator it = globals.begin(); it != globals.end(); it++) {
         Node* node = (Node*)*it;
         switch(node->nodeType) {
             case nodes::Function:

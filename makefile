@@ -8,11 +8,11 @@ TAR=tar -cvf
 UNTAR=tar -xvf
 
 ME=boss
-ASSN=7 small
+ASSN=7
 FILE=$(ROOT)/$(TMP)/$(SUBT)
 SUBRESULT=result.html
 
-CFLAGS=-Wno-write-strings -std=c++11
+CFLAGS=-Wno-write-strings
 DFLAGS=-g -Wall
 
 FLEX=$(BIN).l
