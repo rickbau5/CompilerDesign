@@ -58,7 +58,7 @@ void handleArgs(int argc, char **argv, char *fileHandle) {
 void getFileName(char*, char*);
 
 int main (int argc, char **argv) {
-    printf(""); // WTF
+    //printf(""); // WTF
 
     char fileHandle[100];
     handleArgs(argc, argv, fileHandle);
@@ -100,7 +100,7 @@ int main (int argc, char **argv) {
         codeGen(root, globalPointer);
 
         //status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
-        printf("Offset for end of global space: %d\n", globalPointer);
+        //printf("Offset for end of global space: %d\n", globalPointer);
         printf("Source: %s.c-  Object: %s.tm\n", name, name);
     } else {
         //status = EXIT_FAILURE; 

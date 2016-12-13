@@ -106,24 +106,41 @@ void _computeArrayOffset(Node* node) {
     emitRO(SUB, 5, 5, 4, "Compute offset of value");
 }
 
+bool _bothAreArray(Node* a, Node* b) {
+    return (a->isArray && b->isArray) || (b->tokenData->tokenClass == LBRACKET && a->tokenData->tokenClass == LBRACKET);
+}
+
 void _assignmentMutator(Node* node, char* op) {
-    bool flag = onRight;
-    if (flag)
-        onRight = false;
-    generateExpression(node->children[0]);
-    generateExpression(node->children[1]);
-    if (flag)
-        onRight = true;
-    char* name;
-    if (node->children[0]->tokenData->tokenClass == LBRACKET) {
-        _computeArrayOffset(node->children[0]->children[0]);
-        name = (char*) node->children[0]->children[0]->tokenString;
-    } else {
-        name = (char*) node->children[0]->tokenString;
+    Node* left = node->children[0];
+    Node* right = node->children[1];
+    if (left->nodeType != nodes::Identifier) {
+        bool flag = onRight;
+        if (flag)
+            onRight = false;
+        generateExpression(left);
+        if (flag)
+            onRight = true;
     }
-    emitRM(LD, 4, 0, 5, "load lhs variable", name);
+    onRight = true;
+    bool both = _bothAreArray(left, right);
+    if (both) {
+        tOffset--;
+    }
+    generateExpression(right);
+    if (both) {
+        tOffset++;
+    }
+    onRight = false;
+    char* name;
+    if (left->tokenData->tokenClass == LBRACKET) {
+        _computeArrayOffset(left->children[0]);
+        name = (char*) left->children[0]->tokenString;
+    } else {
+        name = (char*) left->tokenString;
+    }
+    emitRM(LD, 4, left->loc, _varRegister(left), "load lhs variable", name);
     emitRO(op, 3, 4, 3, "op", (char*) node->tokenString);
-    emitRM(ST, 3, 0, 5, "Store variable", name);
+    emitRM(ST, 3, left->loc, _varRegister(left), "Store variable", name);
 }
 
 void generateExpression(Node* expr) {
@@ -262,13 +279,19 @@ void generateExpression(Node* expr) {
         case nodes::ReturnStatement:
         case nodes::Return:
             emitComment("RETURN");
-            onRight = true;
-            generateExpression(expr->children[0]);
-            onRight = false;
-            emitRM(LDA, 2, 0, 3, "Copy result to rt register");
-            emitRM(LD, 3, -1, 1, "Load return address");
-            emitRM(LD, 1, 0, 1, "Adjust fp");
-            emitRM(LDA, 7, 0, 3, "Return");
+            if (expr->children[0] != NULL) {
+                onRight = true;
+                generateExpression(expr->children[0]);
+                onRight = false;
+                emitRM(LDA, 2, 0, 3, "Copy result to rt register");
+                emitRM(LD, 3, -1, 1, "Load return address");
+                emitRM(LD, 1, 0, 1, "Adjust fp");
+                emitRM(LDA, 7, 0, 3, "Return");
+            } else {
+                emitRM(LD, 3, -1, 1, "Load return address");
+                emitRM(LD, 1, 0, 1, "Adjust fp");
+                emitRM(LDA, 7, 0, 3, "Return");
+            }
             handled = true;
             break;
 
@@ -350,14 +373,14 @@ void generateExpression(Node* expr) {
                     break;
                 }
             case INC: {
-                    emitRM(LD, 3, left->loc, 1, "load lhs variable", (char*) left->tokenString);
+                    emitRM(LD, 3, left->loc, _varRegister(left), "load lhs variable", (char*) left->tokenString);
                     emitRM(LDA, 3, 1, 3, "increment value of", (char*) left->tokenString);
                     _storeVariable(left);
                    
                     break;
                 }
             case DEC: {
-                    emitRM(LD, 3, left->loc, 1, "load lhs variable", (char*) left->tokenString);
+                    emitRM(LD, 3, left->loc, _varRegister(left), "load lhs variable", (char*) left->tokenString);
                     emitRM(LDA, 3, -1, 3, "decrement value of", (char*) left->tokenString);
                     _storeVariable(left);
                     break;
@@ -502,10 +525,19 @@ void doCodeGeneration(Node* node) {
             }
         case nodes::IncrementAssignment:
         case nodes::Operator:
+            if (node->tokenData->tokenClass == LBRACKET) {
+                onRight = true;
+                generateExpression(node);
+                onRight = false;
+                break;
+            }
         case nodes::FunctionCall:
         case nodes::Constant:
         case nodes::Assignment:
         case nodes::AddAssignment:
+        case nodes::SubAssignment:
+        case nodes::MulAssignment:
+        case nodes::DivAssignment:
             emitComment("EXPRESSION");
             generateExpression(node);
             break;
