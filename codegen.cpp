@@ -20,6 +20,7 @@
 #define DIV "DIV"
 #define MUL "MUL"
 #define XOR "XOR"
+#define RND "RND"
 
 void doCodeGeneration(Node*);
 void generateExpression(Node*);
@@ -59,7 +60,8 @@ int _varRegister(Node* node) {
 }
 
 void _storeVariable(Node* node) {
-    emitRM(ST, 3, node->loc, _varRegister(node), "Store variable", (char*) node->tokenString);
+    int reg = _varRegister(node);
+    emitRM(ST, 3, node->loc, reg, "Store variable", (char*) node->tokenString);
 }
 
 void _loadBaseArray(Node* node, int reg) {
@@ -154,6 +156,41 @@ void _assignmentMutator(Node* node, char* op) {
     emitRM(ST, 3, left->loc, varReg, "Store variable", name);
 }
 
+void _unaryMutator(Node* node, char* op) {
+    bool isArray = node->tokenData->tokenClass == LBRACKET;
+    
+    Node* n = node;
+    char *name;
+    if (isArray) {
+        name = (char*) node->children[0]->tokenString;
+        n = node->children[0];
+        bool flag = onRight;
+        if (!flag)
+            onRight = true;
+        generateExpression(node->children[1]);
+        if (!flag)
+            onRight = false;
+        _loadBaseArray(node->children[0], 5);
+        emitRO(SUB, 5, 5, 3, "Compute offset of value");
+        emitRM(LD, 3, 0, 5, "load lhs variable", name);
+    } else {
+        name = (char*) node->tokenString;
+        emitRM(LD, 3, node->loc, _varRegister(node), "load lhs variable", name);
+    }
+
+    if (!strcmp(ADD, op)) {
+        emitRM(LDA, 3, 1, 3, "increment value of", name);
+    } else {
+        emitRM(LDA, 3, -1, 3, "decrement value of", name);
+    }
+
+    if (isArray) {
+        emitRM(ST, 3, 0, 5, "Store variable", name);
+    } else {
+        emitRM(ST, 3, node->loc, _varRegister(node), "Store variable", name);
+    }
+}
+
 void generateExpression(Node* expr) {
     if (expr == NULL) // Unary operators
         return;
@@ -178,13 +215,19 @@ void generateExpression(Node* expr) {
                     bool flag = onRight;
                     if (!flag)
                         onRight = true;
+
+                    if (index > 1) 
+                        --framePointer;
                     generateExpression(n);
+
                     if (!flag)
                         onRight = false;
-                    emitRM(ST, 3, _offset() - (index - 1), 1, "Store parameter");
+                    emitRM(ST, 3, _offset(), 1, "Store parameter");
                     index++;
                 }
                 framePointer += 2;
+                if (index > 1)
+                    framePointer += index - 2;
                 //tOffset += index - 1;
                 emitCommentRight("Jump to", (char*) function->tokenString);
                 emitRM(LDA, 1, _offset(), 1, "Load address of new frame");
@@ -291,6 +334,11 @@ void generateExpression(Node* expr) {
                         case NOT:
                             emitRM(LDC, 4, 1, 6, "Load 1");
                             emitRO(XOR, 3, 3, 4, "Op NOT");
+                            break;
+                        case QUEOP:
+                            emitRO(RND, 3, 3, 6, "Op ?");
+                            break;
+
                         default:
                             emitComment("Unknown unary op:", (char*)expr->tokenString);
                             break;
@@ -409,27 +457,30 @@ void generateExpression(Node* expr) {
                         emitRM(ST, 3, _offset(), 1, "Save left side");
                         --tOffset;
                     }
+                    bool flag = onRight;
+                    if (!flag && right->children[0] != NULL && right->tokenData->tokenClass == LBRACKET)
+                        onRight = true;
+                    emitComment("onRight =", (char*)(onRight ? "true" : "false"));
+                    emitComment("right =", (char*) right->tokenString);
                     generateExpression(right);
+                    if (!flag)
+                        onRight = false;
                     if (!onRight)
                         emitRM(ST, 3, _offset(), 1, "Save index");
                     else {
                         tOffset++;
                         _computeArrayElement();
                     }
+
                      
                     break;
                 }
             case INC: {
-                    emitRM(LD, 3, left->loc, _varRegister(left), "load lhs variable", (char*) left->tokenString);
-                    emitRM(LDA, 3, 1, 3, "increment value of", (char*) left->tokenString);
-                    _storeVariable(left);
-                   
+                    _unaryMutator(left, ADD); 
                     break;
                 }
             case DEC: {
-                    emitRM(LD, 3, left->loc, _varRegister(left), "load lhs variable", (char*) left->tokenString);
-                    emitRM(LDA, 3, -1, 3, "decrement value of", (char*) left->tokenString);
-                    _storeVariable(left);
+                    _unaryMutator(left, SUB); 
                     break;
                 }
             default:
@@ -541,8 +592,8 @@ void doCodeGeneration(Node* node) {
                 bool me = false;
                 emitComment("WHILE");
                 start = emitSkip(0);
-                recentLoopStart = start;
                 doCodeGeneration(node->children[0]);
+                recentLoopStart = emitSkip(0);
                 emitRM("JNZ", 3, 1, 7, "Jump to while part");
                 skip = emitSkip(1);
                 emitComment("DO");
@@ -559,7 +610,7 @@ void doCodeGeneration(Node* node) {
 
         case nodes::Break: {
                 emitComment("BREAK");
-                emitRM(LDA, 7, -(emitSkip(0) - recentLoopStart - 1), 7, "break"); 
+                emitRM(LDA, 7, -(emitSkip(0) - recentLoopStart), 7, "break"); 
             }
             break;
         case nodes::Identifier:
@@ -571,6 +622,7 @@ void doCodeGeneration(Node* node) {
                 break;
             }
         case nodes::IncrementAssignment:
+        case nodes::DecrementAssignment:
         case nodes::Operator:
             if (node->tokenData->tokenClass == LBRACKET) {
                 onRight = true;

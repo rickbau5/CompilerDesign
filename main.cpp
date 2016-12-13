@@ -89,19 +89,21 @@ int main (int argc, char **argv) {
         if (printTypedTree) {
             prettyPrintTreeWithInfo(root);
         }
-        
-        char name[strlen(fileHandle)];
-        char pathTo[strlen(fileHandle)];
-        getFileName(fileHandle, name);
-        char outputPath[strlen(fileHandle) + 3];
-        sprintf(outputPath, "%s.tm", name);
-        code = fopen(outputPath, "w");
 
-        codeGen(root, globalPointer);
+        if (numErrors == 0) {
+            char name[strlen(fileHandle)];
+            char pathTo[strlen(fileHandle)];
+            getFileName(fileHandle, name);
+            char outputPath[strlen(fileHandle) + 3];
+            sprintf(outputPath, "%s.tm", name);
+            code = fopen(outputPath, "w");
 
-        //status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
-        //printf("Offset for end of global space: %d\n", globalPointer);
-        printf("Source: %s.c-  Object: %s.tm\n", name, name);
+            codeGen(root, globalPointer);
+
+            //status = numErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+            //printf("Offset for end of global space: %d\n", globalPointer);
+            printf("Source: %s.c-  Object: %s.tm\n", name, name);
+        }
     } else {
         //status = EXIT_FAILURE; 
     }
