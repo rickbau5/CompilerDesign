@@ -19,6 +19,7 @@
 #define ADD "ADD"
 #define DIV "DIV"
 #define MUL "MUL"
+#define XOR "XOR"
 
 void doCodeGeneration(Node*);
 void generateExpression(Node*);
@@ -105,7 +106,7 @@ void _computeArrayElement() {
 }
 
 void _computeArrayOffset(Node* node) {
-    emitRM(LD, 4, framePointer, 1, "Restore index");
+    emitRM(LD, 4, _offset(), 1, "Restore index");
     _loadBaseArray(node, 5);
     emitRO(SUB, 5, 5, 4, "Compute offset of value");
 }
@@ -212,6 +213,9 @@ void generateExpression(Node* expr) {
                         case DIVOP:
                             sprintf(opString, "%s", DIV);
                             break;
+                        case MODOP:
+                            sprintf(opString, "%s", "MODOP");
+                            break;
                         case SUBOP:
                             sprintf(opString, "%s", SUB);
                             break;
@@ -261,7 +265,13 @@ void generateExpression(Node* expr) {
                         onRight = false;
                     ++tOffset;
                     emitRM(LD, 4, _offset(), 1, "Load left into ac1");
-                    emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
+                    if (!strcmp(opString, "MODOP")) {
+                        emitRO(DIV, 5, 4, 3, "OP %");
+                        emitRO(MUL, 5, 5, 3, "");
+                        emitRO(SUB, 3, 4, 5, "");
+                    } else {
+                        emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
+                    }
                     handled = true;
                 } else {
                     bool flag = onRight;
@@ -278,6 +288,9 @@ void generateExpression(Node* expr) {
                         case MULOP:
                             emitRM(LD, 3, 1, 3, "Load array size");
                             break;
+                        case NOT:
+                            emitRM(LDC, 4, 1, 6, "Load 1");
+                            emitRO(XOR, 3, 3, 4, "Op NOT");
                         default:
                             emitComment("Unknown unary op:", (char*)expr->tokenString);
                             break;
@@ -365,17 +378,21 @@ void generateExpression(Node* expr) {
                             _storeVariable(left);
                         }
                     } else {
-                        generateExpression(left);
-                            bool flag = onRight;
-                            if (!flag)
-                                onRight = true;
-                        if (left->tokenData->tokenClass == LBRACKET)
-                            tOffset--;
-                        generateExpression(right);
-                        if (left->tokenData->tokenClass == LBRACKET)
-                            tOffset++;
-                        if (!flag)
+                        bool flag = onRight;
+                        if (flag)
                             onRight = false;
+                        generateExpression(left);
+                        if (left->tokenData->tokenClass == LBRACKET) {
+                            tOffset--;
+                            onRight = true;
+                        }
+                        generateExpression(right);
+                        if (left->tokenData->tokenClass == LBRACKET) {
+                            tOffset++;
+                            onRight = false;
+                        }
+                        if (flag)
+                            onRight = true;
                         Node* leftChild = left->children[0];
 
                         if (left->tokenData->tokenClass == LBRACKET) {
@@ -392,9 +409,7 @@ void generateExpression(Node* expr) {
                         emitRM(ST, 3, _offset(), 1, "Save left side");
                         --tOffset;
                     }
-                    emitComment("Here", (char*)(onRight ? "true" : "false"));
                     generateExpression(right);
-                    emitComment("Saving", (char*)(onRight ? "true" : "false"));
                     if (!onRight)
                         emitRM(ST, 3, _offset(), 1, "Save index");
                     else {
