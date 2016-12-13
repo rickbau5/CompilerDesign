@@ -45,6 +45,10 @@ bool _isGlobal(Node* node) {
     return !strcmp(node->ref, "Global");
 }
 
+bool _isLocal(Node* node) {
+    return !strcmp(node->ref, "Local");
+}
+
 bool _isParam(Node* node) {
     return !strcmp(node->ref, "Param");
 }
@@ -138,9 +142,15 @@ void _assignmentMutator(Node* node, char* op) {
     } else {
         name = (char*) left->tokenString;
     }
-    emitRM(LD, 4, left->loc, _varRegister(left), "load lhs variable", name);
+    int varReg = 5;
+    if (_isGlobal(left)) {
+        varReg = 0;
+    } else if (_isLocal(left) || _isParam(left)) {
+        varReg = 1;
+    }
+    emitRM(LD, 4, left->loc, varReg, "load lhs variable", name);
     emitRO(op, 3, 4, 3, "op", (char*) node->tokenString);
-    emitRM(ST, 3, left->loc, _varRegister(left), "Store variable", name);
+    emitRM(ST, 3, left->loc, varReg, "Store variable", name);
 }
 
 void generateExpression(Node* expr) {
@@ -164,9 +174,12 @@ void generateExpression(Node* expr) {
                     char tmp[10];
                     sprintf(tmp, "%d", index);
                     emitCommentRight("Load param", tmp);
-                    onRight = true;
+                    bool flag = onRight;
+                    if (!flag)
+                        onRight = true;
                     generateExpression(n);
-                    onRight = false;
+                    if (!flag)
+                        onRight = false;
                     emitRM(ST, 3, _offset() - (index - 1), 1, "Store parameter");
                     index++;
                 }
@@ -235,20 +248,28 @@ void generateExpression(Node* expr) {
                             break;
                     }
 
+                    bool flag = onRight;
+                    if (!flag)
+                        onRight = true;
                     generateExpression(left);
                     if (save) {
                         emitRM(ST, 3, _offset(), 1, "Save left side");
                     }
                     --tOffset;
-                    onRight = true;
                     generateExpression(right);
-                    onRight = false;
+                    if (!flag)
+                        onRight = false;
                     ++tOffset;
                     emitRM(LD, 4, _offset(), 1, "Load left into ac1");
                     emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
                     handled = true;
                 } else {
-                    _loadVariable(expr->children[0]);
+                    bool flag = onRight;
+                    if (!flag)
+                        onRight = true;
+                    generateExpression(expr->children[0]);
+                    if (!flag)
+                        onRight = false;
                     switch (expr->tokenData->tokenClass) {
                         case SUBOP:
                             emitRM(LDC, 4, 0, 6, "Load 0");
@@ -327,25 +348,34 @@ void generateExpression(Node* expr) {
                             _loadConstant(right);
                             _storeVariable(left);
                         } else if (right->nodeType == nodes::Identifier) {
-                            onRight = true;
+                            bool flag = onRight;
+                            if (!flag)
+                                onRight = true;
                             generateExpression(right);
-                            onRight = false;
+                            if (!flag)
+                                onRight = false;
                             _storeVariable(left);
                         } else {
-                            onRight = true;
+                            bool flag = onRight;
+                            if (!flag)
+                                onRight = true;
                             generateExpression(right);
-                            onRight = false;
+                            if (!flag)
+                                onRight = false;
                             _storeVariable(left);
                         }
                     } else {
                         generateExpression(left);
-                        onRight = true;
+                            bool flag = onRight;
+                            if (!flag)
+                                onRight = true;
                         if (left->tokenData->tokenClass == LBRACKET)
                             tOffset--;
                         generateExpression(right);
                         if (left->tokenData->tokenClass == LBRACKET)
                             tOffset++;
-                        onRight = false;
+                        if (!flag)
+                            onRight = false;
                         Node* leftChild = left->children[0];
 
                         if (left->tokenData->tokenClass == LBRACKET) {
@@ -362,7 +392,9 @@ void generateExpression(Node* expr) {
                         emitRM(ST, 3, _offset(), 1, "Save left side");
                         --tOffset;
                     }
+                    emitComment("Here", (char*)(onRight ? "true" : "false"));
                     generateExpression(right);
+                    emitComment("Saving", (char*)(onRight ? "true" : "false"));
                     if (!onRight)
                         emitRM(ST, 3, _offset(), 1, "Save index");
                     else {
