@@ -172,6 +172,7 @@ varDeclaration: typeSpecifier varDeclList SEMI  {
                     s->nodeType = nodes::Variable;
                     s->returnType = $1->tokenString;
                     s->ref = (char*)"Global";
+                    s->inGlobal = true;
                 }
                 $$ = n;
 
@@ -183,6 +184,7 @@ varDeclaration: typeSpecifier varDeclList SEMI  {
                     s->nodeType = nodes::Variable;
                     s->returnType = (char*)"unknwown";
                     s->ref = (char*)"Global";
+                    s->inGlobal = true;
                 }
                 $$ = n;
               }
@@ -820,6 +822,8 @@ Node* newNode(nodes::NodeType type, TokenData* token) {
     node->loc = 0;
     node->ref = (char*)"None";
     node->hasInfo = type == nodes::Function || type == nodes::Variable || type == nodes::Parameter;
+
+    node->inGlobal = false;
 
     return node;
 }

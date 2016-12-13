@@ -130,6 +130,14 @@ void SymbolTable::applyToAllGlobal(void (*action)(std::string , void *))
     stack[0]->applyToAll(action);
 }
 
+std::vector<void*> SymbolTable::getAllGlobal() {
+    std::vector<void*> vec;
+    for (std::map<std::string , void *>::iterator it=stack[0]->symbols.begin(); it!=stack[0]->symbols.end(); it++) {
+        vec.push_back(it->second);
+    } 
+    return vec;
+}
+
 
 // Enter a scope
 void SymbolTable::enter(std::string name)                    

@@ -86,6 +86,7 @@ typedef struct treeNode {
     int  intValue;
 
     bool isIONode;
+    bool inGlobal;
 } Node;
 
 #endif

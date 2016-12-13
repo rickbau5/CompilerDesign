@@ -50,6 +50,10 @@ void emitCommentRight(char* c) {
     emitCommentRight(c, "");
 }
 
+void emitCommentNumber(char* c, int num) {
+    fprintf(code, "* %s %d\n", c, num);
+}
+
 // emitRO emits a REGISTER-ONLY TM instruction
 // op = the opcode
 // r = target register

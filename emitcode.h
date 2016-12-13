@@ -37,6 +37,7 @@ void emitComment(char *c);
 void emitComment(char *c, char *cc);
 void emitCommentRight(char *c, char *cc);
 void emitCommentRight(char *c);
+void emitCommentNumber(char *c, int num);
 
 void emitGoto(int d, int s, char *c);
 void emitGoto(int d, int s, char *c, char *cc);

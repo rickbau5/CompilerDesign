@@ -3,6 +3,9 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
+#include <vector>
+#include <map>
+
 #include "emitcode.h"
 #include "c-.h"
 #include "c-.tab.h"
@@ -16,10 +19,19 @@
 
 void doCodeGeneration(Node*);
 
-int framePointer;
 bool onRight;
 
-int tmpStack = 0;
+int tOffset = 0;
+int fOffset = 0;
+int framePointer = 0;
+
+void _pfp() {
+    emitCommentNumber("framePointer =", framePointer);
+}
+
+void _pto() {
+    emitCommentNumber("tOffset =", tOffset);
+}
 
 bool _isGlobal(Node* node) {
     return !strcmp(node->ref, "Global");
@@ -67,6 +79,17 @@ void _loadConstant(Node* node) {
     }
 }
 
+void _initializeVariable(Node* node) {
+    tOffset--;
+    doCodeGeneration(node->children[0]);
+    tOffset++;
+    emitRM(ST, 3, node->loc, _varRegister(node), "Store variable", (char*)node->tokenString);
+}
+
+int _offset() {
+    return framePointer + tOffset;
+}
+
 void generateExpression(Node* expr) {
     if (expr == NULL) // Unary operators
         return;
@@ -79,27 +102,23 @@ void generateExpression(Node* expr) {
         case nodes::FunctionCall: {
                 Node* function = (Node*)symbolTable.lookup(expr->tokenString);
                 emitCommentRight("Begin call to ", (char*) expr->tokenString);
+                _pfp();
 
-                emitRM(ST, 1, framePointer - tmpStack, 1, "Store old fp in ghost frame");
-                framePointer -= 2; // Advance framepointer
+                emitRM(ST, 1, _offset(), 1, "Store old fp in ghost frame");
                 int index = 1;
+                framePointer -= 2;
                 for (Node* n = expr->children[0]; n != NULL; n = n->sibling) {
-                    if (n->nodeType == nodes::Variable) {
-                        _loadVariable(n);
-                        emitRM(ST, 3, framePointer - tmpStack, 1, "Store parameter");
-                    } else {
-                        char tmp[10];
-                        sprintf(tmp, "%d", index++);
-                        emitCommentRight("Load param", tmp);
-                        generateExpression(n);
-                        emitRM(ST, 3, framePointer - tmpStack, 1, "Store parameter");
-                        tmpStack++;
-                    }
+                    char tmp[10];
+                    sprintf(tmp, "%d", index);
+                    emitCommentRight("Load param", tmp);
+                    generateExpression(n);
+                    emitRM(ST, 3, _offset() - (index - 1), 1, "Store parameter");
+                    index++;
                 }
-                tmpStack -= index - 1;
                 framePointer += 2;
+                //tOffset += index - 1;
                 emitCommentRight("Jump to", (char*) function->tokenString);
-                emitRM(LDA, 1, framePointer - tmpStack, 1, "Load address of new frame");
+                emitRM(LDA, 1, _offset(), 1, "Load address of new frame");
                 emitRM(LDA, 3, 1, 7, "Return address in ac");
                 // emitRM(LDA, 7, -emitSkip(0) - function->loc - 2, 7, "CALL", (char*) expr->tokenString);
                 // emitRM(LDA, 7, function->loc, 7, "CALL", (char*) mainFunc->tokenString);
@@ -157,12 +176,12 @@ void generateExpression(Node* expr) {
 
                     generateExpression(left);
                     if (save) {
-                        emitRM(ST, 3, framePointer - tmpStack, 1, "Save left side");
+                        emitRM(ST, 3, framePointer + tOffset, 1, "Save left side");
                     }
-                    tmpStack++;
+                    --tOffset;
                     generateExpression(right);
-                    tmpStack--;
-                    emitRM(LD, 4, framePointer - tmpStack, 1, "Load left into ac1");
+                    ++tOffset;
+                    emitRM(LD, 4, framePointer + tOffset, 1, "Load left into ac1");
                     emitRO(opString, 3, 4, 3, "Op", (char*)expr->tokenString);
                     handled = true;
                 } else {
@@ -221,7 +240,7 @@ void generateExpression(Node* expr) {
                             onRight = false;
 
                             if (right->tokenData->tokenClass == LBRACKET) {
-                                emitRM(LD, 4, framePointer, 1, "Load left into ac1");
+                                emitRM(LD, 4, _offset(), 1, "Load left into ac1");
                                 emitRO(SUB, 3, 4, 3, "compute location from index");
                                 emitRM(LD, 3, 0, 3, "Load array element");
                                 _storeVariable(left);
@@ -239,6 +258,7 @@ void generateExpression(Node* expr) {
                         }
                         emitRM(ST, 3, 0, 5, "Store variable", (char*)leftChild->tokenString);
                     }
+                    _pfp();
                 }
                 break;
             case LBRACKET: {
@@ -280,21 +300,30 @@ void pimpIO();
 bool inLoop = false;
 int recentLoopStart;
 
+bool recurse = true;
+
 void doCodeGeneration(Node* node) {
     if (node == NULL)
         return;
     switch (node->nodeType) {
         case nodes::Function: { 
-                framePointer = node->memSize;
+                framePointer = -2;
+                tOffset = 0;
                 node->loc = emitSkip(0);
                 emitComment("");
                 emitComment("** ** ** ** ** ** ** ** ** ** ** **");
                 emitComment("FUNCTION", (char*) node->tokenString);
                 emitRM(ST, 3, -1, 1, "Store return address.");
 
+                for (Node* n = node->children[0]; n != NULL; n = n->sibling) {
+                    framePointer--;
+                }
+                emitCommentNumber("framePointer =", framePointer);
+
                 // Function Body
                 // doCodeGeneration(node->children[0]);  -- don't do parameters here?
                 doCodeGeneration(node->children[1]);
+                framePointer = node->memSize;
 
                 emitComment("Add standard closing in case there is no return statement");
                 emitRM(LDC, 2, 0, 6, "Set return value to 0");
@@ -305,14 +334,26 @@ void doCodeGeneration(Node* node) {
             }
             break;
         case nodes::Compound: {
+                int tOffsetBefore = tOffset;
                 int before = framePointer;
                 emitComment("COMPOUND");
+                recurse = false;
                 for (Node* n = node->children[0]; n != NULL; n = n->sibling) {
                     _storeArraySize(n);
+                    if (!n->isArray) {
+                        if (n->children[0] != NULL) {
+                            _initializeVariable(n);
+                        }
+                        framePointer--;
+                    } else {
+                        framePointer -= n->memSize;
+                    }
                 }
+                recurse = true;
                 emitComment("Compound Body");
                 doCodeGeneration(node->children[1]);
                 framePointer = before;
+                tOffset = tOffsetBefore;
                 emitComment("END COMPOUND");
             }
             break;
@@ -377,18 +418,17 @@ void doCodeGeneration(Node* node) {
                 emitRM(LDA, 7, -(emitSkip(0) - recentLoopStart - 1), 7, "break"); 
             }
             break;
-
-        case nodes::Parameter: {
-                emitRM(LD, 3, -2, 1, "Load parameter");
-            }
-            break;
         case nodes::Identifier:
-            _loadVariable(node);
+                _loadVariable(node);
             break;
+        case nodes::Variable:
+            if (node->inGlobal && node->nodeType == nodes::Variable) {
+                // Ignore global variables here,t hey are done later.
+                break;
+            }
         case nodes::IncrementAssignment:
         case nodes::Operator:
         case nodes::FunctionCall:
-        case nodes::Variable:
         case nodes::Constant:
         case nodes::Assignment:
             emitComment("EXPRESSION");
@@ -409,22 +449,30 @@ void doCodeGeneration(Node* node) {
 }
 
 void initGlobals() {
-    auto globalFunction = [](std::string name, void* data) {
-        Node* node = (Node*)data;
+    int gOffset = 0;
+
+    std::vector<void*> globals = symbolTable.getAllGlobal();
+
+    for (auto it = globals.begin(); it != globals.end(); it++) {
+        Node* node = (Node*)*it;
         switch(node->nodeType) {
             case nodes::Function:
                 // emitComment("Nothing to do for function", (char*) name.c_str());
                 break;
             case nodes::Variable:
-                _storeArraySize(node);
+                if (node->children[0] != NULL) {
+                    _initializeVariable(node);
+                    gOffset--;
+                } else {
+                    _storeArraySize(node);
+                    gOffset -= node->memSize + 1;
+                }
                 break;
             default:
-                emitComment("No behavior defined for", (char*) name.c_str());
+                emitComment("No behavior defined for", (char*) node->tokenString);
                 break;
         }
-    };
-
-    symbolTable.applyToAllGlobal(globalFunction);
+    }
 }
 
 void genInit(int endOfGlobal) {

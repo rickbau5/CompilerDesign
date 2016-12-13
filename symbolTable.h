@@ -42,11 +42,11 @@ class Scope {
 private:
     static bool debugFlg;                      // turn on tedious debugging
     std::string name;                          // name of scope
-    std::map<std::string , void *> symbols;    // use an ordered map (not as fast as unordered)
 
 public:
     Scope(std::string newname);
     ~Scope();
+    std::map<std::string , void *> symbols;    // use an ordered map (not as fast as unordered)
     void debug(bool state);                    // sets the debug flag to new state
     void print(void (*printData)(void *));     // prints the table using the supplied function to print the void *
     void applyToAll(void (*action)(std::string , void *));  // applies func to all symbol/data pairs
@@ -78,6 +78,7 @@ public:
     int depth();                                     // what is the depth of the scope stack?
     void print(void (*printData)(void *));           // print all scopes using data printing function
     void applyToAllGlobal(void (*action)(std::string , void *));  // applies func to all symbol/data pairs
+    std::vector<void*> getAllGlobal();
     void enter(std::string name);                    // enter a scope with given name
     void leave();                                    // leave a scope (not allowed to leave global)
     void *lookup(std::string sym);                   // returns ptr associated with sym in most recent scope or global
